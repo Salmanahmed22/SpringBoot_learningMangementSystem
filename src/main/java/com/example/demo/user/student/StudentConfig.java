@@ -20,7 +20,7 @@ public class StudentConfig {
                     "khaled@gmail.com"
                     ,"1234");
 
-            repository.s
+
         };
     }
 }
