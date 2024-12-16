@@ -1,4 +1,5 @@
 package com.example.demo;
+import com.example.demo.user.Student;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,7 +18,13 @@ public class DemoApplication {
 
 	//returns json object
 	@GetMapping
-	public List<String> hello() {
-		return List.of("Hello","World","Iam salman");
+	public List<Student> hello() {
+		return List.of(
+				new Student(1L,
+						"Omar",
+						"omar@gmail.com"
+						,"123")
+		);
 	}
+
 }
