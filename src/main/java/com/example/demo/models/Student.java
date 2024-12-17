@@ -1,6 +1,8 @@
 package com.example.demo.models;
 
 import jakarta.persistence.*;
+
+import java.sql.Struct;
 import java.util.List;
 
 @Entity
@@ -23,6 +25,10 @@ public class Student extends User {
     public Student(String name, String email, String password, Role role, List<Course> enrolledCourses) {
         super(name, email, password, role);
         this.enrolledCourses = enrolledCourses;
+    }
+
+    public Student(String name, String email,String password, Role role) {
+        super(name, email, password, role);
     }
 
     // Getters
