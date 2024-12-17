@@ -25,6 +25,11 @@ public class Student extends User {
         this.enrolledCourses = enrolledCourses;
     }
 
+    public Student(String name, String email, String password, Role role) {
+        super(name, email, password, role);
+
+    }
+
     // Getters
     public List<Course> getEnrolledCourses() {
         return enrolledCourses;
