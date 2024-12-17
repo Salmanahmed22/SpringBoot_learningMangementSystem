@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 @Configuration
-public class InstructorConfig {
+public class  InstructorConfig {
     @Bean
     CommandLineRunner commandLineRunner(InstructorRepository repository) {
         return args -> {
