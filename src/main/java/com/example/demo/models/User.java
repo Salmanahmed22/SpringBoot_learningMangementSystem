@@ -3,7 +3,7 @@ package com.example.demo.models;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "AppUser")
+@Table(name = "app_user")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User {
 
