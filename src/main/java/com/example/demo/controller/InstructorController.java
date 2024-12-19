@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.models.Instructor;
-import com.example.demo.models.Notification;
+//import com.example.demo.models.Notification;
 import com.example.demo.service.InstructorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -62,11 +62,11 @@ public class InstructorController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{id}/notifications")
-    public ResponseEntity<List<Notification>> getNotifications(@PathVariable Long id, @RequestParam(required = false) Boolean unread) {
-        List<Notification> notifications = instructorService.getNotifications(id, unread);
-        return ResponseEntity.ok(notifications);
-    }
+//    @GetMapping("/{id}/notifications")
+//    public ResponseEntity<List<Notification>> getNotifications(@PathVariable Long id, @RequestParam(required = false) Boolean unread) {
+//        List<Notification> notifications = instructorService.getNotifications(id, unread);
+//        return ResponseEntity.ok(notifications);
+//    }
 
 
 

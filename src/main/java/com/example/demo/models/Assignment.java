@@ -1,19 +1,37 @@
 package com.example.demo.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
+<<<<<<< Updated upstream
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+=======
+@Getter
+@Setter
+@AllArgsConstructor
+>>>>>>> Stashed changes
 @Entity
 public class Assignment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     private String title;
 
     private String description;
 
-    private String dueDate;
+    private Date dueDate;
+
+    @ElementCollection
+    @MapKeyColumn(name = "student_id")
+    @Column(name = "submission_content")
+    private Map<Long, String> submissions = new HashMap<>();
 
     @ManyToOne
     @JoinColumn(name = "course_id")
@@ -23,8 +41,9 @@ public class Assignment {
     public Assignment() {
     }
 
+<<<<<<< Updated upstream
     // parameterized constructor
-    public Assignment(String title, String description, String dueDate, Course course) {
+    public Assignment(String title, String description, Date dueDate, Course course) {
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
@@ -44,7 +63,7 @@ public class Assignment {
         return description;
     }
 
-    public String getDueDate() {
+    public Date getDueDate() {
         return dueDate;
     }
 
@@ -65,11 +84,17 @@ public class Assignment {
         this.description = description;
     }
 
-    public void setDueDate(String dueDate) {
+    public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
     }
 
     public void setCourse(Course course) {
         this.course = course;
     }
+
+    public void submitAssignment(Long studentId, String submissionContent) {
+        submissions.put(studentId, submissionContent);
+    }
+=======
+>>>>>>> Stashed changes
 }

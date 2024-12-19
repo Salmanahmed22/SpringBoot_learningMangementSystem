@@ -41,4 +41,10 @@ public class LessonController {
         lessonService.deleteLesson(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/content")
+    public String getLessonContent(@RequestParam Long studentId, @RequestParam Long courseId, @RequestParam Long lessonId) {
+        return lessonService.getLessonContent(studentId, courseId,lessonId);
+    }
+
 }
