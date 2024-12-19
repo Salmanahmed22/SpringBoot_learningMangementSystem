@@ -19,10 +19,11 @@ public class webConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return id -> userRepository
-                .findById(Long.valueOf(id))
-                .orElseThrow(()->new UsernameNotFoundException("user not found"));
+        return username -> userRepository
+                .findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
+
 
 
     //decode the password
