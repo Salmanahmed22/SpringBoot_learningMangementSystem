@@ -7,8 +7,8 @@ import java.util.List;
 public class Course {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     private short minLevel;
 
@@ -48,7 +48,9 @@ public class Course {
     }
 
     // Getters
-    public Long getId() {return id;}
+    public String getId() {
+        return id;
+    }
 
     public short getMinLevel() {return minLevel;}
 
@@ -68,7 +70,9 @@ public class Course {
 
     public Instructor getInstructor() {return instructor;}
     // Setters
-    public void setId(Long id) {this.id = id;}
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public void setMinLevel(short minLevel) { this.minLevel = minLevel;}
 

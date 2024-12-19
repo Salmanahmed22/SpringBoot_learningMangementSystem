@@ -1,14 +1,24 @@
 package com.example.demo.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
+@Setter
+@AllArgsConstructor
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Student extends User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @ManyToMany
     @JoinTable(
@@ -42,17 +52,7 @@ public class Student extends User {
 
     }
 
-    // Getters
-    public List<Course> getEnrolledCourses() {
-        return enrolledCourses;
-    }
 
-    public int getLevel() { return level;}
-
-    // Setters
-    public void setEnrolledCourses(List<Course> enrolledCourses) {
-        this.enrolledCourses = enrolledCourses;
-    }
 
     public void getLevel(int level ) {  this.level = level;}
 
@@ -101,8 +101,8 @@ public class Student extends User {
             throw new IllegalArgumentException("Assignment not found in enrolled courses");
         }
 
-        Date currentDate = new Date();
-        if (currentDate.after(assignment.getDueDate())) {
+        LocalDateTime currentDate = LocalDateTime.now();
+        if (currentDate.isAfter(assignment.getDueDate())) {
             throw new IllegalArgumentException("Cannot submit assignment after the due date");
         }
 
