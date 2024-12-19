@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.models.Course;
+import com.example.demo.models.Lesson;
 import com.example.demo.models.Student;
 import com.example.demo.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,24 @@ public class StudentController {
     @PutMapping("/{id}/enroll")
     public ResponseEntity<Student> enrollCourse(@PathVariable Long id, @RequestBody Course course) {
         return ResponseEntity.ok(studentService.enrollCourse(id, course));
+    }
+
+    @GetMapping("/{studentId}/enrolled-courses")
+    public List<Course> getEnrolledCourses(@PathVariable Long studentId) {
+        return studentService.getEnrolledCourses(studentId);
+    }
+
+    @GetMapping("/{studentId}/courses/{courseId}/lessons")
+    public ResponseEntity<List<Lesson>> viewCourseLessons(@PathVariable Long studentId, @PathVariable Long courseId) {
+        List<Lesson> lessons = studentService.viewCourseLessons(studentId, courseId);
+        return ResponseEntity.ok(lessons);
+    }
+
+
+
+    @GetMapping("/{studentId}/available-courses")
+    public List<Course> viewAvailableCourses(@PathVariable Long studentId) {
+        return studentService.getAvailableCourses(studentId);
     }
 
     @PutMapping("/{id}/unenroll")

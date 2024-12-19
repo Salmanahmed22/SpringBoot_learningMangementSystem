@@ -2,7 +2,9 @@ package com.example.demo.service;
 
 import com.example.demo.models.Course;
 import com.example.demo.models.Student;
+import com.example.demo.models.Lesson;
 import com.example.demo.repository.StudentRepository;
+import com.example.demo.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ public class StudentService {
 
     @Autowired
     private StudentRepository studentRepository;
+    private CourseRepository courseRepository;
 
     public Student getStudentById(Long id) {
         return studentRepository.findById(id).orElse(null);
@@ -33,6 +36,32 @@ public class StudentService {
             return studentRepository.save(student);
         }
         return null;
+    }
+
+    public List<Course> getEnrolledCourses(Long studentId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+
+        return student.getEnrolledCourses();
+    }
+
+    public List<Course> getAvailableCourses(Long studentId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+
+        List<Course> allCourses = courseRepository.findAll();
+
+        return student.viewAvailableCourses(allCourses);
+    }
+
+    public List<Lesson> viewCourseLessons(Long studentId, Long courseId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new IllegalArgumentException("Course not found"));
+
+        return student.viewCourseLessons(course);
     }
 
     public Student unenrollCourse(Long studentId, Course course) {

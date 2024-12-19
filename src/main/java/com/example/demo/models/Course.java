@@ -10,6 +10,8 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private short minLevel;
+
     private String title;
 
     private String description;
@@ -45,6 +47,8 @@ public class Course {
         return id;
     }
 
+    public short getMinLevel() { return minLevel;}
+
     public String getTitle() {
         return title;
     }
@@ -77,6 +81,8 @@ public class Course {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public void setId(short minLevel) { this.minLevel = minLevel;}
 
     public void setTitle(String title) {
         this.title = title;
