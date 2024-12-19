@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.models.Course;
+import com.example.demo.models.Notification;
 import com.example.demo.models.Student;
 import com.example.demo.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,4 +48,19 @@ public class StudentController {
         studentService.deleteStudent(id);
         return ResponseEntity.noContent().build();
     }
+
+
+    //notification
+    @PutMapping("/{id}/notifications/mark-as-read")
+    public ResponseEntity<Void> markNotificationsAsRead(@PathVariable Long id) {
+        studentService.markNotificationsAsRead(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}/notifications")
+    public ResponseEntity<List<Notification>> getNotifications(@PathVariable Long id, @RequestParam(required = false) Boolean unread) {
+        List<Notification> notifications = studentService.getNotifications(id, unread);
+        return ResponseEntity.ok(notifications);
+    }
+
 }
