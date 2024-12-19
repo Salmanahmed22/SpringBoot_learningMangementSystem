@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.models.Course;
+import com.example.demo.models.Lesson;
 import com.example.demo.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,5 +39,10 @@ public class CourseService {
 
     public void deleteCourse(Long id) {
         courseRepository.deleteById(id);
+    }
+
+    public void addLesson(Course course, Lesson lesson) {
+        course.addLesson(lesson);
+        courseRepository.save(course);
     }
 }

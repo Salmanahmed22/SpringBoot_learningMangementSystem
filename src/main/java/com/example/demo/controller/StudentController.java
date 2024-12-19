@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.models.Course;
 import com.example.demo.models.Lesson;
-import com.example.demo.models.Notification;
+//import com.example.demo.models.Notification;
 import com.example.demo.models.Student;
 import com.example.demo.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,16 +70,16 @@ public class StudentController {
 
 
     //notification
-    @PutMapping("/{id}/notifications/mark-as-read")
-    public ResponseEntity<Void> markNotificationsAsRead(@PathVariable Long id) {
-        studentService.markNotificationsAsRead(id);
-        return ResponseEntity.ok().build();
-    }
+//    @PutMapping("/{id}/notifications/mark-as-read")
+//    public ResponseEntity<Void> markNotificationsAsRead(@PathVariable Long id) {
+//        studentService.markNotificationsAsRead(id);
+//        return ResponseEntity.ok().build();
+//    }
 
-    @GetMapping("/{id}/notifications")
-    public ResponseEntity<List<Notification>> getNotifications(@PathVariable Long id, @RequestParam(required = false) Boolean unread) {
-        List<Notification> notifications = studentService.getNotifications(id, unread);
-        return ResponseEntity.ok(notifications);
-    }
+//    @GetMapping("/{id}/notifications")
+//    public ResponseEntity<List<Notification>> getNotifications(@PathVariable Long id, @RequestParam(required = false) Boolean unread) {
+//        List<Notification> notifications = studentService.getNotifications(id, unread);
+//        return ResponseEntity.ok(notifications);
+//    }
 
 }

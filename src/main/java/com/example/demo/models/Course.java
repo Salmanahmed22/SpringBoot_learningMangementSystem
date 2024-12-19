@@ -31,6 +31,11 @@ public class Course {
     @OneToMany(mappedBy = "course")
     private List<Quiz> quizzes;
 
+
+    @ManyToOne
+    @JoinColumn(name = "instructor_id")
+    private Instructor instructor;
+
     public Course() {
     }
 
@@ -47,42 +52,29 @@ public class Course {
         return id;
     }
 
-    public short getMinLevel() { return minLevel;}
+    public short getMinLevel() {return minLevel;}
 
-    public String getTitle() {
-        return title;
-    }
+    public String getTitle() {return title;}
 
-    public String getDescription() {
-        return description;
-    }
+    public String getDescription() {return description;}
 
-    public Duration getDuration() {
-        return duration;
-    }
+    public Duration getDuration() {return duration;}
 
-    public List<Student> getEnrolledStudents() {
-        return enrolledStudents;
-    }
+    public List<Student> getEnrolledStudents() {return enrolledStudents;}
 
-    public List<Lesson> getLessons() {
-        return lessons;
-    }
+    public List<Lesson> getLessons() {return lessons;}
 
-    public List<Assignment> getAssignments() {
-        return assignments;
-    }
+    public List<Assignment> getAssignments() {return assignments;}
 
-    public List<Quiz> getQuizzes() {
-        return quizzes;
-    }
+    public List<Quiz> getQuizzes() {return quizzes;}
 
+    public Instructor getInstructor() {return instructor;}
     // Setters
     public void setId(String id) {
         this.id = id;
     }
 
-    public void setId(short minLevel) { this.minLevel = minLevel;}
+    public void setMinLevel(short minLevel) { this.minLevel = minLevel;}
 
     public void setTitle(String title) {
         this.title = title;
@@ -110,5 +102,12 @@ public class Course {
 
     public void setQuizzes(List<Quiz> quizzes) {
         this.quizzes = quizzes;
+    }
+
+    public void setInstructor(Instructor instructor) {this.instructor = instructor;}
+
+    public void addLesson(Lesson lesson) {
+        lessons.add(lesson);
+        lesson.setCourse(this);
     }
 }
