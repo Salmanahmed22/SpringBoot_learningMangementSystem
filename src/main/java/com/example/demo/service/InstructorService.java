@@ -1,7 +1,9 @@
 package com.example.demo.service;
 
 import com.example.demo.models.Instructor;
+import com.example.demo.models.Notification;
 import com.example.demo.repository.InstructorRepository;
+import com.example.demo.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,4 +51,24 @@ public class InstructorService {
     public void deleteInstructor(Long id) {
         instructorRepository.deleteById(id);
     }
+
+
+    @Autowired
+    private NotificationRepository notificationRepository;
+
+    public List<Notification> getNotifications(Long studentId, Boolean unread) {
+        if (unread != null && unread) {
+            return notificationRepository.findByUserIdAndIsRead(studentId, false);
+        }
+        return notificationRepository.findByUserId(studentId);
+    }
+
+    public void markNotificationsAsRead(Long studentId) {
+        List<Notification> notifications = notificationRepository.findByUserIdAndIsRead(studentId, false);
+        for (Notification notification : notifications) {
+            notification.setRead(true);
+        }
+        notificationRepository.saveAll(notifications);
+    }
+
 }
