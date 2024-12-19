@@ -18,6 +18,7 @@ public class StudentService {
 
     @Autowired
     private StudentRepository studentRepository;
+    @Autowired
     private CourseRepository courseRepository;
 
     public Student getStudentById(Long id) {
