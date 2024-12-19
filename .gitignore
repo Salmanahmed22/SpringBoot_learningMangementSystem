@@ -57,5 +57,5 @@ src/main/resources/application.yml
 # Ignore application.properties
 src/main/resources/application.properties
 
-# Ignore pom.xml
-pom.xml
+### Dependencies ###
+**/dependency-reduced-pom.xml
