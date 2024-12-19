@@ -56,11 +56,11 @@ public class InstructorController {
     }
 
     //notification
-    @PutMapping("/{id}/notifications/mark-as-read")
-    public ResponseEntity<Void> markNotificationsAsRead(@PathVariable Long id) {
-        instructorService.markNotificationsAsRead(id);
-        return ResponseEntity.ok().build();
-    }
+//    @PutMapping("/{id}/notifications/mark-as-read")
+//    public ResponseEntity<Void> markNotificationsAsRead(@PathVariable Long id) {
+//        instructorService.markNotificationsAsRead(id);
+//        return ResponseEntity.ok().build();
+//    }
 
 //    @GetMapping("/{id}/notifications")
 //    public ResponseEntity<List<Notification>> getNotifications(@PathVariable Long id, @RequestParam(required = false) Boolean unread) {
