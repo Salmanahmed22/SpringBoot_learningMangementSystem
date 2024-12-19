@@ -30,11 +30,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-<<<<<<< Updated upstream
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.createUser(user));
-=======
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         if (userService.existsByEmail(user.getEmail())) {
@@ -51,7 +47,7 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(response, HttpStatus.OK);
->>>>>>> Stashed changes
+
     }
 
     @PutMapping("/{id}")
