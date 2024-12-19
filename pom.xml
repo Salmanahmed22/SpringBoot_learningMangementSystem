@@ -84,6 +84,21 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>6.5.2.Final</version>
+		</dependency>
+
+		<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.hibernate/hibernate-entitymanager &ndash;&gt;-->
+		<dependency>
+			<groupId>org.hibernate.orm</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>6.0.0.Alpha7</version>
+			<type>pom</type>
+		</dependency>
+
 	</dependencies>
 
 	<build>

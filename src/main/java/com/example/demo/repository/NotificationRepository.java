@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface NotificationRepository extends JpaRepository<Notification, Long> {
-    List<Notification> findByUserIdAndIsRead(Long userId, boolean isRead);
-    List<Notification> findByUserId(Long userId);
+public interface NotificationRepository extends JpaRepository<Notification, String> {
+    List<Notification> findByUserIdAndIsRead(String userId, boolean isRead);
+    List<Notification> findByUserId(String userId);
 }

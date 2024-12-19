@@ -4,6 +4,7 @@ import com.example.demo.models.Role;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -22,15 +23,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
         securedEnabled = true
 )
 public class SecurityConfig {
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .securityMatcher("/api/**")
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/users/**").permitAll()
-                        //students and admin and instructor all are authorized to api/students
+//                        students and admin and instructor all are authorized to api/students
                         .requestMatchers("/api/students/**").hasAnyRole(Role.STUDENT.name(), Role.ADMIN.name(),
                                 Role.INSTRUCTOR.name())
                         //only Admin and instructor are authorized to api/instructors
