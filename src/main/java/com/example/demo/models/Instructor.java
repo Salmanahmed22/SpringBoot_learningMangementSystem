@@ -2,6 +2,8 @@ package com.example.demo.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +11,12 @@ import java.util.List;
 @Entity
 public class Instructor extends User {
 
+    // Getters and Setters
+    @Getter
+    @Setter
     private String department;
+    @Getter
+    @Setter
     private String employeeId;
 
     @OneToMany(mappedBy = "instructor")
@@ -22,23 +29,6 @@ public class Instructor extends User {
         this.department = department;
         this.employeeId = employeeId;
         this.courses = new ArrayList<>();
-    }
-
-    // Getters and Setters
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
-    }
-
-    public String getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(String employeeId) {
-        this.employeeId = employeeId;
     }
 
     public void addCourse(Course course){
