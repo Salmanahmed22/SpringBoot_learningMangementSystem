@@ -1,0 +1,5 @@
+# Ignore application.properties
+src/main/resources/application.properties
+
+# Ignore pom.xml
+pom.xml
