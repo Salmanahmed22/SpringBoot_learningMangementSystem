@@ -1,9 +1,13 @@
 package com.example.demo.service;
 
+import com.example.demo.models.Course;
 import com.example.demo.models.Instructor;
+import com.example.demo.models.Lesson;
 //import com.example.demo.models.Notification;
+import com.example.demo.repository.CourseRepository;
 import com.example.demo.repository.InstructorRepository;
 //import com.example.demo.repository.NotificationRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +19,12 @@ public class InstructorService {
 
     @Autowired
     private InstructorRepository instructorRepository;
+
+    @Autowired
+    private CourseService courseService;
+
+    @Autowired
+    private LessonService lessonService;
 
     // Get all instructors
     public List<Instructor> getAllInstructors() {
@@ -70,5 +80,35 @@ public class InstructorService {
 //        }
 //        notificationRepository.saveAll(notifications);
 //    }
+    // Create a new course
+    public Course createCourse(Course course, Long id) {
+        Instructor instructor = getInstructorById(id);
+        instructor.addCourse(course);
+        return courseService.createCourse(course);
+    }
 
+    // Update a course
+    public Course updateCourse(Long id, Course updatedCourse) {
+        return courseService.updateCourse(id, updatedCourse);
+    }
+
+    // Delete an instructor
+    public void deleteCourse(Long id) {
+        courseService.deleteCourse(id);
+    }
+
+    // Add a lesson to course
+    public Lesson addLessonToCourse(Long instructorId, Long courseId, Lesson lesson) {
+
+        Instructor instructor = getInstructorById(instructorId);
+
+        Course course = courseService.getCourseById(courseId);
+
+        if (!course.getInstructor().equals(instructor)) {
+            throw new IllegalArgumentException("Course does not belong to the instructor");
+        }
+
+        courseService.addLesson(course, lesson);
+        return lesson;
+    }
 }

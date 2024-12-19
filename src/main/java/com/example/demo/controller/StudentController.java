@@ -69,7 +69,7 @@ public class StudentController {
     }
 
 
-//    //notification
+    //notification
 //    @PutMapping("/{id}/notifications/mark-as-read")
 //    public ResponseEntity<Void> markNotificationsAsRead(@PathVariable Long id) {
 //        studentService.markNotificationsAsRead(id);
