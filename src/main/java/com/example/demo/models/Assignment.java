@@ -1,17 +1,26 @@
 package com.example.demo.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
+<<<<<<< Updated upstream
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+=======
+@Getter
+@Setter
+@AllArgsConstructor
+>>>>>>> Stashed changes
 @Entity
 public class Assignment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     private String title;
 
@@ -32,6 +41,7 @@ public class Assignment {
     public Assignment() {
     }
 
+<<<<<<< Updated upstream
     // parameterized constructor
     public Assignment(String title, String description, Date dueDate, Course course) {
         this.title = title;
@@ -85,4 +95,6 @@ public class Assignment {
     public void submitAssignment(Long studentId, String submissionContent) {
         submissions.put(studentId, submissionContent);
     }
+=======
+>>>>>>> Stashed changes
 }

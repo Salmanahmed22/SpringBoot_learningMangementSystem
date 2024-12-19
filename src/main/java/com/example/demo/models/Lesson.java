@@ -6,8 +6,8 @@ import jakarta.persistence.*;
 public class Lesson {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     private String title;
 
@@ -29,7 +29,7 @@ public class Lesson {
     }
 
     // Getters
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
@@ -46,7 +46,7 @@ public class Lesson {
     }
 
     // Setters
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
