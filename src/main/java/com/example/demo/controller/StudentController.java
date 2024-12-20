@@ -36,9 +36,9 @@ public class  StudentController {
         return ResponseEntity.ok(studentService.createStudent(student));
     }
 
-    @PutMapping("/{id}/enroll")
-    public ResponseEntity<Student> enrollCourse(@PathVariable Long id, @RequestBody Course course) {
-        return ResponseEntity.ok(studentService.enrollCourse(id, course));
+    @PutMapping("/{studentId}/enroll/{courseId}")
+    public ResponseEntity<Student> enrollCourse(@PathVariable String studentId, @PathVariable String courseId) {
+        return ResponseEntity.ok(studentService.enrollCourse(studentId, courseId));
     }
 
     @GetMapping("/{studentId}/enrolled-courses")

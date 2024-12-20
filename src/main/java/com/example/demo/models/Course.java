@@ -1,8 +1,16 @@
 package com.example.demo.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
+@AllArgsConstructor
 @Entity
 public class Course {
 
@@ -16,8 +24,6 @@ public class Course {
 
     private String description;
 
-    @Enumerated(EnumType.STRING)
-    private Duration duration;
 
     @ManyToMany(mappedBy = "enrolledCourses")
     private List<Student> enrolledStudents;
@@ -37,74 +43,13 @@ public class Course {
     private Instructor instructor;
 
     public Course() {
+        this.enrolledStudents = new ArrayList<>();
+        this.lessons = new ArrayList<>();
+        this.assignments = new ArrayList<>();
+        this.quizzes = new ArrayList<>();
     }
 
-    // parameterized constructor
-    public Course(String title, String description, Duration duration, List<Student> enrolledStudents) {
-        this.title = title;
-        this.description = description;
-        this.duration = duration;
-        this.enrolledStudents = enrolledStudents;
-    }
 
-    // Getters
-    public String getId() {
-        return id;
-    }
-
-    public short getMinLevel() {return minLevel;}
-
-    public String getTitle() {return title;}
-
-    public String getDescription() {return description;}
-
-    public Duration getDuration() {return duration;}
-
-    public List<Student> getEnrolledStudents() {return enrolledStudents;}
-
-    public List<Lesson> getLessons() {return lessons;}
-
-    public List<Assignment> getAssignments() {return assignments;}
-
-    public List<Quiz> getQuizzes() {return quizzes;}
-
-    public Instructor getInstructor() {return instructor;}
-    // Setters
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setMinLevel(short minLevel) { this.minLevel = minLevel;}
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setDuration(Duration duration) {
-        this.duration = duration;
-    }
-
-    public void setEnrolledStudents(List<Student> enrolledStudents) {
-        this.enrolledStudents = enrolledStudents;
-    }
-
-    public void setLessons(List<Lesson> lessons) {
-        this.lessons = lessons;
-    }
-
-    public void setAssignments(List<Assignment> assignments) {
-        this.assignments = assignments;
-    }
-
-    public void setQuizzes(List<Quiz> quizzes) {
-        this.quizzes = quizzes;
-    }
-
-    public void setInstructor(Instructor instructor) {this.instructor = instructor;}
 
     public void addLesson(Lesson lesson) {
         lessons.add(lesson);

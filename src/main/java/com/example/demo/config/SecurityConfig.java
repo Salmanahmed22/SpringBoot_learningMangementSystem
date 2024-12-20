@@ -35,10 +35,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/students/**").hasAnyRole(Role.STUDENT.name(), Role.ADMIN.name(),
                                 Role.INSTRUCTOR.name())
                         //only Admin and instructor are authorized to api/instructors
-                        .requestMatchers("/api/instructors/**").hasAnyRole(Role.INSTRUCTOR.name(), Role.ADMIN.name())
+//                        .requestMatchers("/api/instructors/**").hasAnyRole(Role.INSTRUCTOR.name(), Role.ADMIN.name())
                         //only admin
-                        .requestMatchers("/api/admins/**").hasRole(Role.ADMIN.name())
-                        .anyRequest().authenticated()
+//                        .requestMatchers("/api/admins/**").hasRole(Role.ADMIN.name())
+                        .requestMatchers("/api/admins/**").permitAll()
+//                        .anyRequest().authenticated()
                 ).sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )

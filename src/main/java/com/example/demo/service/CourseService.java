@@ -31,7 +31,6 @@ public class CourseService {
         if (existingCourse != null) {
             existingCourse.setTitle(updatedCourse.getTitle());
             existingCourse.setDescription(updatedCourse.getDescription());
-            existingCourse.setDuration(updatedCourse.getDuration());
             return courseRepository.save(existingCourse);
         }
         return null;

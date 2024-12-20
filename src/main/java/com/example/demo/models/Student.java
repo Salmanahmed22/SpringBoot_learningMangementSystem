@@ -30,30 +30,11 @@ public class Student extends User {
     public Student() {
     }
 
-    // parameterized constructor
-    public Student(String name, String email, String password, Role role, List<Course> enrolledCourses , int level) {
-        super(name, email, password, role);
-        this.enrolledCourses = enrolledCourses;
-        this.level = level;
-    }
-
-    public Student(String name, String email, String password, Role role, List<Course> enrolledCourses) {
-        super(name, email, password, role);
-        this.enrolledCourses = enrolledCourses;
-        this.level = 1;
-    }
-
-    public Student(String name, String email, String password, Role role) {
-        super(name, email, password, role);
-
-    }
 
 
 
-    public void getLevel(int level ) {  this.level = level;}
 
-    // enroll in a course
-    public void enrollCourse(Course course) { this.enrolledCourses.add(course);}
+
 
     // view the available courses
     public List<Course> viewAvailableCourses(List<Course> allCourses) {

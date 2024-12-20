@@ -36,10 +36,12 @@ public class StudentService {
         return studentRepository.save(student);
     }
 
-    public Student enrollCourse(Long studentId, Course course) {
-        Student student = studentRepository.findById(studentId).orElse(null);
-        if (student != null) {
-            student.enrollCourse(course);
+    public Student enrollCourse(String studentId, String courseId) {
+        Student student = studentRepository.findById(Long.valueOf(studentId)).orElse(null);
+        Course course = courseRepository.findById(Long.valueOf(courseId)).orElse(null);
+        if (student != null && course != null) {
+            List<Course> enrolledCourses = student.getEnrolledCourses();
+            enrolledCourses.add(course);
             return studentRepository.save(student);
         }
         return null;
