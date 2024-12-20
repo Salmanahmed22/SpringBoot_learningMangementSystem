@@ -31,12 +31,6 @@ public class AdminController {
         return ResponseEntity.ok(admin);
     }
 
-    // Create a new admin
-    @PostMapping
-    public ResponseEntity<Admin> createAdmin(@RequestBody Admin admin) {
-        return ResponseEntity.ok(adminService.createAdmin(admin));
-    }
-
     // Update an existing admin
     @PutMapping("/{id}")
     public ResponseEntity<Admin> updateAdmin(@PathVariable Long id, @RequestBody Admin updatedAdmin) {
