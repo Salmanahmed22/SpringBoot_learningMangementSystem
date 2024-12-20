@@ -16,10 +16,6 @@ import java.util.stream.Collectors;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Student extends User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-
     @ManyToMany
     @JoinTable(
             name = "student_course",
