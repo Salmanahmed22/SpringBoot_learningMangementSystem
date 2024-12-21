@@ -20,19 +20,15 @@ public class Question {
     private String text;
 
     @ElementCollection
-    private List<String> options; // Multiple-choice options
+    private List<String> options;
 
-    private String correctAnswer; // The correct answer
+    private String correctAnswer;
 
     @ManyToOne
-    @JoinColumn(name = "question_bank_id") // Foreign key to QuestionBank
+    @JoinColumn(name = "question_bank_id")
     private QuestionBank questionBank;
 
     // Default constructor
     public Question() {}
 
-    // Method to validate an answer
-    public boolean isCorrect(String answer) {
-        return this.correctAnswer.equals(answer);
-    }
 }

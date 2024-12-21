@@ -8,7 +8,6 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 @Getter
@@ -33,7 +32,7 @@ public class Quiz {
     private List<Question> questions;
 
 //    @ElementCollection
-//    private Map<String, List<Answer>> submissions = new HashMap<String, List<Answer>>();
+//    private HashMap<String, List<Answer>> submissions = new HashMap<String, List<Answer>>();
 
     // Default constructor
     public Quiz() {}

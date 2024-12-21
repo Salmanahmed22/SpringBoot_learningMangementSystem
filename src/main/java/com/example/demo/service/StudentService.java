@@ -52,7 +52,7 @@ public class StudentService {
         return null;
     }
 
-    public List<Course> viewAvailableCourses(Long studentId) {
+    public List<Course> getAvailableCourses(Long studentId) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new IllegalArgumentException("Student not found"));
 
@@ -70,7 +70,7 @@ public class StudentService {
         return student.getEnrolledCourses();
     }
 
-    public List<Lesson> viewCourseLessons(Long studentId, Long courseId) {
+    public List<Lesson> getCourseLessons(Long studentId, Long courseId) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new IllegalArgumentException("Student not found"));
 
@@ -84,13 +84,14 @@ public class StudentService {
         return course.getLessons();
     }
 
-    public String getLessonContent(Long studentId, Long courseId,Long lessonId) {
+    public String getLessonContent(Long studentId, Long courseId, Long lessonId) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new IllegalArgumentException("Student not found"));
-        List<Course> courses = student.getEnrolledCourses();
-        for (Course course : courses) {
+        List<Course> enrolledCourses = student.getEnrolledCourses();
+        for (Course course : enrolledCourses) {
             if (course.getId().equals(courseId)) {
-                for (Lesson lesson : course.getLessons()) {
+                List<Lesson> lessons = course.getLessons();
+                for (Lesson lesson : lessons) {
                     if (lesson.getId().equals(lessonId)) {
                         return lesson.getContent();
                     }
@@ -103,32 +104,27 @@ public class StudentService {
     public List<Assignment> getAssignments(Long studentId, Long courseId) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new IllegalArgumentException("Student not found"));
-
-        return student.viewAssignments(courseId);
+        List<Course> enrolledCourses = student.getEnrolledCourses();
+        for (Course course : enrolledCourses) {
+            if (course.getId().equals(courseId)) {
+                return course.getAssignments();
+            }
+        }
+        throw new IllegalArgumentException("Student is not enrolled in the course with ID: " + courseId);
     }
 
     public List<Quiz> getQuizzes(Long studentId, Long courseId) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new IllegalArgumentException("Student not found"));
-
-        return student.viewQuizzes(courseId);
-    }
-
-
-    public Student unenrollCourse(Long studentId, Course course) {
-        Student student = studentRepository.findById(studentId).orElse(null);
-        if (student != null) {
-            student.unenrollCourse(course);
-            return studentRepository.save(student);
+        List<Course> enrolledCourses = student.getEnrolledCourses();
+        for (Course course : enrolledCourses) {
+            if (course.getId().equals(courseId)) {
+                return course.getQuizzes();
+            }
         }
-        return null;
+        // better version we can make sure also if the course exist if not exist throw error
+        throw new IllegalArgumentException("Student is not enrolled in this course");
     }
-
-    public void deleteStudent(Long id) {
-        studentRepository.deleteById(id);
-    }
-
-
 
     public List<Notification> getNotifications(Long studentId, Boolean unread) {
         if (unread != null && unread) {
@@ -144,5 +140,32 @@ public class StudentService {
         }
         notificationRepository.saveAll(notifications);
     }
+
+    public Student unrollCourse(Long studentId, Long courseId) {
+        Student student = studentRepository.findById(studentId).orElse(null);
+        Course course = courseRepository.findById(courseId).orElse(null);
+
+        if (student != null) {
+            List<Course> enrolledCourses = student.getEnrolledCourses();
+            for(Course enrolledCourse: enrolledCourses){
+                if(enrolledCourse.getId().equals(courseId)){
+                    List<Course> newEnrolledCourses = student.getEnrolledCourses();
+                    newEnrolledCourses.remove(course);
+                    student.setEnrolledCourses(newEnrolledCourses);
+                    return studentRepository.save(student);
+                }
+            }
+            throw new IllegalArgumentException("Student is not enrolled in this course");
+
+        }
+        else {
+            throw new IllegalArgumentException("Student not found");
+        }
+    }
+
+    public void deleteStudent(Long id) {
+        studentRepository.deleteById(id);
+    }
+
 
 }

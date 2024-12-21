@@ -15,7 +15,7 @@ public class QuizController {
     @Autowired
     private QuizService quizService;
 
-    @GetMapping("/{id}")
+    @GetMapping("quizzes/{id}")
     public ResponseEntity<Quiz> getQuizById(@PathVariable Long id) {
         Quiz quiz = quizService.getQuizById(id);
         return ResponseEntity.ok(quiz);

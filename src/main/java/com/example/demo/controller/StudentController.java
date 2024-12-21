@@ -43,26 +43,25 @@ public class  StudentController {
 
     @GetMapping("/{studentId}/available-courses")
     public List<Course> viewAvailableCourses(@PathVariable Long studentId) {
-        return studentService.viewAvailableCourses(studentId);
+        return studentService.getAvailableCourses(studentId);
     }
 
     @GetMapping("/{studentId}/enrolled-courses")
-    public List<Course> getEnrolledCourses(@PathVariable Long studentId) {
+    public List<Course> viewEnrolledCourses(@PathVariable Long studentId) {
         return studentService.getEnrolledCourses(studentId);
     }
 
     @GetMapping("/{studentId}/courses/{courseId}/lessons")
     public ResponseEntity<List<Lesson>> viewCourseLessons(@PathVariable Long studentId, @PathVariable Long courseId) {
-        List<Lesson> lessons = studentService.viewCourseLessons(studentId, courseId);
+        List<Lesson> lessons = studentService.getCourseLessons(studentId, courseId);
         return ResponseEntity.ok(lessons);
     }
 
     @GetMapping("/{studentId}/courses/{courseId}/lessons/{lessonId}")
-    public ResponseEntity<String> getLessonContent(@PathVariable Long studentId, @PathVariable Long courseId, @PathVariable Long lessonId) {
+    public ResponseEntity<String> viewLessonContent(@PathVariable Long studentId, @PathVariable Long courseId, @PathVariable Long lessonId) {
         String lessonContent = studentService.getLessonContent(studentId, courseId, lessonId);
         return ResponseEntity.ok(lessonContent);
     }
-
 
     @GetMapping("/{studentId}/courses/{courseId}/assignments")
     public ResponseEntity<List<Assignment>> viewAssignments(
@@ -78,15 +77,10 @@ public class  StudentController {
         return ResponseEntity.ok(quizzes);
     }
 
-    @PutMapping("/{id}/unenroll")
-    public ResponseEntity<Student> unenrollCourse(@PathVariable Long id, @RequestBody Course course) {
-        return ResponseEntity.ok(studentService.unenrollCourse(id, course));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
-        studentService.deleteStudent(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/{id}/notifications")
+    public ResponseEntity<List<Notification>> viewNotifications(@PathVariable Long id, @RequestParam(required = false) Boolean unread) {
+        List<Notification> notifications = studentService.getNotifications(id, unread);
+        return ResponseEntity.ok(notifications);
     }
 
     @PutMapping("/{id}/notifications/mark-as-read")
@@ -95,10 +89,15 @@ public class  StudentController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{id}/notifications")
-    public ResponseEntity<List<Notification>> getNotifications(@PathVariable Long id, @RequestParam(required = false) Boolean unread) {
-        List<Notification> notifications = studentService.getNotifications(id, unread);
-        return ResponseEntity.ok(notifications);
+    @PutMapping("/{studentId}/unroll/{courseId}")
+    public ResponseEntity<Student> unrollCourse(@PathVariable Long studentId, @PathVariable Long courseId) {
+        return ResponseEntity.ok(studentService.unrollCourse(studentId, courseId));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
+        studentService.deleteStudent(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
