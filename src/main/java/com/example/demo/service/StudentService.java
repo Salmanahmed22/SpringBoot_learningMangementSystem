@@ -25,6 +25,9 @@ public class StudentService {
     @Autowired
     private NotificationRepository notificationRepository;
 
+    public Student createStudent(Student student) {
+        return studentRepository.save(student);
+    }
     public Student getStudentById(Long id) {
         return studentRepository.findById(id).orElse(null);
     }
@@ -33,9 +36,6 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    public Student createStudent(Student student) {
-        return studentRepository.save(student);
-    }
 
     public Student enrollCourse(Long studentId, Long courseId) {
         Student student = studentRepository.findById(studentId).orElse(null);

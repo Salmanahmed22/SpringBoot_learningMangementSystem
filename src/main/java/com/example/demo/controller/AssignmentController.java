@@ -36,12 +36,12 @@ public class AssignmentController {
         return ResponseEntity.ok(assignmentService.updateAssignment(id, updatedAssignment));
     }
 
-    @PostMapping("/submit")
-    public void submitAssignment(@RequestParam Long studentId,
-                                 @RequestParam Long assignmentId,
-                                 @RequestParam String submissionContent) {
-        assignmentService.submitAssignment(studentId, assignmentId, submissionContent);
-    }
+//    @PostMapping("/submit")
+//    public void submitAssignment(@RequestParam Long studentId,
+//                                 @RequestParam Long assignmentId,
+//                                 @RequestParam String submissionContent) {
+//        assignmentService.submitAssignment(studentId, assignmentId, submissionContent);
+//    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAssignment(@PathVariable Long id) {

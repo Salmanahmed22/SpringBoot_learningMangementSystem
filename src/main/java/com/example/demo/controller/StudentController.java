@@ -20,6 +20,11 @@ public class  StudentController {
     @Autowired
     private StudentService studentService;
 
+    @PostMapping
+    public ResponseEntity<Student> createStudent(@RequestBody Student student) {
+        return ResponseEntity.ok(studentService.createStudent(student));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
         return ResponseEntity.ok(studentService.getStudentById(id));
@@ -31,10 +36,6 @@ public class  StudentController {
         return ResponseEntity.ok(studentService.getAllStudents());
     }
 
-    @PostMapping
-    public ResponseEntity<Student> createStudent(@RequestBody Student student) {
-        return ResponseEntity.ok(studentService.createStudent(student));
-    }
 
     @PutMapping("/{studentId}/enroll/{courseId}")
     public ResponseEntity<Student> enrollCourse(@PathVariable Long studentId, @PathVariable Long courseId) {

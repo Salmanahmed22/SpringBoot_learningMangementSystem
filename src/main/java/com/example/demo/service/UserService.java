@@ -68,23 +68,25 @@ public class UserService {
         newUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         newUser.setRole(user.getRole());
 
-        User savedUser = userRepository.save(newUser);
+        User savedUser;
         if (newUser.getRole().equals(Role.INSTRUCTOR)) {
             Instructor instructor = new Instructor();
-            instructor.setId(savedUser.getId());
-            instructor.setName(savedUser.getName());
-            instructor.setEmail(savedUser.getEmail());
-            instructor.setPassword(savedUser.getPassword());
-            instructor.setRole(savedUser.getRole());
-            instructorRepository.save(instructor);
+            instructor.setId(newUser.getId());
+            instructor.setName(newUser.getName());
+            instructor.setEmail(newUser.getEmail());
+            instructor.setPassword(newUser.getPassword());
+            instructor.setRole(newUser.getRole());
+            savedUser = instructorRepository.save(instructor);
         }else if (newUser.getRole().equals(Role.STUDENT)) {
             Student student = new Student();
-            student.setId(savedUser.getId());
-            student.setName(savedUser.getName());
-            student.setEmail(savedUser.getEmail());
-            student.setRole(savedUser.getRole());
-            studentRepository.save(student);
-        }
+            student.setId(newUser.getId());
+            student.setName(newUser.getName());
+            student.setEmail(newUser.getEmail());
+            student.setRole(newUser.getRole());
+            savedUser = studentRepository.save(student);
+        }else
+            savedUser = userRepository.save(newUser);
+
         String token = jwtService.generateToken(savedUser);
 
         Map<String, Object> response = new HashMap<>();

@@ -42,17 +42,17 @@ public class AssignmentService {
         return null;
     }
 
-    public void submitAssignment(Long studentId, Long assignmentId, String submissionContent) {
-        // Find the student by ID
-        Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
-
-        // Call the method in the Student class to submit the assignment
-        student.submitAssignment(assignmentId, submissionContent);
-
-        // The assignment is automatically updated through the Student object.
-        // No need to explicitly save the assignment, because it’s updated through JPA.
-    }
+//    public void submitAssignment(Long studentId, Long assignmentId, String submissionContent) {
+//        // Find the student by ID
+//        Student student = studentRepository.findById(studentId)
+//                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+//
+//        // Call the method in the Student class to submit the assignment
+//        student.submitAssignment(assignmentId, submissionContent);
+//
+//        // The assignment is automatically updated through the Student object.
+//        // No need to explicitly save the assignment, because it’s updated through JPA.
+//    }
 
     public void deleteAssignment(Long id) {
         assignmentRepository.deleteById(id);
