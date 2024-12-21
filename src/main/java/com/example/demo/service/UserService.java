@@ -82,6 +82,7 @@ public class UserService {
             student.setId(newUser.getId());
             student.setName(newUser.getName());
             student.setEmail(newUser.getEmail());
+            student.setPassword(newUser.getPassword());
             student.setRole(newUser.getRole());
             savedUser = studentRepository.save(student);
         }else
