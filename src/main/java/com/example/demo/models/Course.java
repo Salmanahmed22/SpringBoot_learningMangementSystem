@@ -27,11 +27,10 @@ public class Course {
 
     @ManyToOne
     @JoinColumn(name = "instructor_id")
-<<<<<<< HEAD
 //    @JsonManagedReference
-=======
+
     @JsonBackReference
->>>>>>> e8fa69a5a009f9252fe4a39bed6468c09d3a6564
+
     private Instructor instructor;
 
     @ManyToMany(mappedBy = "enrolledCourses")
