@@ -25,10 +25,6 @@ public class WebConfig {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-//    @Bean
-//    public MvcHandlerMappingIntrospector mvcHandlerMappingIntrospector() {
-//        return new DefaultMvcHandlerMappingIntrospector();
-//    }
 
     //decode the password
     @Bean

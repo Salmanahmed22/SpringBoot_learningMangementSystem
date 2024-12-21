@@ -1,8 +1,10 @@
 package com.example.demo.service;
 
 import com.example.demo.models.Course;
+import com.example.demo.models.Instructor;
 import com.example.demo.models.Lesson;
 import com.example.demo.repository.CourseRepository;
+import com.example.demo.repository.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,8 @@ public class CourseService {
 
     @Autowired
     private CourseRepository courseRepository;
+    @Autowired
+    private InstructorRepository instructorRepository;
 
     public Course getCourseById(Long id) {
         return courseRepository.findById(id).orElse(null);
@@ -23,6 +27,12 @@ public class CourseService {
     }
 
     public Course createCourse(Course course) {
+        if (course.getInstructor() != null) {
+            Long instructorId = course.getInstructor().getId();
+            Instructor instructor = instructorRepository.findById(instructorId)
+                    .orElseThrow(() -> new IllegalArgumentException("Instructor not found with id: " + instructorId));
+            course.setInstructor(instructor);
+        }
         return courseRepository.save(course);
     }
 
@@ -31,7 +41,6 @@ public class CourseService {
         if (existingCourse != null) {
             existingCourse.setTitle(updatedCourse.getTitle());
             existingCourse.setDescription(updatedCourse.getDescription());
-            existingCourse.setDuration(updatedCourse.getDuration());
             return courseRepository.save(existingCourse);
         }
         return null;

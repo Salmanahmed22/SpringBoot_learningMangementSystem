@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.models.Admin;
+import com.example.demo.models.User;
 import com.example.demo.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,12 @@ public class AdminController {
 
     @Autowired
     private AdminService adminService;
+
+    @PostMapping
+    public ResponseEntity<?> createAdmin(@RequestBody Admin admin) {
+        return ResponseEntity.ok(adminService.createAdmin(admin));
+    }
+
 
     // Get all admins
     @GetMapping
@@ -29,12 +36,6 @@ public class AdminController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(admin);
-    }
-
-    // Create a new admin
-    @PostMapping
-    public ResponseEntity<Admin> createAdmin(@RequestBody Admin admin) {
-        return ResponseEntity.ok(adminService.createAdmin(admin));
     }
 
     // Update an existing admin
