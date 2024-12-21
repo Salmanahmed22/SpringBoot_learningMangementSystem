@@ -1,5 +1,6 @@
 package com.example.demo.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ public class Instructor extends User {
     private String employeeId;
 
     @OneToMany(mappedBy = "instructor")
+    @JsonManagedReference
     private List<Course> courses;
 
     public Instructor() {
@@ -28,11 +30,8 @@ public class Instructor extends User {
         employeeId = "default employeeId";
     }
 
-
-
-    public void addCourse(Course course){
+    public void addCourse(Course course) {
         courses.add(course);
         course.setInstructor(this);
     }
-
 }
