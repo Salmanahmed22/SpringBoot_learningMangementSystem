@@ -100,7 +100,7 @@ public class InstructorService {
     // Add a lesson to course
     public Lesson addLessonToCourse(Long instructorId, Long courseId, Lesson lesson) {
 
-        Instructor instructor = getInstructorById(instructorId);
+        Instructor instructor = instructorRepository.findById(instructorId).orElse(null);
 
         Course course = courseService.getCourseById(courseId);
 

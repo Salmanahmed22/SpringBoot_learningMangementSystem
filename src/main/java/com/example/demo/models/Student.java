@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,10 +17,6 @@ import java.util.stream.Collectors;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Student extends User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-
     @ManyToMany
     @JoinTable(
             name = "student_course",
@@ -32,32 +29,16 @@ public class Student extends User {
 
     // default constructor
     public Student() {
-    }
-
-    // parameterized constructor
-    public Student(String name, String email, String password, Role role, List<Course> enrolledCourses , int level) {
-        super(name, email, password, role);
-        this.enrolledCourses = enrolledCourses;
-        this.level = level;
-    }
-
-    public Student(String name, String email, String password, Role role, List<Course> enrolledCourses) {
-        super(name, email, password, role);
-        this.enrolledCourses = enrolledCourses;
-        this.level = 1;
-    }
-
-    public Student(String name, String email, String password, Role role) {
-        super(name, email, password, role);
-
+        super();
+        enrolledCourses = new ArrayList<>();
+        level = 1;
     }
 
 
 
-    public void getLevel(int level ) {  this.level = level;}
 
-    // enroll in a course
-    public void enrollCourse(Course course) { this.enrolledCourses.add(course);}
+
+
 
     // view the available courses
     public List<Course> viewAvailableCourses(List<Course> allCourses) {
@@ -108,6 +89,43 @@ public class Student extends User {
 
         assignment.submitAssignment(this.getId(), submissionContent);  // Use the student's ID to store the submission
     }
+
+    public List<Assignment> viewAssignments(Long courseId) {
+        for (Course course : enrolledCourses) {
+            if (course.getId().equals(courseId)) {
+                return course.getAssignments();
+            }
+        }
+        throw new IllegalArgumentException("Student is not enrolled in the course with ID: " + courseId);
+    }
+
+    public List<Quiz> viewQuizzes(Long courseId) {
+        for (Course course : enrolledCourses) {
+            if (course.getId().equals(courseId)) {
+                return course.getQuizzes(); // Assuming Course has a `getQuizzes` method
+            }
+        }
+        throw new IllegalArgumentException("Student is not enrolled in the course with ID: " + courseId);
+    }
+
+//    public void takeQuiz(Long quizId, List<Answer> answers) {
+//        for (Course course : enrolledCourses) {
+//            for (Quiz quiz : course.getQuizzes()) {
+//                if (quiz.getId().equals(quizId)) {
+//                    if (quiz.isSubmittedBy(this.getId())) {
+//                        throw new IllegalArgumentException("Quiz has already been submitted.");
+//                    }
+//                    if (quiz.getDeadline().isBefore(LocalDateTime.now())) {
+//                        throw new IllegalArgumentException("Quiz deadline has passed.");
+//                    }
+//                    quiz.submitAnswers(this.getId(), answers); // Assuming the Quiz class has a `submitAnswers` method
+//                    return;
+//                }
+//            }
+//        }
+//        throw new IllegalArgumentException("Quiz not found in enrolled courses.");
+//    }
+
 
     // unenroll from a course
     public void unenrollCourse(Course course) {

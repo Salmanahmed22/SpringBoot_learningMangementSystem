@@ -2,10 +2,11 @@ package com.example.demo.service;
 
 import com.example.demo.models.Course;
 import com.example.demo.models.Lesson;
-//import com.example.demo.models.Notification;
-//import com.example.demo.repository.NotificationRepository;
+import com.example.demo.models.Quiz;
+import com.example.demo.models.Assignment;
+import com.example.demo.models.Notification;
+import com.example.demo.repository.NotificationRepository;
 import com.example.demo.models.Student;
-//import com.example.demo.repository.NotificationRepository;
 import com.example.demo.repository.StudentRepository;
 import com.example.demo.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,13 @@ public class StudentService {
 
     @Autowired
     private StudentRepository studentRepository;
+    @Autowired
     private CourseRepository courseRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
 
-    public Student getStudentById(Long id) {
-        return studentRepository.findById(id).orElse(null);
+    public Student getStudentById(String id) {
+        return studentRepository.findById(Long.valueOf(id)).orElse(null);
     }
 
     public List<Student> getAllStudents() {
@@ -32,10 +36,12 @@ public class StudentService {
         return studentRepository.save(student);
     }
 
-    public Student enrollCourse(Long studentId, Course course) {
-        Student student = studentRepository.findById(studentId).orElse(null);
-        if (student != null) {
-            student.enrollCourse(course);
+    public Student enrollCourse(String studentId, String courseId) {
+        Student student = studentRepository.findById(Long.valueOf(studentId)).orElse(null);
+        Course course = courseRepository.findById(courseId).orElse(null);
+        if (student != null && course != null) {
+            List<Course> enrolledCourses = student.getEnrolledCourses();
+            enrolledCourses.add(course);
             return studentRepository.save(student);
         }
         return null;
@@ -57,8 +63,8 @@ public class StudentService {
         return student.viewAvailableCourses(allCourses);
     }
 
-    public List<Lesson> viewCourseLessons(Long studentId, Long courseId) {
-        Student student = studentRepository.findById(studentId)
+    public List<Lesson> viewCourseLessons(String studentId, String courseId) {
+        Student student = studentRepository.findById(Long.valueOf(studentId))
                 .orElseThrow(() -> new IllegalArgumentException("Student not found"));
 
         Course course = courseRepository.findById(courseId)
@@ -66,6 +72,21 @@ public class StudentService {
 
         return student.viewCourseLessons(course);
     }
+
+    public List<Assignment> getAssignments(Long studentId, Long courseId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+
+        return student.viewAssignments(courseId);
+    }
+
+    public List<Quiz> getQuizzes(Long studentId, Long courseId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+
+        return student.viewQuizzes(courseId);
+    }
+
 
     public Student unenrollCourse(Long studentId, Course course) {
         Student student = studentRepository.findById(studentId).orElse(null);
@@ -80,22 +101,21 @@ public class StudentService {
         studentRepository.deleteById(id);
     }
 
-//    @Autowired
-//    private NotificationRepository notificationRepository;
-//
-//    public List<Notification> getNotifications(Long studentId, Boolean unread) {
-//        if (unread != null && unread) {
-//            return notificationRepository.findByUserIdAndIsRead(studentId, false);
-//        }
-//        return notificationRepository.findByUserId(studentId);
-//    }
-//
-//    public void markNotificationsAsRead(Long studentId) {
-//        List<Notification> notifications = notificationRepository.findByUserIdAndIsRead(studentId, false);
-//        for (Notification notification : notifications) {
-//            notification.setRead(true);
-//        }
-//        notificationRepository.saveAll(notifications);
-//    }
+
+
+    public List<Notification> getNotifications(Long studentId, Boolean unread) {
+        if (unread != null && unread) {
+            return notificationRepository.findByUserIdAndIsRead(String.valueOf(studentId), false);
+        }
+        return notificationRepository.findByUserId(String.valueOf(studentId));
+    }
+
+    public void markNotificationsAsRead(Long studentId) {
+        List<Notification> notifications = notificationRepository.findByUserIdAndIsRead(String.valueOf(studentId), false);
+        for (Notification notification : notifications) {
+            notification.setRead(true);
+        }
+        notificationRepository.saveAll(notifications);
+    }
 
 }

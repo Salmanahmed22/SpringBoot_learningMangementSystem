@@ -1,35 +1,61 @@
-# Ignore Maven's target directory
-/target/
+### Maven ###
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
-# Ignore IntelliJ IDEA files
-/.idea/
-/*.iml
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
 
-# Ignore Maven wrapper files
-/.mvn/wrapper/maven-wrapper.jar
+### Maven Wrapper ###
+# Keep the wrapper jar but ignore the binary files
+mvnw
+mvnw.cmd
+!.mvn/wrapper/maven-wrapper.jar
 
-# Ignore application properties
-/src/main/resources/application.properties
+### Logs ###
+*.log
+logs/
+log/
 
-# Ignore OS-specific files
+### Compiled files ###
+*.class
+*.jar
+*.war
+*.ear
+
+### Temporary files ###
+*.swp
+*~
+*.tmp
+
+### Test and Coverage ###
+test-output/
+*.out
+*.report
+coverage/
+
+### OS specific ###
 .DS_Store
 Thumbs.db
 
-# Ignore logs
-*.log
-/logs/
+### Application Properties ###
+# Don't ignore the main application.properties as it contains default configs
+# !src/main/resources/application.properties
 
-# Ignore compiled files
-*.class
+# Ignore environment-specific properties
+src/main/resources/application-*.properties
+src/main/resources/application-*.yml
+src/main/resources/application.yml
 
-# Ignore temporary files
-*.tmp
-*.swp
+# Ignore local development configurations
+**/application-local.properties
+**/application-local.yml
+# Ignore application.properties
+src/main/resources/application.properties
 
-# Ignore generated files
-/src/main/resources/static/built/
-
-# Ignore Eclipse files
-.project
-.classpath
-.settings/
+### Dependencies ###
+**/dependency-reduced-pom.xml
