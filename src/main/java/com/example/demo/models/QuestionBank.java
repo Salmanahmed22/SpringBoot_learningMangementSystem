@@ -25,13 +25,5 @@ public class QuestionBank {
     // Default constructor
     public QuestionBank() {}
 
-    public void addQuestion(Question question) {
-        question.setQuestionBank(this);
-        questions.add(question);
-    }
 
-    public void removeQuestion(Question question) {
-        question.setQuestionBank(null);
-        questions.remove(question);
-    }
 }

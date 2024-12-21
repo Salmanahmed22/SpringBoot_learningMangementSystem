@@ -30,7 +30,7 @@ public class Assignment {
     @ElementCollection
     @MapKeyColumn(name = "student_id")
     @Column(name = "submission_content")
-    private Map<String, String> submissions = new HashMap<>();
+    private Map<Long, String> submissions = new HashMap<>();
 
     @ManyToOne
     @JoinColumn(name = "course_id")
@@ -41,7 +41,7 @@ public class Assignment {
     }
 
 
-    public void submitAssignment(String studentId, String submissionContent) {
+    public void submitAssignment(Long studentId, String submissionContent) {
         submissions.put(studentId, submissionContent);
     }
 }

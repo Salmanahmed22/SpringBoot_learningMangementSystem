@@ -7,9 +7,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -34,8 +32,6 @@ public class Student extends User {
         level = 1;
     }
 
-
-
     public void submitAssignment(Long assignmentId, String submissionContent) {
         Assignment assignment = null;
         for (Course course : enrolledCourses) {
@@ -58,23 +54,6 @@ public class Student extends User {
         assignment.submitAssignment(String.valueOf(this.getId()), submissionContent);  // Use the student's ID to store the submission
     }
 
-    public List<Assignment> viewAssignments(Long courseId) {
-        for (Course course : enrolledCourses) {
-            if (course.getId().equals(courseId)) {
-                return course.getAssignments();
-            }
-        }
-        throw new IllegalArgumentException("Student is not enrolled in the course with ID: " + courseId);
-    }
-
-    public List<Quiz> viewQuizzes(Long courseId) {
-        for (Course course : enrolledCourses) {
-            if (course.getId().equals(courseId)) {
-                return course.getQuizzes(); // Assuming Course has a `getQuizzes` method
-            }
-        }
-        throw new IllegalArgumentException("Student is not enrolled in the course with ID: " + courseId);
-    }
 
 //    public void takeQuiz(Long quizId, List<Answer> answers) {
 //        for (Course course : enrolledCourses) {
@@ -94,9 +73,4 @@ public class Student extends User {
 //        throw new IllegalArgumentException("Quiz not found in enrolled courses.");
 //    }
 
-
-    // unenroll from a course
-    public void unenrollCourse(Course course) {
-        this.enrolledCourses.remove(course);
-    }
 }
