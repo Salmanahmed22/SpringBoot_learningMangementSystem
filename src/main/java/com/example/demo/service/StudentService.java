@@ -39,7 +39,7 @@ public class StudentService {
 
     public Student enrollCourse(String studentId, String courseId) {
         Student student = studentRepository.findById(Long.valueOf(studentId)).orElse(null);
-        Course course = courseRepository.findById(Long.valueOf(courseId)).orElse(null);
+        Course course = courseRepository.findById(courseId).orElse(null);
         if (student != null && course != null) {
             if (student.getLevel() < course.getMinLevel()) {
                 throw new IllegalArgumentException("Student level is not sufficient to enroll in this course");
@@ -69,8 +69,8 @@ public class StudentService {
         return student.getEnrolledCourses();
     }
 
-    public List<Lesson> viewCourseLessons(Long studentId, Long courseId) {
-        Student student = studentRepository.findById(studentId)
+    public List<Lesson> viewCourseLessons(String studentId, String courseId) {
+        Student student = studentRepository.findById(Long.valueOf(studentId))
                 .orElseThrow(() -> new IllegalArgumentException("Student not found"));
 
         Course course = courseRepository.findById(courseId)

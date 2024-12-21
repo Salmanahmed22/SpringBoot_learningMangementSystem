@@ -52,7 +52,7 @@ public class  StudentController {
     }
 
     @GetMapping("/{studentId}/courses/{courseId}/lessons")
-    public ResponseEntity<List<Lesson>> viewCourseLessons(@PathVariable Long studentId, @PathVariable Long courseId) {
+    public ResponseEntity<List<Lesson>> viewCourseLessons(@PathVariable String studentId, @PathVariable String courseId) {
         List<Lesson> lessons = studentService.viewCourseLessons(studentId, courseId);
         return ResponseEntity.ok(lessons);
     }
