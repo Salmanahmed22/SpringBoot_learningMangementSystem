@@ -8,6 +8,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Getter
@@ -31,8 +32,8 @@ public class Quiz {
     @JoinColumn(name = "quiz_id")
     private List<Question> questions;
 
-//    @ElementCollection
-//    private HashMap<String, List<Answer>> submissions = new HashMap<String, List<Answer>>();
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Submission> submissions;
 
     // Default constructor
     public Quiz() {}
