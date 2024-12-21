@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
@@ -24,8 +25,8 @@ public class StudentService {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    public Student getStudentById(String id) {
-        return studentRepository.findById(Long.valueOf(id)).orElse(null);
+    public Student getStudentById(Long id) {
+        return studentRepository.findById(id).orElse(null);
     }
 
     public List<Student> getAllStudents() {
@@ -36,15 +37,29 @@ public class StudentService {
         return studentRepository.save(student);
     }
 
-    public Student enrollCourse(String studentId, String courseId) {
-        Student student = studentRepository.findById(Long.valueOf(studentId)).orElse(null);
+    public Student enrollCourse(Long studentId, Long courseId) {
+        Student student = studentRepository.findById(studentId).orElse(null);
         Course course = courseRepository.findById(courseId).orElse(null);
         if (student != null && course != null) {
+            if (student.getLevel() < course.getMinLevel()) {
+                throw new IllegalArgumentException("Student level is not sufficient to enroll in this course");
+            }
             List<Course> enrolledCourses = student.getEnrolledCourses();
             enrolledCourses.add(course);
             return studentRepository.save(student);
         }
         return null;
+    }
+
+    public List<Course> viewAvailableCourses(Long studentId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+
+        List<Course> allCourses = courseRepository.findAll();
+
+        return allCourses.stream()
+                .filter(course -> student.getEnrolledCourses().contains(course) && course.getMinLevel() <= student.getLevel())
+                .collect(Collectors.toList());
     }
 
     public List<Course> getEnrolledCourses(Long studentId) {
@@ -54,23 +69,34 @@ public class StudentService {
         return student.getEnrolledCourses();
     }
 
-    public List<Course> getAvailableCourses(Long studentId) {
+    public List<Lesson> viewCourseLessons(Long studentId, Long courseId) {
         Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
-
-        List<Course> allCourses = courseRepository.findAll();
-
-        return student.viewAvailableCourses(allCourses);
-    }
-
-    public List<Lesson> viewCourseLessons(String studentId, String courseId) {
-        Student student = studentRepository.findById(Long.valueOf(studentId))
                 .orElseThrow(() -> new IllegalArgumentException("Student not found"));
 
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("Course not found"));
 
-        return student.viewCourseLessons(course);
+        if (!student.getEnrolledCourses().contains(course)) {
+            throw new IllegalArgumentException("Student is not enrolled in this course");
+        }
+
+        return course.getLessons();
+    }
+
+    public String getLessonContent(Long studentId, Long courseId,Long lessonId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+        List<Course> courses = student.getEnrolledCourses();
+        for (Course course : courses) {
+            if (course.getId().equals(courseId)) {
+                for (Lesson lesson : course.getLessons()) {
+                    if (lesson.getId().equals(lessonId)) {
+                        return lesson.getContent();
+                    }
+                }
+            }
+        }
+        throw new IllegalArgumentException("Lesson not found in enrolled courses");
     }
 
     public List<Assignment> getAssignments(Long studentId, Long courseId) {

@@ -36,38 +36,6 @@ public class Student extends User {
 
 
 
-
-
-
-
-    // view the available courses
-    public List<Course> viewAvailableCourses(List<Course> allCourses) {
-        return allCourses.stream()
-                .filter(course -> !enrolledCourses.contains(course) && course.getMinLevel() <= this.level)
-                .collect(Collectors.toList());
-    }
-
-    public List<Lesson> viewCourseLessons(Course course) {
-        if (!this.enrolledCourses.contains(course)) {
-            throw new IllegalArgumentException("Student is not enrolled in this course");
-        }
-
-        return course.getLessons();
-    }
-
-    public String getLessonContent(Long courseId, Long lessonId) {
-        for (Course course : enrolledCourses) {
-            if (course.getId().equals(courseId)) {
-                for (Lesson lesson : course.getLessons()) {
-                    if (lesson.getId().equals(lessonId)) {
-                        return lesson.getContent();
-                    }
-                }
-            }
-        }
-        throw new IllegalArgumentException("Lesson not found in enrolled courses");
-    }
-
     public void submitAssignment(Long assignmentId, String submissionContent) {
         Assignment assignment = null;
         for (Course course : enrolledCourses) {
@@ -87,7 +55,7 @@ public class Student extends User {
             throw new IllegalArgumentException("Cannot submit assignment after the due date");
         }
 
-        assignment.submitAssignment(this.getId(), submissionContent);  // Use the student's ID to store the submission
+        assignment.submitAssignment(String.valueOf(this.getId()), submissionContent);  // Use the student's ID to store the submission
     }
 
     public List<Assignment> viewAssignments(Long courseId) {
