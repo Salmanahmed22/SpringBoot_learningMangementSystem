@@ -88,7 +88,7 @@ public class InstructorService {
     }
 
     // Update a course
-    public Course updateCourse(String id, Course updatedCourse) {
+    public Course updateCourse(Long id, Course updatedCourse) {
         return courseService.updateCourse(id, updatedCourse);
     }
 
