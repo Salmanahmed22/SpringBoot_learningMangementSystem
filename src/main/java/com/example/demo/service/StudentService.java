@@ -28,6 +28,7 @@ public class StudentService {
     public Student createStudent(Student student) {
         return studentRepository.save(student);
     }
+
     public Student getStudentById(Long id) {
         return studentRepository.findById(id).orElse(null);
     }
@@ -35,7 +36,6 @@ public class StudentService {
     public List<Student> getAllStudents() {
         return studentRepository.findAll();
     }
-
 
     public Student enrollCourse(Long studentId, Long courseId) {
         Student student = studentRepository.findById(studentId).orElse(null);
@@ -113,7 +113,7 @@ public class StudentService {
         throw new IllegalArgumentException("Student is not enrolled in the course with ID: " + courseId);
     }
 
-    // Subbmission is string which is not the best to do but for now
+    // Submission is string which is not the best to do but for now
     public void submitAssignment(Long studentId,Long assignmentId, String submissionContent) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new IllegalArgumentException("Student not found"));
@@ -175,8 +175,6 @@ public class StudentService {
         }
         throw new IllegalArgumentException("Quiz not found in enrolled courses.");
     }
-
-    
 
     public List<Notification> getNotifications(Long studentId, Boolean unread) {
         if (unread != null && unread) {
