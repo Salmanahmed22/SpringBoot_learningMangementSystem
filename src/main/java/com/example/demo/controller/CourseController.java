@@ -35,8 +35,6 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getAllCourses());
     }
 
-<<<<<<< Updated upstream
-=======
     @PostMapping
     public ResponseEntity<Course> createCourse(@RequestBody Course course) {
         try {
@@ -46,7 +44,6 @@ public class CourseController {
             return ResponseEntity.badRequest().body(null);
         }
     }
->>>>>>> Stashed changes
 
     @PutMapping("/{id}")
     public ResponseEntity<Course> updateCourse(@PathVariable Long id, @RequestBody Course updatedCourse) {
