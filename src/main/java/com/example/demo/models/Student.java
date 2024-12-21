@@ -51,7 +51,7 @@ public class Student extends User {
             throw new IllegalArgumentException("Cannot submit assignment after the due date");
         }
 
-        assignment.submitAssignment(String.valueOf(this.getId()), submissionContent);  // Use the student's ID to store the submission
+        assignment.submitAssignment(this.getId(), submissionContent);  // Use the student's ID to store the submission
     }
 
 
