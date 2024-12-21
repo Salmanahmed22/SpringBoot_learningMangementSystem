@@ -25,7 +25,8 @@ public class Student extends User {
     @JsonManagedReference
     private List<Course> enrolledCourses;
 
-    private int level;
+    @Column(nullable = false)
+    private short level;
 
     // default constructor
     public Student() {
