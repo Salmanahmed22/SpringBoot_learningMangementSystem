@@ -76,32 +76,32 @@ public class InstructorController {
     public ResponseEntity<String> createCourse(@PathVariable Long id, @RequestBody Course course) {
         return ResponseEntity.ok(instructorService.createCourse(course, id).getTitle());
     }
-//
-//    // Update a course
-//    @PutMapping("/{id}")
-//    public ResponseEntity<Course> updateCourse(@PathVariable Long id, @RequestBody Course updatedCourse) {
-//        Course course = instructorService.updateCourse(id, updatedCourse);
-//        if (course != null) {
-//            return ResponseEntity.ok(course);
-//        }
-//        return ResponseEntity.notFound().build();
-//    }
-//
-//    // Delete a course
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
-//        instructorService.deleteCourse(id);
-//        return ResponseEntity.noContent().build();
-//    }
-//
-//    //Add a lesson to course
-//    @PostMapping("/{instructorId}/courses/{courseId}/lessons")
-//    public ResponseEntity<Lesson> addLessonToCourse(
-//            @PathVariable Long instructorId,
-//            @PathVariable Long courseId,
-//            @RequestBody Lesson lesson) {
-//        return ResponseEntity.ok(instructorService.addLessonToCourse(instructorId, courseId, lesson));
-//    }
+
+    // Update a course
+    @PutMapping("/{id}/courses")
+    public ResponseEntity<Course> updateCourse(@PathVariable Long id, @RequestBody Course updatedCourse) {
+        Course course = instructorService.updateCourse(id, updatedCourse);
+        if (course != null) {
+            return ResponseEntity.ok(course);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    // Delete a course
+    @DeleteMapping("/{id}/courses")
+    public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
+        instructorService.deleteCourse(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    //Add a lesson to course
+    @PostMapping("/{instructorId}/courses/{courseId}/lessons")
+    public ResponseEntity<Lesson> addLessonToCourse(
+            @PathVariable Long instructorId,
+            @PathVariable Long courseId,
+            @RequestBody Lesson lesson) {
+        return ResponseEntity.ok(instructorService.addLessonToCourse(instructorId, courseId, lesson));
+    }
 
 
 }

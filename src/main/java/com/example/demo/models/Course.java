@@ -1,6 +1,7 @@
 package com.example.demo.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,11 +28,7 @@ public class Course {
 
     @ManyToOne
     @JoinColumn(name = "instructor_id")
-<<<<<<< HEAD
-//    @JsonManagedReference
-=======
-    @JsonBackReference
->>>>>>> e8fa69a5a009f9252fe4a39bed6468c09d3a6564
+    @JsonManagedReference
     private Instructor instructor;
 
     @ManyToMany(mappedBy = "enrolledCourses")
