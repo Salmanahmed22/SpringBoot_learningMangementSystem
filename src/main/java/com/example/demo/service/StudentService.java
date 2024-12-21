@@ -46,6 +46,7 @@ public class StudentService {
             }
             List<Course> enrolledCourses = student.getEnrolledCourses();
             enrolledCourses.add(course);
+            student.setEnrolledCourses(enrolledCourses);
             return studentRepository.save(student);
         }
         return null;
@@ -131,13 +132,13 @@ public class StudentService {
 
     public List<Notification> getNotifications(Long studentId, Boolean unread) {
         if (unread != null && unread) {
-            return notificationRepository.findByUserIdAndIsRead(String.valueOf(studentId), false);
+            return notificationRepository.findByUserIdAndIsRead(studentId, false);
         }
-        return notificationRepository.findByUserId(String.valueOf(studentId));
+        return notificationRepository.findByUserId(studentId);
     }
 
     public void markNotificationsAsRead(Long studentId) {
-        List<Notification> notifications = notificationRepository.findByUserIdAndIsRead(String.valueOf(studentId), false);
+        List<Notification> notifications = notificationRepository.findByUserIdAndIsRead(studentId, false);
         for (Notification notification : notifications) {
             notification.setRead(true);
         }
