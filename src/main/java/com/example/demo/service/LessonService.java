@@ -18,8 +18,8 @@ public class LessonService {
     @Autowired
     private StudentRepository studentRepository;
 
-    public Lesson getLessonById(Long id) {
-        return lessonRepository.findById(id).orElse(null);
+    public Lesson getLessonById(String id) {
+        return lessonRepository.findById(Long.valueOf(id)).orElse(null);
     }
 
     public List<Lesson> getAllLessons() {

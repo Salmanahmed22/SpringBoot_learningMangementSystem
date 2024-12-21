@@ -24,8 +24,8 @@ public class StudentService {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    public Student getStudentById(Long id) {
-        return studentRepository.findById(id).orElse(null);
+    public Student getStudentById(String id) {
+        return studentRepository.findById(Long.valueOf(id)).orElse(null);
     }
 
     public List<Student> getAllStudents() {
@@ -38,7 +38,7 @@ public class StudentService {
 
     public Student enrollCourse(String studentId, String courseId) {
         Student student = studentRepository.findById(Long.valueOf(studentId)).orElse(null);
-        Course course = courseRepository.findById(Long.valueOf(courseId)).orElse(null);
+        Course course = courseRepository.findById(courseId).orElse(null);
         if (student != null && course != null) {
             List<Course> enrolledCourses = student.getEnrolledCourses();
             enrolledCourses.add(course);
@@ -63,8 +63,8 @@ public class StudentService {
         return student.viewAvailableCourses(allCourses);
     }
 
-    public List<Lesson> viewCourseLessons(Long studentId, Long courseId) {
-        Student student = studentRepository.findById(studentId)
+    public List<Lesson> viewCourseLessons(String studentId, String courseId) {
+        Student student = studentRepository.findById(Long.valueOf(studentId))
                 .orElseThrow(() -> new IllegalArgumentException("Student not found"));
 
         Course course = courseRepository.findById(courseId)

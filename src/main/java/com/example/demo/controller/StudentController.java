@@ -21,12 +21,12 @@ public class  StudentController {
     private StudentService studentService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
+    public ResponseEntity<Student> getStudentById(@PathVariable String id) {
         return ResponseEntity.ok(studentService.getStudentById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<Student>> getAllStudentss() {
+    public ResponseEntity<List<Student>> getAllStudents() {
 
         return ResponseEntity.ok(studentService.getAllStudents());
     }
@@ -47,7 +47,7 @@ public class  StudentController {
     }
 
     @GetMapping("/{studentId}/courses/{courseId}/lessons")
-    public ResponseEntity<List<Lesson>> viewCourseLessons(@PathVariable Long studentId, @PathVariable Long courseId) {
+    public ResponseEntity<List<Lesson>> viewCourseLessons(@PathVariable String studentId, @PathVariable String courseId) {
         List<Lesson> lessons = studentService.viewCourseLessons(studentId, courseId);
         return ResponseEntity.ok(lessons);
     }

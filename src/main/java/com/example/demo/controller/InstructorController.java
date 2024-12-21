@@ -36,10 +36,10 @@ public class InstructorController {
 //    }
 //
 //    // Create a new instructor
-//    @PostMapping
-//    public ResponseEntity<Instructor> createInstructor(@RequestBody Instructor instructor) {
-//        return ResponseEntity.ok(instructorService.createInstructor(instructor));
-//    }
+    @PostMapping
+    public ResponseEntity<Instructor> createInstructor(@RequestBody Instructor instructor) {
+        return ResponseEntity.ok(instructorService.createInstructor(instructor));
+    }
 
 //    // Update an existing instructor
 //    @PutMapping("/{id}")
