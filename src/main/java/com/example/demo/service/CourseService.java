@@ -18,7 +18,7 @@ public class CourseService {
     @Autowired
     private InstructorRepository instructorRepository;
 
-    public Course getCourseById(String id) {
+    public Course getCourseById(Long id) {
         return courseRepository.findById(id).orElse(null);
     }
 
@@ -28,15 +28,15 @@ public class CourseService {
 
     public Course createCourse(Course course) {
         if (course.getInstructor() != null) {
-            String instructorId = course.getInstructor().getId();
-            Instructor instructor = instructorRepository.findById(Long.valueOf(instructorId))
+            Long instructorId = course.getInstructor().getId();
+            Instructor instructor = instructorRepository.findById(instructorId)
                     .orElseThrow(() -> new IllegalArgumentException("Instructor not found with id: " + instructorId));
             course.setInstructor(instructor);
         }
         return courseRepository.save(course);
     }
 
-    public Course updateCourse(String id, Course updatedCourse) {
+    public Course updateCourse(Long id, Course updatedCourse) {
         Course existingCourse = courseRepository.findById(id).orElse(null);
         if (existingCourse != null) {
             existingCourse.setTitle(updatedCourse.getTitle());
@@ -46,7 +46,7 @@ public class CourseService {
         return null;
     }
 
-    public void deleteCourse(String id) {
+    public void deleteCourse(Long id) {
         courseRepository.deleteById(id);
     }
 

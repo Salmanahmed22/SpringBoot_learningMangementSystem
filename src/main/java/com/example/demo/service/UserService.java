@@ -32,8 +32,8 @@ public class UserService {
     @Autowired
     private StudentRepository studentRepository;
 
-    public User getUserById(String id) {
-        return userRepository.findById(Long.valueOf(id)).orElse(null);
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
     }
 
     public List<User> getAllUsers() {
@@ -57,8 +57,8 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public void deleteUser(String id) {
-        userRepository.deleteById(Long.valueOf(id));
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
     }
 
     public Map<String, Object> registerUser(User user) {

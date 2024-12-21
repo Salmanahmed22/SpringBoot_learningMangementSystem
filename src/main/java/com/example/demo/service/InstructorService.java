@@ -88,21 +88,21 @@ public class InstructorService {
     }
 
     // Update a course
-    public Course updateCourse(String id, Course updatedCourse) {
+    public Course updateCourse(Long id, Course updatedCourse) {
         return courseService.updateCourse(id, updatedCourse);
     }
 
     // Delete an instructor
-    public void deleteCourse(String id) {
+    public void deleteCourse(Long id) {
         courseService.deleteCourse(id);
     }
 
     // Add a lesson to course
-    public Lesson addLessonToCourse(String instructorId, String courseId, Lesson lesson) {
+    public Lesson addLessonToCourse(Long instructorId, Long courseId, Lesson lesson) {
 
-        Instructor instructor = instructorRepository.findById(Long.valueOf(instructorId)).orElse(null);
+        Instructor instructor = instructorRepository.findById(instructorId).orElse(null);
 
-        Course course = courseService.getCourseById(String.valueOf(courseId));
+        Course course = courseService.getCourseById(courseId);
 
         if (!course.getInstructor().equals(instructor)) {
             throw new IllegalArgumentException("Course does not belong to the instructor");
