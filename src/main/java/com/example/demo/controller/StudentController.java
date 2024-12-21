@@ -21,7 +21,7 @@ public class  StudentController {
     private StudentService studentService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudentById(@PathVariable String id) {
+    public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
         return ResponseEntity.ok(studentService.getStudentById(id));
     }
 
@@ -37,25 +37,32 @@ public class  StudentController {
     }
 
     @PutMapping("/{studentId}/enroll/{courseId}")
-    public ResponseEntity<Student> enrollCourse(@PathVariable String studentId, @PathVariable String courseId) {
+    public ResponseEntity<Student> enrollCourse(@PathVariable Long studentId, @PathVariable Long courseId) {
         return ResponseEntity.ok(studentService.enrollCourse(studentId, courseId));
     }
 
     @GetMapping("/{studentId}/available-courses")
-    public List<Course> viewAvailableCourses(@PathVariable String studentId) {
+    public List<Course> viewAvailableCourses(@PathVariable Long studentId) {
         return studentService.viewAvailableCourses(studentId);
     }
 
     @GetMapping("/{studentId}/enrolled-courses")
-    public List<Course> getEnrolledCourses(@PathVariable String studentId) {
+    public List<Course> getEnrolledCourses(@PathVariable Long studentId) {
         return studentService.getEnrolledCourses(studentId);
     }
 
     @GetMapping("/{studentId}/courses/{courseId}/lessons")
-    public ResponseEntity<List<Lesson>> viewCourseLessons(@PathVariable String studentId, @PathVariable String courseId) {
+    public ResponseEntity<List<Lesson>> viewCourseLessons(@PathVariable Long studentId, @PathVariable Long courseId) {
         List<Lesson> lessons = studentService.viewCourseLessons(studentId, courseId);
         return ResponseEntity.ok(lessons);
     }
+
+    @GetMapping("/{studentId}/courses/{courseId}/lessons/{lessonId}")
+    public ResponseEntity<String> getLessonContent(@PathVariable Long studentId, @PathVariable Long courseId, @PathVariable Long lessonId) {
+        String lessonContent = studentService.getLessonContent(studentId, courseId, lessonId);
+        return ResponseEntity.ok(lessonContent);
+    }
+
 
     @GetMapping("/{studentId}/courses/{courseId}/assignments")
     public ResponseEntity<List<Assignment>> viewAssignments(

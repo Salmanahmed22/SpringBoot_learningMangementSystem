@@ -41,15 +41,6 @@ public class LessonService {
         return null;
     }
 
-
-
-    public String getLessonContent(Long studentId, Long courseId,Long lessonId) {
-        Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
-
-        return student.getLessonContent(courseId ,lessonId);
-    }
-
     public void deleteLesson(Long id) {
         lessonRepository.deleteById(id);
     }
