@@ -70,5 +70,3 @@ src/main/resources/application.properties
 **/*.p12
 **/*.jks
 
-### Dependencies ###
-**/dependency-reduced-pom.xml
