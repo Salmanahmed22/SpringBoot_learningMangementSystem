@@ -30,27 +30,6 @@ public class Student extends User {
     public Student() {
     }
 
-
-
-
-
-
-
-    // view the available courses
-    public List<Course> viewAvailableCourses(List<Course> allCourses) {
-        return allCourses.stream()
-                .filter(course -> !enrolledCourses.contains(course) && course.getMinLevel() <= this.level)
-                .collect(Collectors.toList());
-    }
-
-    public List<Lesson> viewCourseLessons(Course course) {
-        if (!this.enrolledCourses.contains(course)) {
-            throw new IllegalArgumentException("Student is not enrolled in this course");
-        }
-
-        return course.getLessons();
-    }
-
     public String getLessonContent(Long courseId, Long lessonId) {
         for (Course course : enrolledCourses) {
             if (course.getId().equals(courseId)) {

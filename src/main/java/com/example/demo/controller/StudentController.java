@@ -21,12 +21,12 @@ public class  StudentController {
     private StudentService studentService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
+    public ResponseEntity<Student> getStudentById(@PathVariable String id) {
         return ResponseEntity.ok(studentService.getStudentById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<Student>> getAllStudentss() {
+    public ResponseEntity<List<Student>> getAllStudents() {
 
         return ResponseEntity.ok(studentService.getAllStudents());
     }
@@ -41,8 +41,13 @@ public class  StudentController {
         return ResponseEntity.ok(studentService.enrollCourse(studentId, courseId));
     }
 
+    @GetMapping("/{studentId}/available-courses")
+    public List<Course> viewAvailableCourses(@PathVariable String studentId) {
+        return studentService.viewAvailableCourses(studentId);
+    }
+
     @GetMapping("/{studentId}/enrolled-courses")
-    public List<Course> getEnrolledCourses(@PathVariable Long studentId) {
+    public List<Course> getEnrolledCourses(@PathVariable String studentId) {
         return studentService.getEnrolledCourses(studentId);
     }
 
@@ -50,13 +55,6 @@ public class  StudentController {
     public ResponseEntity<List<Lesson>> viewCourseLessons(@PathVariable Long studentId, @PathVariable Long courseId) {
         List<Lesson> lessons = studentService.viewCourseLessons(studentId, courseId);
         return ResponseEntity.ok(lessons);
-    }
-
-
-
-    @GetMapping("/{studentId}/available-courses")
-    public List<Course> viewAvailableCourses(@PathVariable Long studentId) {
-        return studentService.getAvailableCourses(studentId);
     }
 
     @GetMapping("/{studentId}/courses/{courseId}/assignments")

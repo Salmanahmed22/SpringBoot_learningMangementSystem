@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
@@ -24,8 +25,8 @@ public class StudentService {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    public Student getStudentById(Long id) {
-        return studentRepository.findById(id).orElse(null);
+    public Student getStudentById(String id) {
+        return studentRepository.findById(Long.valueOf(id)).orElse(null);
     }
 
     public List<Student> getAllStudents() {
@@ -40,6 +41,9 @@ public class StudentService {
         Student student = studentRepository.findById(Long.valueOf(studentId)).orElse(null);
         Course course = courseRepository.findById(Long.valueOf(courseId)).orElse(null);
         if (student != null && course != null) {
+            if (student.getLevel() < course.getMinLevel()) {
+                throw new IllegalArgumentException("Student level is not sufficient to enroll in this course");
+            }
             List<Course> enrolledCourses = student.getEnrolledCourses();
             enrolledCourses.add(course);
             return studentRepository.save(student);
@@ -47,20 +51,22 @@ public class StudentService {
         return null;
     }
 
-    public List<Course> getEnrolledCourses(Long studentId) {
-        Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
-
-        return student.getEnrolledCourses();
-    }
-
-    public List<Course> getAvailableCourses(Long studentId) {
-        Student student = studentRepository.findById(studentId)
+    public List<Course> viewAvailableCourses(String studentId) {
+        Student student = studentRepository.findById(Long.valueOf(studentId))
                 .orElseThrow(() -> new IllegalArgumentException("Student not found"));
 
         List<Course> allCourses = courseRepository.findAll();
 
-        return student.viewAvailableCourses(allCourses);
+        return allCourses.stream()
+                .filter(course -> student.getEnrolledCourses().contains(course) && course.getMinLevel() <= student.getLevel())
+                .collect(Collectors.toList());
+    }
+
+    public List<Course> getEnrolledCourses(String studentId) {
+        Student student = studentRepository.findById(Long.valueOf(studentId))
+                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+
+        return student.getEnrolledCourses();
     }
 
     public List<Lesson> viewCourseLessons(Long studentId, Long courseId) {
@@ -70,7 +76,11 @@ public class StudentService {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("Course not found"));
 
-        return student.viewCourseLessons(course);
+        if (!student.getEnrolledCourses().contains(course)) {
+            throw new IllegalArgumentException("Student is not enrolled in this course");
+        }
+
+        return course.getLessons();
     }
 
     public List<Assignment> getAssignments(Long studentId, Long courseId) {

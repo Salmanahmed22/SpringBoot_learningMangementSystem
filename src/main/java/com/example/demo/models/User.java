@@ -20,8 +20,8 @@ import java.util.Collections;
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     private String name;
     private String email;
@@ -52,6 +52,6 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return id;
+        return String.valueOf(id);
     }
 }
