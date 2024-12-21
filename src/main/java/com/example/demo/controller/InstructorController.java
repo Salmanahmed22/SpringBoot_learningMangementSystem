@@ -25,6 +25,20 @@ public class InstructorController {
         return ResponseEntity.ok(instructorService.getAllInstructors());
     }
 
+//
+//    // Get an instructor by ID
+//    @GetMapping("/{id}")
+//    public ResponseEntity<Instructor> getInstructorById(@PathVariable Long id) {
+//        Instructor instructor = instructorService.getInstructorById(id);
+//        if (instructor != null) {
+//            return ResponseEntity.ok(instructor);
+//        }
+//        return ResponseEntity.notFound().build();
+//    }
+//
+//    // Create a new instructor
+
+
     // Get an instructor by ID
     @GetMapping("/{id}")
     public ResponseEntity<Instructor> getInstructorById(@PathVariable Long id) {
