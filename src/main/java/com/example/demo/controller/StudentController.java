@@ -6,6 +6,7 @@ import com.example.demo.models.Quiz;
 import com.example.demo.models.Notification;
 import com.example.demo.models.Student;
 import com.example.demo.models.Assignment;
+import com.example.demo.models.Submission;
 import com.example.demo.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -71,11 +72,45 @@ public class  StudentController {
         return ResponseEntity.ok(assignments);
     }
 
+    @PostMapping("/{studentId}/assignments/{assignmentId}/submit")
+    public ResponseEntity<String> submitAssignment(@PathVariable Long studentId, @PathVariable Long assignmentId, @RequestBody SubmissionRequest submissionRequest) {
+        try {
+            studentService.submitAssignment(studentId, assignmentId, submissionRequest.getSubmissionContent());
+            return ResponseEntity.ok("Assignment submitted successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // DTO class for submission content
+    public static class SubmissionRequest {
+        private String submissionContent;
+
+        public String getSubmissionContent() {
+            return submissionContent;
+        }
+
+        public void setSubmissionContent(String submissionContent) {
+            this.submissionContent = submissionContent;
+        }
+    }
+
+
     @GetMapping("/{studentId}/courses/{courseId}/quizzes")
-    public ResponseEntity<List<Quiz>> viewQuizzes(
-            @PathVariable Long studentId, @PathVariable Long courseId) {
+    public ResponseEntity<List<Quiz>> viewQuizzes(@PathVariable Long studentId, @PathVariable Long courseId) {
         List<Quiz> quizzes = studentService.getQuizzes(studentId, courseId);
         return ResponseEntity.ok(quizzes);
+    }
+
+
+    @PostMapping("/{studentId}/quizzes/{quizId}/submit")
+    public ResponseEntity<String> takeQuiz(@PathVariable Long studentId, @PathVariable Long quizId, @RequestBody Submission submission) {
+        try {
+            studentService.takeQuiz(studentId, quizId, submission);
+            return ResponseEntity.ok("Quiz submission successful.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/{id}/notifications")

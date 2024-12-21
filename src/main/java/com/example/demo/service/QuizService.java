@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.models.Quiz;
+import com.example.demo.models.Submission;
 import com.example.demo.repository.QuizRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,4 +40,9 @@ public class QuizService {
     public void deleteQuiz(Long id) {
         quizRepository.deleteById(id);
     }
+
+//    // Method to retrieve a student's submission
+//    public List<Answer> getSubmission(Long studentId) {
+//        return submissions.get(studentId);
+//    }
 }

@@ -1,17 +1,14 @@
 package com.example.demo.service;
 
-import com.example.demo.models.Course;
-import com.example.demo.models.Lesson;
-import com.example.demo.models.Quiz;
-import com.example.demo.models.Assignment;
-import com.example.demo.models.Notification;
+import com.example.demo.models.*;
 import com.example.demo.repository.NotificationRepository;
-import com.example.demo.models.Student;
+import com.example.demo.repository.QuizRepository;
 import com.example.demo.repository.StudentRepository;
 import com.example.demo.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +21,9 @@ public class StudentService {
     private CourseRepository courseRepository;
     @Autowired
     private NotificationRepository notificationRepository;
+    @Autowired
+    private QuizRepository quizRepository;
+
 
     public Student createStudent(Student student) {
         return studentRepository.save(student);
@@ -113,6 +113,33 @@ public class StudentService {
         throw new IllegalArgumentException("Student is not enrolled in the course with ID: " + courseId);
     }
 
+    // Subbmission is string which is not the best to do but for now
+    public void submitAssignment(Long studentId,Long assignmentId, String submissionContent) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+        List<Course> enrolledCourses = student.getEnrolledCourses();
+        Assignment assignment = null;
+        for (Course course : enrolledCourses) {
+            List<Assignment> courseAssignments = course.getAssignments();
+            for (Assignment a : courseAssignments) {
+                if (a.getId().equals(assignmentId)) {
+                    assignment = a;
+                    break;
+                }
+            }
+        }
+        if (assignment == null) {
+            throw new IllegalArgumentException("Assignment not found in enrolled courses");
+        }
+
+        LocalDateTime currentDate = LocalDateTime.now();
+        if (currentDate.isAfter(assignment.getDueDate())) {
+            throw new IllegalArgumentException("Cannot submit assignment after the due date");
+        }
+
+        assignment.submitAssignment(studentId, submissionContent);
+    }
+
     public List<Quiz> getQuizzes(Long studentId, Long courseId) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new IllegalArgumentException("Student not found"));
@@ -125,6 +152,31 @@ public class StudentService {
         // better version we can make sure also if the course exist if not exist throw error
         throw new IllegalArgumentException("Student is not enrolled in this course");
     }
+
+    public void takeQuiz(Long studentId, Long quizId, Submission submission) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+        List<Course> enrolledCourses = student.getEnrolledCourses();
+        for (Course course : enrolledCourses) {
+            List<Quiz> quizzes = course.getQuizzes();
+            for (Quiz quiz : quizzes) {
+                if (quiz.getId().equals(quizId)) {
+                    if (quiz.getDeadline().isBefore(LocalDateTime.now())) {
+                        throw new IllegalArgumentException("Quiz deadline has passed.");
+                    }
+                    List<Submission> submissions = quiz.getSubmissions();
+                    submissions.add(submission);
+                    quiz.setSubmissions(submissions);
+                    quizRepository.save(quiz); // Save the updated quiz instance
+
+                    return;
+                }
+            }
+        }
+        throw new IllegalArgumentException("Quiz not found in enrolled courses.");
+    }
+
+    
 
     public List<Notification> getNotifications(Long studentId, Boolean unread) {
         if (unread != null && unread) {

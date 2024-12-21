@@ -1,9 +1,13 @@
 package com.example.demo.models;
 
+import com.example.demo.models.Student;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Setter
@@ -23,6 +27,9 @@ public class Lesson {
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
+
+    @OneToMany
+    private List<Student> Attendance = new ArrayList<>();
 
     // default constructor
     public Lesson() {
