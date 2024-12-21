@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,26 +31,13 @@ public class Quiz {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "quiz_id")
-    private List<Question> questions;
+    private List<Question> questions = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Submission> submissions;
+    private List<Submission> submissions = new ArrayList<>();;
 
     // Default constructor
     public Quiz() {}
 
-//    public void submitAnswers(String studentId, List<Answer> answers) {
-//        if (submissions.containsKey(studentId)) {
-//            throw new IllegalArgumentException("You have already submitted this quiz.");
-//        }
-//        if (deadline != null && deadline.isBefore(LocalDateTime.now())) {
-//            throw new IllegalArgumentException("The deadline for this quiz has passed.");
-//        }
-//        submissions.put(studentId, answers);
-//    }
-//
-//    // Method to retrieve a student's submission
-//    public List<Answer> getSubmission(Long studentId) {
-//        return submissions.get(studentId);
-//    }
+
 }
