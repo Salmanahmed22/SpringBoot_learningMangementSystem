@@ -36,7 +36,7 @@ public class CourseService {
         return courseRepository.save(course);
     }
 
-    public Course updateCourse(String id, Course updatedCourse) {
+    public Course updateCourse(Long id, Course updatedCourse) {
         Course existingCourse = courseRepository.findById(id).orElse(null);
         if (existingCourse != null) {
             existingCourse.setTitle(updatedCourse.getTitle());

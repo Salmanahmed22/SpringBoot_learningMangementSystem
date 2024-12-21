@@ -10,8 +10,8 @@ import lombok.Setter;
 public class Notification {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     private String content;
     private boolean isRead;
