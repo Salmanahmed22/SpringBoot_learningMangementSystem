@@ -45,9 +45,13 @@ public class StudentService {
                 throw new IllegalArgumentException("Student level is not sufficient to enroll in this course");
             }
             List<Course> enrolledCourses = student.getEnrolledCourses();
-            enrolledCourses.add(course);
-            student.setEnrolledCourses(enrolledCourses);
-            return studentRepository.save(student);
+            if(!enrolledCourses.contains(course)) {
+                enrolledCourses.add(course);
+                student.setEnrolledCourses(enrolledCourses);
+                return studentRepository.save(student);
+            }
+            else throw new IllegalArgumentException("Student is already enrolled in this course");
+
         }
         return null;
     }
@@ -191,6 +195,16 @@ public class StudentService {
         notificationRepository.saveAll(notifications);
     }
 
+    public Student updateStudentLevel(Long id, short level) {
+        Student student = studentRepository.findById(id).orElse(null);
+
+        if (student != null) {
+            student.setLevel(level);
+            return studentRepository.save(student);
+        }
+        return null;
+    }
+
     public Student unrollCourse(Long studentId, Long courseId) {
         Student student = studentRepository.findById(studentId).orElse(null);
         Course course = courseRepository.findById(courseId).orElse(null);
@@ -217,5 +231,8 @@ public class StudentService {
         studentRepository.deleteById(id);
     }
 
-
+    public void removeEnrolledCourse(Course course, Student student) {
+        student.getEnrolledCourses().remove(course);
+        studentRepository.save(student);
+    }
 }
