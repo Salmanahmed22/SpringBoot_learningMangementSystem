@@ -27,7 +27,7 @@ public class Course {
 
     @ManyToOne
     @JoinColumn(name = "instructor_id")
-    @JsonManagedReference
+//    @JsonManagedReference
     private Instructor instructor;
 
     @ManyToMany(mappedBy = "enrolledCourses")
