@@ -18,12 +18,13 @@ public class InstructorController {
 
     @Autowired
     private InstructorService instructorService;
-//
+
     // Get all instructors
     @GetMapping
     public ResponseEntity<List<Instructor>> getAllInstructors() {
         return ResponseEntity.ok(instructorService.getAllInstructors());
     }
+
 //
 //    // Get an instructor by ID
 //    @GetMapping("/{id}")
@@ -36,28 +37,41 @@ public class InstructorController {
 //    }
 //
 //    // Create a new instructor
+
+
+    // Get an instructor by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Instructor> getInstructorById(@PathVariable Long id) {
+        Instructor instructor = instructorService.getInstructorById(id);
+        if (instructor != null) {
+            return ResponseEntity.ok(instructor);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    // Create a new instructor
     @PostMapping
     public ResponseEntity<Instructor> createInstructor(@RequestBody Instructor instructor) {
         return ResponseEntity.ok(instructorService.createInstructor(instructor));
     }
 
-//    // Update an existing instructor
-//    @PutMapping("/{id}")
-//    public ResponseEntity<Instructor> updateInstructor(@PathVariable Long id, @RequestBody Instructor updatedInstructor) {
-//        Instructor instructor = instructorService.updateInstructor(id, updatedInstructor);
-//        if (instructor != null) {
-//            return ResponseEntity.ok(instructor);
-//        }
-//        return ResponseEntity.notFound().build();
-//    }
-//
-//    // Delete an instructor
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> deleteInstructor(@PathVariable Long id) {
-//        instructorService.deleteInstructor(id);
-//        return ResponseEntity.noContent().build();
-//    }
-//
+    // Update an existing instructor
+    @PutMapping("/{id}")
+    public ResponseEntity<Instructor> updateInstructor(@PathVariable Long id, @RequestBody Instructor updatedInstructor) {
+        Instructor instructor = instructorService.updateInstructor(id, updatedInstructor);
+        if (instructor != null) {
+            return ResponseEntity.ok(instructor);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    // Delete an instructor
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteInstructor(@PathVariable Long id) {
+        instructorService.deleteInstructor(id);
+        return ResponseEntity.noContent().build();
+    }
+
 //    //notification
 ////    @PutMapping("/{id}/notifications/mark-as-read")
 ////    public ResponseEntity<Void> markNotificationsAsRead(@PathVariable Long id) {
@@ -71,11 +85,11 @@ public class InstructorController {
 ////        return ResponseEntity.ok(notifications);
 ////    }
 //
-//    // Create a new course
-//    @PostMapping("/{id}/courses")
-//    public ResponseEntity<Course> createCourse(@PathVariable Long id, @RequestBody Course course) {
-//        return ResponseEntity.ok(instructorService.createCourse(course, id));
-//    }
+    // Create a new course
+    @PostMapping("/{id}/courses")
+    public ResponseEntity<String> createCourse(@PathVariable Long id, @RequestBody Course course) {
+        return ResponseEntity.ok(instructorService.createCourse(course, id).getTitle());
+    }
 //
 //    // Update a course
 //    @PutMapping("/{id}")
