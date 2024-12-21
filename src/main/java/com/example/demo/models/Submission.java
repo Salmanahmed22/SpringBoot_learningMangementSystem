@@ -1,31 +1,31 @@
 package com.example.demo.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
-public class Answer {
+public class Submission {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @OneToOne
-    @JoinColumn(name = "question_id")
-    private Question question;
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    Student student;
 
-    private String response;
+    @OneToMany
+    @JoinColumn(name = "answer_id")
+    List<Answer> answers;
 
     // Default constructor
-    public Answer() {}
+    public Submission() {}
 }

@@ -1,6 +1,6 @@
 package com.example.demo.models;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +27,11 @@ public class Course {
 
     @ManyToOne
     @JoinColumn(name = "instructor_id")
+<<<<<<< HEAD
 //    @JsonManagedReference
+=======
+    @JsonBackReference
+>>>>>>> e8fa69a5a009f9252fe4a39bed6468c09d3a6564
     private Instructor instructor;
 
     @ManyToMany(mappedBy = "enrolledCourses")
@@ -42,16 +46,12 @@ public class Course {
     @OneToMany(mappedBy = "course")
     private List<Quiz> quizzes;
 
-
-
     public Course() {
         this.enrolledStudents = new ArrayList<>();
         this.lessons = new ArrayList<>();
         this.assignments = new ArrayList<>();
         this.quizzes = new ArrayList<>();
     }
-
-
 
     public void addLesson(Lesson lesson) {
         lessons.add(lesson);
