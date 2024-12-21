@@ -28,8 +28,8 @@ public class CourseService {
 
     public Course createCourse(Course course) {
         if (course.getInstructor() != null) {
-            String instructorId = course.getInstructor().getId();
-            Instructor instructor = instructorRepository.findById(Long.valueOf(instructorId))
+            Long instructorId = course.getInstructor().getId();
+            Instructor instructor = instructorRepository.findById(instructorId)
                     .orElseThrow(() -> new IllegalArgumentException("Instructor not found with id: " + instructorId));
             course.setInstructor(instructor);
         }
