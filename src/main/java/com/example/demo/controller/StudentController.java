@@ -26,14 +26,15 @@ public class  StudentController {
         return ResponseEntity.ok(studentService.createStudent(student));
     }
 
+    //done test
     @GetMapping("/{id}")
     public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
         return ResponseEntity.ok(studentService.getStudentById(id));
     }
 
+    //done test
     @GetMapping
     public ResponseEntity<List<Student>> getAllStudents() {
-
         return ResponseEntity.ok(studentService.getAllStudents());
     }
 
