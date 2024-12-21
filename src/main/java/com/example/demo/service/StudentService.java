@@ -45,9 +45,13 @@ public class StudentService {
                 throw new IllegalArgumentException("Student level is not sufficient to enroll in this course");
             }
             List<Course> enrolledCourses = student.getEnrolledCourses();
-            enrolledCourses.add(course);
-            student.setEnrolledCourses(enrolledCourses);
-            return studentRepository.save(student);
+            if(!enrolledCourses.contains(course)) {
+                enrolledCourses.add(course);
+                student.setEnrolledCourses(enrolledCourses);
+                return studentRepository.save(student);
+            }
+            else throw new IllegalArgumentException("Student is already enrolled in this course");
+
         }
         return null;
     }

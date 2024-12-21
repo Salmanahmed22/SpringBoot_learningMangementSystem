@@ -16,6 +16,7 @@ public class CourseController {
     private CourseService courseService;
 
 
+
     @GetMapping("/{id}")
     public ResponseEntity<Course> getCourseById(@PathVariable Long id) {
         Course course = courseService.getCourseById(id);
@@ -26,7 +27,6 @@ public class CourseController {
     public ResponseEntity<List<Course>> getAllCourses() {
         return ResponseEntity.ok(courseService.getAllCourses());
     }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<Course> updateCourse(@PathVariable Long id, @RequestBody Course updatedCourse) {

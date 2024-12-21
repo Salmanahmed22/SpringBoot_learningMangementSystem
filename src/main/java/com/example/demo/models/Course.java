@@ -32,6 +32,7 @@ public class Course {
     private Instructor instructor;
 
     @ManyToMany(mappedBy = "enrolledCourses")
+    @JsonBackReference
     private List<Student> enrolledStudents;
 
     @OneToMany(mappedBy = "course")
