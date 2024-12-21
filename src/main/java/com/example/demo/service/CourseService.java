@@ -18,7 +18,7 @@ public class CourseService {
     @Autowired
     private InstructorRepository instructorRepository;
 
-    public Course getCourseById(String id) {
+    public Course getCourseById(Long id) {
         return courseRepository.findById(id).orElse(null);
     }
 
@@ -46,7 +46,7 @@ public class CourseService {
         return null;
     }
 
-    public void deleteCourse(String id) {
+    public void deleteCourse(Long id) {
         courseRepository.deleteById(id);
     }
 
