@@ -19,11 +19,11 @@ public class InstructorController {
     @Autowired
     private InstructorService instructorService;
 //
-//    // Get all instructors
-//    @GetMapping
-//    public ResponseEntity<List<Instructor>> getAllInstructors() {
-//        return ResponseEntity.ok(instructorService.getAllInstructors());
-//    }
+    // Get all instructors
+    @GetMapping
+    public ResponseEntity<List<Instructor>> getAllInstructors() {
+        return ResponseEntity.ok(instructorService.getAllInstructors());
+    }
 //
 //    // Get an instructor by ID
 //    @GetMapping("/{id}")
