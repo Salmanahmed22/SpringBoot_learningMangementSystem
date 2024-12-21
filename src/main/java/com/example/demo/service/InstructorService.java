@@ -4,6 +4,7 @@ import com.example.demo.models.Course;
 import com.example.demo.models.Instructor;
 import com.example.demo.models.Lesson;
 //import com.example.demo.models.Notification;
+import com.example.demo.models.Student;
 import com.example.demo.repository.CourseRepository;
 import com.example.demo.repository.InstructorRepository;
 //import com.example.demo.repository.NotificationRepository;
@@ -25,6 +26,9 @@ public class InstructorService {
 
     @Autowired
     private LessonService lessonService;
+
+    @Autowired
+    private StudentService studentService;
 
     // Get all instructors
     public List<Instructor> getAllInstructors() {
@@ -110,5 +114,20 @@ public class InstructorService {
 
         courseService.addLesson(course, lesson);
         return lesson;
+    }
+
+    public void removeStudentFromCourse(Long instructorId, Long courseId, Long studentId) {
+
+        Student student = studentService.getStudentById(studentId);
+
+        Instructor instructor = instructorRepository.findById(instructorId).orElse(null);
+
+        Course course = courseService.getCourseById(courseId);
+
+        if (!course.getInstructor().equals(instructor)) {
+            throw new IllegalArgumentException("Course does not belong to the instructor");
+        }
+        courseService.removeStudentFromCourse(course, student);
+
     }
 }

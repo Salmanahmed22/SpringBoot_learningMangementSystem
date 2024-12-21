@@ -217,5 +217,8 @@ public class StudentService {
         studentRepository.deleteById(id);
     }
 
-
+    public void removeEnrolledCourse(Course course, Student student) {
+        student.getEnrolledCourses().remove(course);
+        studentRepository.save(student);
+    }
 }

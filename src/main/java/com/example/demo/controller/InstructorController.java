@@ -5,7 +5,6 @@ import com.example.demo.models.Instructor;
 import com.example.demo.models.Lesson;
 //import com.example.demo.models.Notification;
 import com.example.demo.service.InstructorService;
-import com.example.demo.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,20 +23,6 @@ public class InstructorController {
     public ResponseEntity<List<Instructor>> getAllInstructors() {
         return ResponseEntity.ok(instructorService.getAllInstructors());
     }
-
-//
-//    // Get an instructor by ID
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Instructor> getInstructorById(@PathVariable Long id) {
-//        Instructor instructor = instructorService.getInstructorById(id);
-//        if (instructor != null) {
-//            return ResponseEntity.ok(instructor);
-//        }
-//        return ResponseEntity.notFound().build();
-//    }
-//
-//    // Create a new instructor
-
 
     // Get an instructor by ID
     @GetMapping("/{id}")
@@ -87,14 +72,16 @@ public class InstructorController {
 //
     // Create a new course
     @PostMapping("/{id}/courses")
-    public ResponseEntity<String> createCourse(@PathVariable Long id, @RequestBody Course course) {
-        return ResponseEntity.ok(instructorService.createCourse(course, id).getTitle());
+    public ResponseEntity<Course> createCourse(@PathVariable Long id, @RequestBody Course course) {
+        return ResponseEntity.ok(instructorService.createCourse(course, id));
     }
 
     // Update a course
-    @PutMapping("/{id}/courses")
-    public ResponseEntity<Course> updateCourse(@PathVariable Long id, @RequestBody Course updatedCourse) {
-        Course course = instructorService.updateCourse(id, updatedCourse);
+    @PutMapping("/{instructorId}/courses/{courseId}")
+    public ResponseEntity<Course> updateCourse(@PathVariable Long instructorId,
+                                               @PathVariable Long courseId,
+                                               @RequestBody Course updatedCourse) {
+        Course course = instructorService.updateCourse(courseId, updatedCourse);
         if (course != null) {
             return ResponseEntity.ok(course);
         }
@@ -102,9 +89,10 @@ public class InstructorController {
     }
 
     // Delete a course
-    @DeleteMapping("/{id}/courses")
-    public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
-        instructorService.deleteCourse(id);
+    @DeleteMapping("/{instructorId}/courses/{courseId}")
+    public ResponseEntity<Void> deleteCourse(@PathVariable Long instructorId,
+                                             @PathVariable Long courseId) {
+        instructorService.deleteCourse(courseId);
         return ResponseEntity.noContent().build();
     }
 
@@ -117,5 +105,12 @@ public class InstructorController {
         return ResponseEntity.ok(instructorService.addLessonToCourse(instructorId, courseId, lesson));
     }
 
-
+    //Remove student from course
+    @DeleteMapping("/{instructorId}/courses/{courseId}/{studentId}")
+    public ResponseEntity<Void> removeStudentFromCourse(@PathVariable Long instructorId,
+                                                        @PathVariable Long courseId,
+                                                        @PathVariable Long studentId){
+        instructorService.removeStudentFromCourse(instructorId, courseId, studentId);
+        return ResponseEntity.noContent().build();
+    }
 }
