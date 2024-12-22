@@ -31,8 +31,4 @@ public class Instructor extends User {
         employeeId = "default employeeId";
     }
 
-    public void addCourse(Course course) {
-        courses.add(course);
-        course.setInstructor(this);
-    }
 }
