@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.DTO.CourseRequest;
+import com.example.demo.dtos.CourseDTO;
 import com.example.demo.models.Course;
 import com.example.demo.models.Instructor;
 import com.example.demo.models.Lesson;
@@ -88,9 +88,9 @@ public class InstructorService {
 //    }
 
     // Create a new course
-    public Course createCourse(CourseRequest courseRequest) {
-        Instructor instructor = getInstructorById(courseRequest.getInstructorId());
-        Course course = courseService.createCourse(courseRequest);
+    public Course createCourse(CourseDTO courseDTO) {
+        Instructor instructor = getInstructorById(courseDTO.getInstructorId());
+        Course course = courseService.createCourse(courseDTO);
         List<Course> courses = instructor.getCourses();
         courses.add(course);
         instructor.setCourses(courses);
@@ -99,7 +99,7 @@ public class InstructorService {
     }
 
     // Update a course
-    public Course updateCourse(Long id, CourseRequest updatedCourse) {
+    public Course updateCourse(Long id, CourseDTO updatedCourse) {
         return courseService.updateCourse(id, updatedCourse);
     }
 

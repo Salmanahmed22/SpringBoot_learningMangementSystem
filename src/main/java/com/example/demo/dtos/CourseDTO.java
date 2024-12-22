@@ -1,4 +1,4 @@
-package com.example.demo.DTO;
+package com.example.demo.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,11 +7,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class CourseRequest {
+public class CourseDTO {
     private short minLevel;
     private String title;
     private String description;
     private Long instructorId;
-
 }
 

@@ -1,16 +1,12 @@
 package com.example.demo.service;
 
-import com.example.demo.DTO.CourseRequest;
+import com.example.demo.dtos.CourseDTO;
 import com.example.demo.models.*;
 import com.example.demo.repository.CourseRepository;
-import com.example.demo.service.InstructorService;
-import jdk.jfr.Label;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -49,21 +45,21 @@ public class CourseService {
         return courseRepository.findAll();
     }
 
-    public Course createCourse(CourseRequest courseRequest) {
+    public Course createCourse(CourseDTO courseDTO) {
         Course course = new Course();
-        course.setMinLevel(courseRequest.getMinLevel());
-        course.setTitle(courseRequest.getTitle());
-        course.setDescription(courseRequest.getDescription());
-        Instructor instructor = instructorService.getInstructorById(courseRequest.getInstructorId());
+        course.setMinLevel(courseDTO.getMinLevel());
+        course.setTitle(courseDTO.getTitle());
+        course.setDescription(courseDTO.getDescription());
+        Instructor instructor = instructorService.getInstructorById(courseDTO.getInstructorId());
         if (instructor != null) {
-        course.setInstructor(instructor);
+            course.setInstructor(instructor);
         }
         else throw new RuntimeException("instructor not found");
 
         return courseRepository.save(course);
     }
 
-    public Course updateCourse(Long id, CourseRequest updatedCourse) {
+    public Course updateCourse(Long id, CourseDTO updatedCourse) {
         Course existingCourse = courseRepository.findById(id).orElse(null);
         if (existingCourse != null) {
             if(updatedCourse.getMinLevel() != 0)

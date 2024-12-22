@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.DTO.SubmissionRequest;
+import com.example.demo.dtos.SubmissionDTO;
 import com.example.demo.models.Course;
 import com.example.demo.models.Lesson;
 import com.example.demo.models.Quiz;
@@ -80,7 +80,7 @@ public class  StudentController {
     }
 
     @PostMapping("/{studentId}/assignments/{assignmentId}/submit")
-    public ResponseEntity<String> submitAssignment(@PathVariable Long studentId, @PathVariable Long assignmentId, @RequestBody SubmissionRequest submissionRequest) {
+    public ResponseEntity<String> submitAssignment(@PathVariable Long studentId, @PathVariable Long assignmentId, @RequestBody SubmissionDTO submissionRequest) {
         try {
             studentService.submitAssignment(studentId, assignmentId, submissionRequest.getSubmissionContent());
             return ResponseEntity.ok("Assignment submitted successfully");

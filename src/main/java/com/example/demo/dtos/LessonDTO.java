@@ -1,4 +1,4 @@
-package com.example.demo.DTO;
+package com.example.demo.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class LessonRequest {
+public class LessonDTO {
 
     private Long id;
     private String title;
@@ -18,6 +18,6 @@ public class LessonRequest {
     private List<Long> attendanceStudentIds;
 
     // Default constructor for serialization/deserialization
-    public LessonRequest() {
+    public LessonDTO() {
     }
 }

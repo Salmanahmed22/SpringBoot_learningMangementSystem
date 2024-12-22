@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.DTO.CourseRequest;
+import com.example.demo.dtos.CourseDTO;
 import com.example.demo.models.Course;
 import com.example.demo.models.Lesson;
 import com.example.demo.service.CourseService;
@@ -21,7 +21,7 @@ public class CourseController {
     private LessonService lessonService;
 
     @PostMapping("/create")
-    public ResponseEntity<Course> createCourse(@RequestBody CourseRequest courseRequest) {
+    public ResponseEntity<Course> createCourse(@RequestBody CourseDTO courseRequest) {
         try {
             return ResponseEntity.ok(courseService.createCourse(courseRequest));
         }
@@ -42,7 +42,7 @@ public class CourseController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Course> updateCourse(@PathVariable Long id, @RequestBody CourseRequest updatedCourse) {
+    public ResponseEntity<Course> updateCourse(@PathVariable Long id, @RequestBody CourseDTO updatedCourse) {
         return ResponseEntity.ok(courseService.updateCourse(id, updatedCourse));
     }
 

@@ -1,10 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.DTO.AssignmentRequest;
+import com.example.demo.dtos.AssignmentDTO;
 import com.example.demo.models.Assignment;
-import com.example.demo.models.Course;
-import com.example.demo.models.Student;
-import com.example.demo.models.Submission;
 import com.example.demo.repository.AssignmentRepository;
 import com.example.demo.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +30,12 @@ public class AssignmentService {
         return assignmentRepository.findAll();
     }
 
-    public Assignment createAssignment(AssignmentRequest assignmentRequest ) {
+    public Assignment createAssignment(AssignmentDTO assignmentDTO) {
         Assignment assignment = new Assignment();
-        assignment.setTitle(assignmentRequest.getTitle());
-        assignment.setDescription(assignmentRequest.getDescription());
-        assignment.setDueDate(assignmentRequest.getDueDate());
-        assignment.setCourse(courseService.getCourseById(assignmentRequest.getCourseId())) ;
+        assignment.setTitle(assignmentDTO.getTitle());
+        assignment.setDescription(assignmentDTO.getDescription());
+        assignment.setDueDate(assignmentDTO.getDueDate());
+        assignment.setCourse(courseService.getCourseById(assignmentDTO.getCourseId())) ;
         return assignmentRepository.save(assignment);
     }
 
