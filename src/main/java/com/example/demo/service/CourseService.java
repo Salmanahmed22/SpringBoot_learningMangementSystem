@@ -1,10 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.DTO.CourseRequest;
-import com.example.demo.models.Course;
-import com.example.demo.models.Instructor;
-import com.example.demo.models.Lesson;
-import com.example.demo.models.Student;
+import com.example.demo.models.*;
 import com.example.demo.repository.CourseRepository;
 import com.example.demo.service.InstructorService;
 import jdk.jfr.Label;
@@ -27,11 +24,22 @@ public class CourseService {
     private InstructorService instructorService;
 
     @Autowired
+    @Lazy
     private LessonService lessonService;
 
     @Autowired
     @Lazy
+    private QuizService quizService;
+
+    @Autowired
+    @Lazy
+    private AssignmentService assignmentService;
+
+    @Autowired
+    @Lazy
     private StudentService studentService;
+
+
 
     public Course getCourseById(Long id) {
         return courseRepository.findById(id).orElse(null);
@@ -55,17 +63,34 @@ public class CourseService {
         return courseRepository.save(course);
     }
 
-    public Course updateCourse(Long id, Course updatedCourse) {
+    public Course updateCourse(Long id, CourseRequest updatedCourse) {
         Course existingCourse = courseRepository.findById(id).orElse(null);
         if (existingCourse != null) {
-            existingCourse.setTitle(updatedCourse.getTitle());
-            existingCourse.setDescription(updatedCourse.getDescription());
+            if(updatedCourse.getMinLevel() != 0)
+                existingCourse.setMinLevel(updatedCourse.getMinLevel());
+            if(updatedCourse.getTitle() != null)
+                existingCourse.setTitle(updatedCourse.getTitle());
+            if(updatedCourse.getDescription() != null)
+                existingCourse.setDescription(updatedCourse.getDescription());
             return courseRepository.save(existingCourse);
         }
         return null;
     }
 
     public void deleteCourse(Long id) {
+        Course course = getCourseById(id);
+        List<Lesson> lessons = course.getLessons();
+        for(Lesson lesson : lessons){
+            lessonService.deleteLesson(lesson.getId());
+        }
+        List<Assignment> assignments = course.getAssignments();
+        for(Assignment assignment : assignments){
+            assignmentService.deleteAssignment(assignment.getId());
+        }
+        List<Quiz> quizes = course.getQuizzes();
+        for(Quiz quiz : quizes){
+            quizService.deleteQuiz(quiz.getId());
+        }
         courseRepository.deleteById(id);
     }
 

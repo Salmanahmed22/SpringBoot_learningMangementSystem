@@ -72,6 +72,7 @@ public class InstructorController {
 ////    }
 //
     // Create a new course
+    // Tested
     @PostMapping("/{id}/courses")
     public ResponseEntity<Course> createCourse(@PathVariable Long id, @RequestBody CourseRequest courseRequest) {
         courseRequest.setInstructorId(id);
@@ -79,10 +80,11 @@ public class InstructorController {
     }
 
     // Update a course
+    // Tested
     @PutMapping("/{instructorId}/courses/{courseId}")
     public ResponseEntity<Course> updateCourse(@PathVariable Long instructorId,
                                                @PathVariable Long courseId,
-                                               @RequestBody Course updatedCourse) {
+                                               @RequestBody CourseRequest updatedCourse) {
         Course course = instructorService.updateCourse(courseId, updatedCourse);
         if (course != null) {
             return ResponseEntity.ok(course);
@@ -91,14 +93,16 @@ public class InstructorController {
     }
 
     // Delete a course
+    // Tested
     @DeleteMapping("/{instructorId}/courses/{courseId}")
     public ResponseEntity<Void> deleteCourse(@PathVariable Long instructorId,
                                              @PathVariable Long courseId) {
-        instructorService.deleteCourse(courseId);
+        instructorService.deleteCourse(instructorId, courseId);
         return ResponseEntity.noContent().build();
     }
 
-    //Add a lesson to course
+    // Add a lesson to course
+    // Tested
     @PostMapping("/{instructorId}/courses/{courseId}/lessons")
     public ResponseEntity<Lesson> addLessonToCourse(
             @PathVariable Long instructorId,
@@ -107,7 +111,7 @@ public class InstructorController {
         return ResponseEntity.ok(instructorService.addLessonToCourse(instructorId, courseId, lesson));
     }
 
-    //Remove student from course
+    // Remove student from course
     @DeleteMapping("/{instructorId}/courses/{courseId}/{studentId}")
     public ResponseEntity<Void> removeStudentFromCourse(@PathVariable Long instructorId,
                                                         @PathVariable Long courseId,

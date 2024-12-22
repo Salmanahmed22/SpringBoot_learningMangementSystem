@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.models.Question;
 import com.example.demo.models.Quiz;
 import com.example.demo.models.Submission;
 import com.example.demo.repository.QuizRepository;
@@ -13,6 +14,10 @@ public class QuizService {
 
     @Autowired
     private QuizRepository quizRepository;
+
+    @Autowired
+    private QuestionBankService questionBankService;
+
 
     public Quiz getQuizById(Long id) {
         return quizRepository.findById(id).orElse(null);
@@ -46,6 +51,11 @@ public class QuizService {
     }
 
     public void deleteQuiz(Long id) {
+        Quiz quiz = getQuizById(id);
+        List<Question> questions = quiz.getQuestions();
+        for(Question question : questions){
+
+        }
         quizRepository.deleteById(id);
     }
 

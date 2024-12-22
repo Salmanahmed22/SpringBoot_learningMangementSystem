@@ -9,8 +9,6 @@ import com.example.demo.models.Student;
 import com.example.demo.repository.CourseRepository;
 import com.example.demo.repository.InstructorRepository;
 //import com.example.demo.repository.NotificationRepository;
-import com.example.demo.repository.StudentRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +20,8 @@ public class InstructorService {
 
     @Autowired
     private InstructorRepository instructorRepository;
+    @Autowired
+    private CourseRepository courseRepository;
 
     @Autowired
     private CourseService courseService;
@@ -94,17 +94,24 @@ public class InstructorService {
         List<Course> courses = instructor.getCourses();
         courses.add(course);
         instructor.setCourses(courses);
+        courseRepository.save(course);
         return course;
     }
 
     // Update a course
-    public Course updateCourse(Long id, Course updatedCourse) {
+    public Course updateCourse(Long id, CourseRequest updatedCourse) {
         return courseService.updateCourse(id, updatedCourse);
     }
 
     // Delete an instructor
-    public void deleteCourse(Long id) {
-        courseService.deleteCourse(id);
+    public void deleteCourse(Long instructorid, Long courseId) {
+        Instructor instructor = getInstructorById(instructorid);
+        Course course = courseService.getCourseById(courseId);
+        List<Course> courses = instructor.getCourses();
+        courses.remove(course);
+        instructor.setCourses(courses);
+        instructorRepository.save(instructor);
+        courseService.deleteCourse(courseId);
     }
 
     // Add a lesson to course
