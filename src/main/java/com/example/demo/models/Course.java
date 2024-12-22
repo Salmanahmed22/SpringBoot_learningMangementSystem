@@ -52,8 +52,5 @@ public class Course {
         this.quizzes = new ArrayList<>();
     }
 
-    public void addLesson(Lesson lesson) {
-        lessons.add(lesson);
-        lesson.setCourse(this);
-    }
+
 }

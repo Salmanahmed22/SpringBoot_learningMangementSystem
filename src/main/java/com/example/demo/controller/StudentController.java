@@ -44,12 +44,13 @@ public class  StudentController {
         return ResponseEntity.ok(studentService.enrollCourse(studentId, courseId));
     }
 
-
+    //done test
     @GetMapping("/{studentId}/available-courses")
     public List<Course> viewAvailableCourses(@PathVariable Long studentId) {
         return studentService.getAvailableCourses(studentId);
     }
 
+    //done test
     @GetMapping("/{studentId}/enrolled-courses")
     public List<Course> viewEnrolledCourses(@PathVariable Long studentId) {
         return studentService.getEnrolledCourses(studentId);
@@ -127,6 +128,7 @@ public class  StudentController {
         return ResponseEntity.ok().build();
     }
 
+    //done test
     @PutMapping("{id}/edit")
     public ResponseEntity<Student> setStudentLevel(@PathVariable Long id, @RequestBody short level) {
         return ResponseEntity.ok(studentService.updateStudentLevel(id, level));

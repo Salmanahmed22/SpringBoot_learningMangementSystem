@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,10 +62,15 @@ public class StudentService {
                 .orElseThrow(() -> new IllegalArgumentException("Student not found"));
 
         List<Course> allCourses = courseRepository.findAll();
+        List<Course> retCourses = new ArrayList<>();
 
-        return allCourses.stream()
-                .filter(course -> student.getEnrolledCourses().contains(course) && course.getMinLevel() <= student.getLevel())
-                .collect(Collectors.toList());
+        for (Course course : allCourses) {
+            if (!student.getEnrolledCourses().contains(course) && course.getMinLevel() <= student.getLevel()) {
+                retCourses.add(course);
+            }
+        }
+
+        return retCourses;
     }
 
     public List<Course> getEnrolledCourses(Long studentId) {

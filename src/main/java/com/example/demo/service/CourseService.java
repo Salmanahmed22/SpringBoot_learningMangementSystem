@@ -9,6 +9,7 @@ import com.example.demo.repository.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -55,10 +56,16 @@ public class CourseService {
         courseRepository.deleteById(id);
     }
 
-    public void addLesson(Course course, Lesson lesson) {
-        lessonService.createLesson(lesson);
-        course.addLesson(lesson);
-        courseRepository.save(course);
+    public Course addLesson(Long courseId, Long lessonId) {
+        Course course = courseRepository.findById(courseId).orElse(null);
+        Lesson newLessonAdded = lessonService.getLessonById(lessonId);
+        if (newLessonAdded == null) {
+            throw new IllegalArgumentException("Lesson not found with id: " + lessonId);
+        }
+        List<Lesson> lessons = course.getLessons();
+        lessons.add(newLessonAdded);
+        course.setLessons(lessons);
+        return courseRepository.save(course);
     }
 
     public void removeStudentFromCourse(Course course, Student student) {

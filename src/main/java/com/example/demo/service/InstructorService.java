@@ -112,7 +112,7 @@ public class InstructorService {
             throw new IllegalArgumentException("Course does not belong to the instructor");
         }
 
-        courseService.addLesson(course, lesson);
+        courseService.addLesson(courseId, lesson.getId());
         return lesson;
     }
 
