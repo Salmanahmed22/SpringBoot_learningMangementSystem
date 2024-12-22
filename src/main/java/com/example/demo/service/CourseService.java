@@ -1,15 +1,17 @@
 package com.example.demo.service;
 
+import com.example.demo.DTO.CourseRequest;
 import com.example.demo.models.Course;
 import com.example.demo.models.Instructor;
 import com.example.demo.models.Lesson;
 import com.example.demo.models.Student;
 import com.example.demo.repository.CourseRepository;
-import com.example.demo.repository.InstructorRepository;
+import com.example.demo.service.InstructorService;
 import jdk.jfr.Label;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +23,12 @@ public class CourseService {
     private CourseRepository courseRepository;
 
     @Autowired
-    private InstructorRepository instructorRepository;
+    @Lazy
+    private InstructorService instructorService;
+
     @Autowired
     private LessonService lessonService;
+
     @Autowired
     @Lazy
     private StudentService studentService;
@@ -36,13 +41,17 @@ public class CourseService {
         return courseRepository.findAll();
     }
 
-    public Course createCourse(Course course) {
-        if (course.getInstructor() != null) {
-            Long instructorId = course.getInstructor().getId();
-            Instructor instructor = instructorRepository.findById(instructorId)
-                    .orElseThrow(() -> new IllegalArgumentException("Instructor not found with id: " + instructorId));
-            course.setInstructor(instructor);
+    public Course createCourse(CourseRequest courseRequest) {
+        Course course = new Course();
+        course.setMinLevel(courseRequest.getMinLevel());
+        course.setTitle(course.getTitle());
+        course.setDescription(courseRequest.getDescription());
+        Instructor instructor = instructorService.getInstructorById(courseRequest.getInstructorId());
+        if (instructor != null) {
+        course.setInstructor(instructor);
         }
+        else throw new RuntimeException("instructor not found");
+
         return courseRepository.save(course);
     }
 
@@ -62,9 +71,12 @@ public class CourseService {
 
     public Course addLesson(Long courseId, Lesson lesson) {
         Course course = courseRepository.findById(courseId).orElseThrow(null);
+        Lesson newLesson = lessonService.createLesson(lesson);
         List <Lesson> courseLessons = course.getLessons();
-        courseLessons.add(lesson);
-        course.setLessons(courseLessons);
+        if(!courseLessons.contains(newLesson)) {
+            courseLessons.add(newLesson);
+            course.setLessons(courseLessons);
+        }
         return courseRepository.save(course);
     }
 

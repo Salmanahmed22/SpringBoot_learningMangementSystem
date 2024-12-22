@@ -2,6 +2,7 @@ package com.example.demo.models;
 
 import com.example.demo.models.Student;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,7 +29,7 @@ public class Lesson {
 
     @ManyToOne
     @JoinColumn(name = "course_id")
-    @JsonBackReference
+    @JsonBackReference(value = "course-lesson")
     private Course course;
 
     @OneToMany
@@ -37,7 +38,4 @@ public class Lesson {
     // default constructor
     public Lesson() {
     }
-
-
-
 }

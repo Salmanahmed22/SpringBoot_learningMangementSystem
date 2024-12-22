@@ -11,11 +11,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/admins")
-public class AdminController {
+public class AdminController { // All methods had been tested
 
     @Autowired
     private AdminService adminService;
 
+
+    // tested but we can ignore it (useless)
     @PostMapping
     public ResponseEntity<?> createAdmin(@RequestBody Admin admin) {
         return ResponseEntity.ok(adminService.createAdmin(admin));
@@ -23,12 +25,14 @@ public class AdminController {
 
 
     // Get all admins
+    // tested
     @GetMapping
     public ResponseEntity<List<Admin>> getAllAdmins() {
         return ResponseEntity.ok(adminService.getAllAdmins());
     }
 
     // Get admin by ID
+    //tested
     @GetMapping("/{id}")
     public ResponseEntity<Admin> getAdminById(@PathVariable Long id) {
         Admin admin = adminService.getAdminById(id);
@@ -39,18 +43,23 @@ public class AdminController {
     }
 
     // Update an existing admin
+    //tested
     @PutMapping("/{id}")
     public ResponseEntity<Admin> updateAdmin(@PathVariable Long id, @RequestBody Admin updatedAdmin) {
-        Admin admin = adminService.updateAdmin(id, updatedAdmin);
-        if (admin == null) {
-            return ResponseEntity.notFound().build();
+        try {
+            Admin admin = adminService.updateAdmin(id, updatedAdmin);
+            return ResponseEntity.ok(admin);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
         }
-        return ResponseEntity.ok(admin);
+
     }
 
     // Delete an admin
+    //tested
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAdmin(@PathVariable Long id) {
+
         adminService.deleteAdmin(id);
         return ResponseEntity.noContent().build();
     }

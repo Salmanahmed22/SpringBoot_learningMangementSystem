@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.DTO.SubmissionRequest;
 import com.example.demo.models.Course;
 import com.example.demo.models.Lesson;
 import com.example.demo.models.Quiz;
@@ -85,19 +86,6 @@ public class  StudentController {
             return ResponseEntity.ok("Assignment submitted successfully");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    // DTO class for submission content
-    public static class SubmissionRequest {
-        private String submissionContent;
-
-        public String getSubmissionContent() {
-            return submissionContent;
-        }
-
-        public void setSubmissionContent(String submissionContent) {
-            this.submissionContent = submissionContent;
         }
     }
 
