@@ -27,6 +27,7 @@ public class AssignmentController {
         return ResponseEntity.ok(assignmentService.getAllAssignments());
     }
 
+    // tested
     @PostMapping
     public ResponseEntity<Assignment> createAssignment(@RequestBody AssignmentRequest assignmentRequest) {
         return ResponseEntity.ok(assignmentService.createAssignment(assignmentRequest));

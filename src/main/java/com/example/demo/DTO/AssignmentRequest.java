@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 @Getter
@@ -19,8 +20,10 @@ public class AssignmentRequest {
     private String description;
     private LocalDateTime dueDate;
     private Map<Long, String> submissions;
-    private Long courseId; // Only include the course ID to avoid circular references
-    public AssignmentRequest() {}
+    private Long courseId;
+    public AssignmentRequest() {
+        submissions = new HashMap<>();
+    }
 }
 
 
