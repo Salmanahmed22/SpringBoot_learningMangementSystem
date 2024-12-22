@@ -40,9 +40,11 @@ public class Course {
     private List<Lesson> lessons;
 
     @OneToMany(mappedBy = "course")
+    @JsonManagedReference
     private List<Assignment> assignments;
 
     @OneToMany(mappedBy = "course")
+    @JsonManagedReference
     private List<Quiz> quizzes;
 
     public Course() {

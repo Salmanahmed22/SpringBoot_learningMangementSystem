@@ -105,12 +105,12 @@ public class InstructorController {
         return ResponseEntity.ok(instructorService.addLessonToCourse(instructorId, courseId, lesson));
     }
 
-    //Remove student from course
-    @DeleteMapping("/{instructorId}/courses/{courseId}/{studentId}")
-    public ResponseEntity<Void> removeStudentFromCourse(@PathVariable Long instructorId,
-                                                        @PathVariable Long courseId,
-                                                        @PathVariable Long studentId){
-        instructorService.removeStudentFromCourse(instructorId, courseId, studentId);
-        return ResponseEntity.noContent().build();
-    }
+//    //Remove student from course
+//    @DeleteMapping("/{instructorId}/courses/{courseId}/{studentId}")
+//    public ResponseEntity<Void> removeStudentFromCourse(@PathVariable Long instructorId,
+//                                                        @PathVariable Long courseId,
+//                                                        @PathVariable Long studentId){
+//        instructorService.removeStudentFromCourse(instructorId, courseId, studentId);
+//        return ResponseEntity.noContent().build();
+//    }
 }

@@ -26,47 +26,51 @@ public class  StudentController {
         return ResponseEntity.ok(studentService.createStudent(student));
     }
 
-    //done test
+    // tested
     @GetMapping("/{id}")
     public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
         return ResponseEntity.ok(studentService.getStudentById(id));
     }
 
-    //done test
+    // tested
     @GetMapping
     public ResponseEntity<List<Student>> getAllStudents() {
         return ResponseEntity.ok(studentService.getAllStudents());
     }
 
-    //done test
+    // tested
     @PutMapping("/{studentId}/enroll/{courseId}")
     public ResponseEntity<Student> enrollCourse(@PathVariable Long studentId, @PathVariable Long courseId) {
         return ResponseEntity.ok(studentService.enrollCourse(studentId, courseId));
     }
 
-
+    // tested
     @GetMapping("/{studentId}/available-courses")
     public List<Course> viewAvailableCourses(@PathVariable Long studentId) {
         return studentService.getAvailableCourses(studentId);
     }
 
+    // tested
     @GetMapping("/{studentId}/enrolled-courses")
     public List<Course> viewEnrolledCourses(@PathVariable Long studentId) {
         return studentService.getEnrolledCourses(studentId);
     }
 
+    // tested
     @GetMapping("/{studentId}/courses/{courseId}/lessons")
     public ResponseEntity<List<Lesson>> viewCourseLessons(@PathVariable Long studentId, @PathVariable Long courseId) {
         List<Lesson> lessons = studentService.getCourseLessons(studentId, courseId);
         return ResponseEntity.ok(lessons);
     }
 
+    // tested
     @GetMapping("/{studentId}/courses/{courseId}/lessons/{lessonId}")
     public ResponseEntity<String> viewLessonContent(@PathVariable Long studentId, @PathVariable Long courseId, @PathVariable Long lessonId) {
         String lessonContent = studentService.getLessonContent(studentId, courseId, lessonId);
         return ResponseEntity.ok(lessonContent);
     }
 
+    // tested
     @GetMapping("/{studentId}/courses/{courseId}/assignments")
     public ResponseEntity<List<Assignment>> viewAssignments(
             @PathVariable Long studentId, @PathVariable Long courseId) {
@@ -97,14 +101,14 @@ public class  StudentController {
         }
     }
 
-
+    // tested
     @GetMapping("/{studentId}/courses/{courseId}/quizzes")
     public ResponseEntity<List<Quiz>> viewQuizzes(@PathVariable Long studentId, @PathVariable Long courseId) {
         List<Quiz> quizzes = studentService.getQuizzes(studentId, courseId);
         return ResponseEntity.ok(quizzes);
     }
 
-
+    // unsupported media problem
     @PostMapping("/{studentId}/quizzes/{quizId}/submit")
     public ResponseEntity<String> takeQuiz(@PathVariable Long studentId, @PathVariable Long quizId, @RequestBody Submission submission) {
         try {
