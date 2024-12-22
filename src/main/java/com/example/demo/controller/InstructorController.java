@@ -108,7 +108,8 @@ public class InstructorController {
 //    //Remove student from course
 //    @DeleteMapping("/{instructorId}/courses/{courseId}/{studentId}")
 //    public ResponseEntity<Void> removeStudentFromCourse(@PathVariable Long instructorId,
-//                                                        @PathVariable Long courseId,
+//                                                        @PathVariable Lo
+//                                                        +ng courseId,
 //                                                        @PathVariable Long studentId){
 //        instructorService.removeStudentFromCourse(instructorId, courseId, studentId);
 //        return ResponseEntity.noContent().build();
