@@ -56,7 +56,7 @@ public class CourseService {
         course.setDescription(courseRequest.getDescription());
         Instructor instructor = instructorService.getInstructorById(courseRequest.getInstructorId());
         if (instructor != null) {
-        course.setInstructor(instructor);
+            course.setInstructor(instructor);
         }
         else throw new RuntimeException("instructor not found");
 
