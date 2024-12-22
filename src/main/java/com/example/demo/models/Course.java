@@ -33,19 +33,19 @@ public class Course {
     private Instructor instructor;
 
     @ManyToMany(mappedBy = "enrolledCourses")
-//    @JsonBackReference
+    @JsonBackReference
     private List<Student> enrolledStudents;
 
     @OneToMany(mappedBy = "course")
-//    @JsonManagedReference
+    @JsonManagedReference
     private List<Lesson> lessons;
 
     @OneToMany(mappedBy = "course")
-//    @JsonManagedReference
+    @JsonManagedReference
     private List<Assignment> assignments;
 
     @OneToMany(mappedBy = "course")
-//    @JsonManagedReference
+    @JsonManagedReference
     private List<Quiz> quizzes;
 
     public Course() {
