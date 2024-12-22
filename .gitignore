@@ -57,5 +57,16 @@ src/main/resources/application.yml
 # Ignore application.properties
 src/main/resources/application.properties
 
-### Dependencies ###
-**/dependency-reduced-pom.xml
+# Ignore production secrets
+**/application-prod.properties
+**/application-prod.yml
+
+### Security ###
+# Ignore any files containing secrets, keys, or credentials
+**/secrets.properties
+**/secrets.yml
+**/*.key
+**/*.pem
+**/*.p12
+**/*.jks
+
