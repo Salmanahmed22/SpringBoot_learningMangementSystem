@@ -8,6 +8,7 @@ import com.example.demo.models.Student;
 import com.example.demo.repository.CourseRepository;
 import com.example.demo.repository.InstructorRepository;
 //import com.example.demo.repository.NotificationRepository;
+import com.example.demo.repository.StudentRepository;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,8 @@ public class InstructorService {
 
     @Autowired
     private InstructorRepository instructorRepository;
+    @Autowired
+    private CourseRepository courseRepository;
 
     @Autowired
     private CourseService courseService;
@@ -87,8 +90,9 @@ public class InstructorService {
     // Create a new course
     public Course createCourse(Course course, Long id) {
         Instructor instructor = getInstructorById(id);
-        instructor.addCourse(course);
-        return courseService.createCourse(course);
+        instructor.getCourses().add(course);
+        course.setInstructor(instructor);
+        return courseRepository.save(course);
     }
 
     // Update a course
@@ -116,18 +120,18 @@ public class InstructorService {
         return lesson;
     }
 
-//    public void removeStudentFromCourse(Long instructorId, Long courseId, Long studentId) {
-//
-//        Student student = studentService.getStudentById(studentId);
-//
-//        Instructor instructor = instructorRepository.findById(instructorId).orElse(null);
-//
-//        Course course = courseService.getCourseById(courseId);
-//
-//        if (!course.getInstructor().equals(instructor)) {
-//            throw new IllegalArgumentException("Course does not belong to the instructor");
-//        }
-//        courseService.removeStudentFromCourse(course, student);
-//
-//    }
+    public void removeStudentFromCourse(Long instructorId, Long courseId, Long studentId) {
+
+        Student student = studentService.getStudentById(studentId);
+
+        Instructor instructor = instructorRepository.findById(instructorId).orElse(null);
+
+        Course course = courseService.getCourseById(courseId);
+
+        if (!course.getInstructor().equals(instructor)) {
+            throw new IllegalArgumentException("Course does not belong to the instructor");
+        }
+        courseService.removeStudentFromCourse(course, student);
+
+    }
 }
