@@ -20,7 +20,7 @@ import java.util.Map;
 public class Assignment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String title;
@@ -28,6 +28,7 @@ public class Assignment {
     private String description;
 
     private LocalDateTime dueDate;
+
 
     @ElementCollection
     @MapKeyColumn(name = "student_id")
@@ -41,6 +42,8 @@ public class Assignment {
 
     // default constructor
     public Assignment() {
+        course = new Course();
+        submissions = new HashMap<>();
     }
 
 }
