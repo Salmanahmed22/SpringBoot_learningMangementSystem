@@ -29,23 +29,23 @@ public class Course {
 
     @ManyToOne
     @JoinColumn(name = "instructor_id")
-    @JsonBackReference
+    @JsonIgnore
     private Instructor instructor;
 
     @ManyToMany(mappedBy = "enrolledCourses")
-//    @JsonBackReference
+    @JsonIgnore
     private List<Student> enrolledStudents;
 
     @OneToMany(mappedBy = "course")
-//    @JsonManagedReference
+    @JsonIgnore
     private List<Lesson> lessons;
 
     @OneToMany(mappedBy = "course")
-//    @JsonManagedReference
+    @JsonIgnore
     private List<Assignment> assignments;
 
     @OneToMany(mappedBy = "course")
-//    @JsonManagedReference
+    @JsonIgnore
     private List<Quiz> quizzes;
 
     public Course() {
