@@ -29,6 +29,7 @@ public class Assignment {
 
     private LocalDateTime dueDate;
 
+
     @ElementCollection
     @MapKeyColumn(name = "student_id")
     @Column(name = "submission_content")

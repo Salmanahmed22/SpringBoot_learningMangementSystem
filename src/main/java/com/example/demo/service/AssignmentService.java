@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
+import com.example.demo.DTO.AssignmentRequest;
 import com.example.demo.models.Assignment;
+import com.example.demo.models.Course;
 import com.example.demo.models.Student;
 import com.example.demo.models.Submission;
 import com.example.demo.repository.AssignmentRepository;
@@ -19,6 +21,8 @@ public class AssignmentService {
 
     @Autowired
     private StudentRepository studentRepository;
+    @Autowired
+    private CourseService courseService;
 
     public Assignment getAssignmentById(Long id) {
         return assignmentRepository.findById(id).orElse(null);
@@ -28,21 +32,36 @@ public class AssignmentService {
         return assignmentRepository.findAll();
     }
 
-    public Assignment createAssignment(Assignment assignment) {
+    public Assignment createAssignment(AssignmentRequest assignmentRequest ) {
+        Assignment assignment = new Assignment();
+        assignment.setTitle(assignmentRequest.getTitle());
+        assignment.setDescription(assignmentRequest.getDescription());
+        assignment.setDueDate(assignmentRequest.getDueDate());
+        assignment.setCourse(courseService.getCourseById(assignmentRequest.getCourseId())) ;
         return assignmentRepository.save(assignment);
     }
 
     public Assignment updateAssignment(Long id, Assignment updatedAssignment) {
+        // Fetch the existing assignment by ID
         Assignment existingAssignment = assignmentRepository.findById(id).orElse(null);
         if (existingAssignment != null) {
-            existingAssignment.setTitle(updatedAssignment.getTitle());
-            existingAssignment.setDescription(updatedAssignment.getDescription());
-            existingAssignment.setDueDate(updatedAssignment.getDueDate());
-            existingAssignment.setCourse(updatedAssignment.getCourse());
+            if (updatedAssignment.getTitle() != null) {
+                existingAssignment.setTitle(updatedAssignment.getTitle());
+            }
+            if (updatedAssignment.getDescription() != null) {
+                existingAssignment.setDescription(updatedAssignment.getDescription());
+            }
+            if (updatedAssignment.getDueDate() != null) {
+                existingAssignment.setDueDate(updatedAssignment.getDueDate());
+            }
+            if (updatedAssignment.getCourse() != null) {
+                existingAssignment.setCourse(updatedAssignment.getCourse());
+            }
             return assignmentRepository.save(existingAssignment);
         }
         return null;
     }
+
 
     public Assignment submitAssignment(Long assignmentId, Long studentId,String submissionContent) {
         Assignment existingAssignment = assignmentRepository.findById(assignmentId).orElse(null);
