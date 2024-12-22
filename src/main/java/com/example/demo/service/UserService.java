@@ -1,9 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.models.Instructor;
-import com.example.demo.models.Role;
-import com.example.demo.models.Student;
-import com.example.demo.models.User;
+import com.example.demo.models.*;
 import com.example.demo.repository.AdminRepository;
 import com.example.demo.repository.InstructorRepository;
 import com.example.demo.repository.StudentRepository;
@@ -85,9 +82,15 @@ public class UserService {
             student.setPassword(newUser.getPassword());
             student.setRole(newUser.getRole());
             savedUser = studentRepository.save(student);
-        }else
-            savedUser = userRepository.save(newUser);
-
+        }else {
+            Admin admin = new Admin();
+            admin.setId(newUser.getId());
+            admin.setName(newUser.getName());
+            admin.setEmail(newUser.getEmail());
+            admin.setPassword(newUser.getPassword());
+            admin.setRole(newUser.getRole());
+            savedUser = adminRepository.save(admin);
+        }
         String token = jwtService.generateToken(savedUser);
 
         Map<String, Object> response = new HashMap<>();
