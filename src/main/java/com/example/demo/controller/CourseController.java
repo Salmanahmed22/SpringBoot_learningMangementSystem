@@ -16,15 +16,15 @@ public class CourseController {
     @Autowired
     private CourseService courseService;
 
-    @PostMapping
+    @PostMapping(consumes = "application/json")
     public ResponseEntity<Course> createCourse(@RequestBody Course course) {
         try {
             return ResponseEntity.ok(courseService.createCourse(course));
-        } catch (IllegalArgumentException ex) {
+        }
+        catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(null);
         }
     }
-
 
     @GetMapping("/{id}")
     public ResponseEntity<Course> getCourseById(@PathVariable Long id) {

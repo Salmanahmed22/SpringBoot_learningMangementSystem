@@ -8,6 +8,7 @@ import com.example.demo.repository.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,7 +19,10 @@ public class CourseService {
 
     @Autowired
     private InstructorRepository instructorRepository;
-
+    @Autowired
+    private LessonService lessonService;
+    @Autowired
+    private StudentService studentService;
 
     public Course getCourseById(Long id) {
         return courseRepository.findById(id).orElse(null);
