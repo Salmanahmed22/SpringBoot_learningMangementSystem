@@ -2,12 +2,14 @@ package com.example.demo.service;
 
 import com.example.demo.models.Assignment;
 import com.example.demo.models.Student;
+import com.example.demo.models.Submission;
 import com.example.demo.repository.AssignmentRepository;
 import com.example.demo.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AssignmentService {
@@ -42,6 +44,17 @@ public class AssignmentService {
         return null;
     }
 
+    public Assignment submitAssignment(Long assignmentId, Long studentId,String submissionContent) {
+        Assignment existingAssignment = assignmentRepository.findById(assignmentId).orElse(null);
+        if (existingAssignment != null) {
+            Map<Long, String> submissions = existingAssignment.getSubmissions();
+            submissions.put(studentId, submissionContent);
+            existingAssignment.setSubmissions(submissions);
+            return assignmentRepository.save(existingAssignment);
+
+        }
+        return null;
+    }
 //    public void submitAssignment(Long studentId, Long assignmentId, String submissionContent) {
 //        // Find the student by ID
 //        Student student = studentRepository.findById(studentId)

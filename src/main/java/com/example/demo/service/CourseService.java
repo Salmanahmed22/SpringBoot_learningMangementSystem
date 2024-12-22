@@ -3,12 +3,12 @@ package com.example.demo.service;
 import com.example.demo.models.Course;
 import com.example.demo.models.Instructor;
 import com.example.demo.models.Lesson;
-import com.example.demo.models.Student;
 import com.example.demo.repository.CourseRepository;
 import com.example.demo.repository.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,6 +16,7 @@ public class CourseService {
 
     @Autowired
     private CourseRepository courseRepository;
+
     @Autowired
     private InstructorRepository instructorRepository;
     @Autowired
@@ -55,15 +56,17 @@ public class CourseService {
         courseRepository.deleteById(id);
     }
 
-    public void addLesson(Course course, Lesson lesson) {
-        lessonService.createLesson(lesson);
-        course.addLesson(lesson);
-        courseRepository.save(course);
+    public Course addLesson(Long courseId, Lesson lesson) {
+        Course course = courseRepository.findById(courseId).orElseThrow(null);
+        List <Lesson> courseLessons = course.getLessons();
+        courseLessons.add(lesson);
+        course.setLessons(courseLessons);
+        return courseRepository.save(course);
     }
 
-    public void removeStudentFromCourse(Course course, Student student) {
-        course.getEnrolledStudents().remove(student);
-        courseRepository.save(course);
-        studentService.removeEnrolledCourse(course, student);
-    }
+//    public void removeStudentFromCourse(Course course, Student student) {
+//        course.getEnrolledStudents().remove(student);
+//        courseRepository.save(course);
+//        studentService.removeEnrolledCourse(course, student);
+//    }
 }

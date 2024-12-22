@@ -112,22 +112,22 @@ public class InstructorService {
             throw new IllegalArgumentException("Course does not belong to the instructor");
         }
 
-        courseService.addLesson(course, lesson);
+        courseService.addLesson(courseId, lesson);
         return lesson;
     }
 
-    public void removeStudentFromCourse(Long instructorId, Long courseId, Long studentId) {
-
-        Student student = studentService.getStudentById(studentId);
-
-        Instructor instructor = instructorRepository.findById(instructorId).orElse(null);
-
-        Course course = courseService.getCourseById(courseId);
-
-        if (!course.getInstructor().equals(instructor)) {
-            throw new IllegalArgumentException("Course does not belong to the instructor");
-        }
-        courseService.removeStudentFromCourse(course, student);
-
-    }
+//    public void removeStudentFromCourse(Long instructorId, Long courseId, Long studentId) {
+//
+//        Student student = studentService.getStudentById(studentId);
+//
+//        Instructor instructor = instructorRepository.findById(instructorId).orElse(null);
+//
+//        Course course = courseService.getCourseById(courseId);
+//
+//        if (!course.getInstructor().equals(instructor)) {
+//            throw new IllegalArgumentException("Course does not belong to the instructor");
+//        }
+//        courseService.removeStudentFromCourse(course, student);
+//
+//    }
 }

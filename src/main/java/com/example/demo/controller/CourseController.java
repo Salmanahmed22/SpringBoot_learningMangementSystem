@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.models.Course;
+import com.example.demo.models.Lesson;
 import com.example.demo.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,15 @@ public class CourseController {
     @Autowired
     private CourseService courseService;
 
-
+    @PostMapping(consumes = "application/json")
+    public ResponseEntity<Course> createCourse(@RequestBody Course course) {
+        try {
+            return ResponseEntity.ok(courseService.createCourse(course));
+        }
+        catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Course> getCourseById(@PathVariable Long id) {
@@ -31,6 +40,11 @@ public class CourseController {
     @PutMapping("/{id}")
     public ResponseEntity<Course> updateCourse(@PathVariable Long id, @RequestBody Course updatedCourse) {
         return ResponseEntity.ok(courseService.updateCourse(id, updatedCourse));
+    }
+
+    @PostMapping("{id}/lessons")
+    public ResponseEntity<Course> addLessonToCourse(@PathVariable Long id, @RequestBody Lesson lesson) {
+        return ResponseEntity.ok(courseService.addLesson(id, lesson));
     }
 
     @DeleteMapping("/{id}")

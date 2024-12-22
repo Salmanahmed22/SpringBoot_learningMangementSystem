@@ -26,6 +26,14 @@ public class QuizService {
         return quizRepository.save(quiz);
     }
 
+    public Quiz submitQuiz(Long quizId, Submission submission) {
+        Quiz quiz = getQuizById(quizId);
+        List<Submission> submissions = quiz.getSubmissions();
+        submissions.add(submission);
+        quiz.setSubmissions(submissions);
+        return quizRepository.save(quiz);
+    }
+
     public Quiz updateQuiz(Long id, Quiz updatedQuiz) {
         Quiz existingQuiz = quizRepository.findById(id).orElse(null);
         if (existingQuiz != null) {

@@ -40,9 +40,11 @@ public class Course {
     private List<Lesson> lessons;
 
     @OneToMany(mappedBy = "course")
+    @JsonManagedReference
     private List<Assignment> assignments;
 
     @OneToMany(mappedBy = "course")
+    @JsonManagedReference
     private List<Quiz> quizzes;
 
     public Course() {
@@ -52,8 +54,5 @@ public class Course {
         this.quizzes = new ArrayList<>();
     }
 
-    public void addLesson(Lesson lesson) {
-        lessons.add(lesson);
-        lesson.setCourse(this);
-    }
+
 }

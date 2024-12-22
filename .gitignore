@@ -1,5 +1,6 @@
 ### Maven ###
 target/
+**/target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -11,7 +12,6 @@ target/
 *.ipr
 
 ### Maven Wrapper ###
-# Keep the wrapper jar but ignore the binary files
 mvnw
 mvnw.cmd
 !.mvn/wrapper/maven-wrapper.jar
@@ -44,7 +44,7 @@ Thumbs.db
 
 ### Application Properties ###
 # Don't ignore the main application.properties as it contains default configs
-# !src/main/resources/application.properties
+!src/main/resources/application.properties
 
 # Ignore environment-specific properties
 src/main/resources/application-*.properties
