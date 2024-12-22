@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.DTO.CourseRequest;
 import com.example.demo.models.Course;
 import com.example.demo.models.Instructor;
 import com.example.demo.models.Lesson;
@@ -21,8 +22,6 @@ public class InstructorService {
 
     @Autowired
     private InstructorRepository instructorRepository;
-    @Autowired
-    private CourseRepository courseRepository;
 
     @Autowired
     private CourseService courseService;
@@ -87,12 +86,15 @@ public class InstructorService {
 //        }
 //        notificationRepository.saveAll(notifications);
 //    }
+
     // Create a new course
-    public Course createCourse(Course course, Long id) {
-        Instructor instructor = getInstructorById(id);
-        instructor.getCourses().add(course);
-        course.setInstructor(instructor);
-        return courseRepository.save(course);
+    public Course createCourse(CourseRequest courseRequest) {
+        Instructor instructor = getInstructorById(courseRequest.getInstructorId());
+        Course course = courseService.createCourse(courseRequest);
+        List<Course> courses = instructor.getCourses();
+        courses.add(course);
+        instructor.setCourses(courses);
+        return course;
     }
 
     // Update a course

@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.DTO.CourseRequest;
 import com.example.demo.models.Course;
 import com.example.demo.models.Instructor;
 import com.example.demo.models.Lesson;
@@ -72,8 +73,9 @@ public class InstructorController {
 //
     // Create a new course
     @PostMapping("/{id}/courses")
-    public ResponseEntity<Course> createCourse(@PathVariable Long id, @RequestBody Course course) {
-        return ResponseEntity.ok(instructorService.createCourse(course, id));
+    public ResponseEntity<Course> createCourse(@PathVariable Long id, @RequestBody CourseRequest courseRequest) {
+        courseRequest.setInstructorId(id);
+        return ResponseEntity.ok(instructorService.createCourse(courseRequest));
     }
 
     // Update a course

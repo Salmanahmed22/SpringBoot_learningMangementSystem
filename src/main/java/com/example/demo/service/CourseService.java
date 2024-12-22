@@ -44,7 +44,7 @@ public class CourseService {
     public Course createCourse(CourseRequest courseRequest) {
         Course course = new Course();
         course.setMinLevel(courseRequest.getMinLevel());
-        course.setTitle(course.getTitle());
+        course.setTitle(courseRequest.getTitle());
         course.setDescription(courseRequest.getDescription());
         Instructor instructor = instructorService.getInstructorById(courseRequest.getInstructorId());
         if (instructor != null) {
