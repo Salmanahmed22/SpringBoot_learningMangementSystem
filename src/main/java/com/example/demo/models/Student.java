@@ -22,7 +22,7 @@ public class Student extends User {
             joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "course_id")
     )
-    @JsonManagedReference
+    @JsonManagedReference(value = "student-course")
     private List<Course> enrolledCourses;
 
     @Column(nullable = false)

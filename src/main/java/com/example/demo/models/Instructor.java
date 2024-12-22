@@ -1,6 +1,5 @@
 package com.example.demo.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -17,18 +16,14 @@ import java.util.List;
 @Entity
 public class Instructor extends User {
 
-    private String department;
-    private String employeeId;
+    private String department = "default department";
+    private String employeeId = "default employeeId";
 
     @OneToMany(mappedBy = "instructor")
-    @JsonManagedReference
-    private List<Course> courses;
+    @JsonManagedReference(value = "instructor-course")
+    private List<Course> courses = new ArrayList<>();
 
     public Instructor() {
         super();
-        courses = new ArrayList<>();
-        department = "default department";
-        employeeId = "default employeeId";
     }
-
 }

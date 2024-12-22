@@ -26,10 +26,6 @@ public class LessonController {
         return ResponseEntity.ok(lessonService.getAllLessons());
     }
 
-    @PostMapping
-    public ResponseEntity<Lesson> createLesson(@RequestBody Lesson lesson) {
-        return ResponseEntity.ok(lessonService.createLesson(lesson));
-    }
 
     @PutMapping("/{id}")
     public ResponseEntity<Lesson> updateLesson(@PathVariable Long id, @RequestBody Lesson updatedLesson) {
