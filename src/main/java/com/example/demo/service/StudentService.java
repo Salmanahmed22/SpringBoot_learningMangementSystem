@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
+import com.example.demo.dtos.AnswerDTO;
 import com.example.demo.dtos.StudentDTO;
+import com.example.demo.dtos.SubmissionDTO;
 import com.example.demo.models.*;
 import com.example.demo.repository.NotificationRepository;
 import com.example.demo.repository.StudentRepository;
@@ -9,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,7 +52,7 @@ public class StudentService {
             throw new IllegalArgumentException("Student not found");
         }
 
-        Course course = courseService.getCourseById(courseId); // Ensure it's a managed entity
+        Course course = courseService.getCourseById(courseId);
 
         if (student.getLevel() < course.getMinLevel()) {
             throw new IllegalArgumentException("Student level is not sufficient to enroll in this course");
@@ -173,7 +176,7 @@ public class StudentService {
     }
 
     // unsupported media problem
-    public void takeQuiz(Long studentId, Long quizId, Submission submission) {
+    public double takeQuiz(Long studentId, Long quizId, SubmissionDTO submissionDTO) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new IllegalArgumentException("Student not found"));
         List<Course> enrolledCourses = student.getEnrolledCourses();
@@ -181,11 +184,20 @@ public class StudentService {
             List<Quiz> quizzes = course.getQuizzes();
             for (Quiz quiz : quizzes) {
                 if (quiz.getId().equals(quizId)) {
-                    if (quiz.getDeadline().isBefore(LocalDateTime.now())) {
+                    if ((quiz.getQuizDate().plus(quiz.getDuration())).isBefore(LocalDateTime.now())) {
                         throw new IllegalArgumentException("Quiz deadline has passed.");
                     }
-                    quizService.submitQuiz(quizId, submission);
-                    return;
+                    Submission submission = new Submission();
+                    submission.setStudent(student);
+                    List<Answer> answers = new ArrayList<>();
+                    for(AnswerDTO answerDTO : submissionDTO.getAnswers()) {
+                        Answer answer = new Answer();
+                        answer.setId(answerDTO.getId());
+                        answer.setAnswer(answerDTO.getAnswer());
+                        answers.add(answer);
+                    }
+                    submission.setAnswers(answers);
+                    return quizService.submitQuiz(quizId, submission);
                 }
             }
         }

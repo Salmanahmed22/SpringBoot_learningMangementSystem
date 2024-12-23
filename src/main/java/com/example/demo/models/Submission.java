@@ -1,5 +1,7 @@
 package com.example.demo.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,6 +27,13 @@ public class Submission {
     @OneToMany
     @JoinColumn(name = "answer_id")
     List<Answer> answers;
+
+    @ManyToOne
+    @JoinColumn(name = "quiz_id")
+    @JsonBackReference(value = "quiz-submission")
+    Quiz quiz;
+
+    private double grade = 0.0;
 
     // Default constructor
     public Submission() {}

@@ -1,10 +1,12 @@
 package com.example.demo.controller;
 
 import com.example.demo.dtos.CourseDTO;
+import com.example.demo.dtos.QuizDTO;
 import com.example.demo.models.Course;
 import com.example.demo.models.Instructor;
 import com.example.demo.models.Lesson;
 //import com.example.demo.models.Notification;
+import com.example.demo.models.Quiz;
 import com.example.demo.service.InstructorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -51,12 +53,6 @@ public class InstructorController {
         return ResponseEntity.notFound().build();
     }
 
-    // Delete an instructor
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteInstructor(@PathVariable Long id) {
-        instructorService.deleteInstructor(id);
-        return ResponseEntity.noContent().build();
-    }
 
 //    //notification
 ////    @PutMapping("/{id}/notifications/mark-as-read")
@@ -111,6 +107,15 @@ public class InstructorController {
         return ResponseEntity.ok(instructorService.addLessonToCourse(instructorId, courseId, lesson));
     }
 
+    // tested
+    @PostMapping("/{instructorId}/courses/{courseId}/quiz")
+    public ResponseEntity<Quiz> addQuiz(
+            @PathVariable Long instructorId,
+            @PathVariable Long courseId,
+            @RequestBody QuizDTO quizDTO) {
+        return ResponseEntity.ok(instructorService.createQuiz(instructorId, courseId, quizDTO));
+    }
+
     // Remove student from course
     @DeleteMapping("/{instructorId}/courses/{courseId}/{studentId}")
     public ResponseEntity<Void> removeStudentFromCourse(@PathVariable Long instructorId,
@@ -119,4 +124,12 @@ public class InstructorController {
         instructorService.removeStudentFromCourse(instructorId, courseId, studentId);
         return ResponseEntity.noContent().build();
     }
+
+    // Delete an instructor
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteInstructor(@PathVariable Long id) {
+        instructorService.deleteInstructor(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

@@ -9,9 +9,10 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class SubmissionDTO {
-    private List<AnswerDTO> answers;
+public class QuestionDTO {
+    private String question;
+    private List<String> options;
+    private String correctAnswer;
 
-    // Default constructor
-    public SubmissionDTO() {}
+    QuestionDTO() {}
 }

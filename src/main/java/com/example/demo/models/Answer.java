@@ -24,7 +24,7 @@ public class Answer {
     @JoinColumn(name = "question_id")
     private Question question;
 
-    private String response;
+    private String answer;
 
     // Default constructor
     public Answer() {}

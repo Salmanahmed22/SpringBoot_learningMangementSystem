@@ -26,19 +26,4 @@ public class QuizController {
         return ResponseEntity.ok(quizService.getAllQuizzes());
     }
 
-    @PostMapping
-    public ResponseEntity<Quiz> createQuiz(@RequestBody Quiz quiz) {
-        return ResponseEntity.ok(quizService.createQuiz(quiz));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Quiz> updateQuiz(@PathVariable Long id, @RequestBody Quiz updatedQuiz) {
-        return ResponseEntity.ok(quizService.updateQuiz(id, updatedQuiz));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteQuiz(@PathVariable Long id) {
-        quizService.deleteQuiz(id);
-        return ResponseEntity.noContent().build();
-    }
 }

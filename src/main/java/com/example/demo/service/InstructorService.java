@@ -1,11 +1,9 @@
 package com.example.demo.service;
 
 import com.example.demo.dtos.CourseDTO;
-import com.example.demo.models.Course;
-import com.example.demo.models.Instructor;
-import com.example.demo.models.Lesson;
+import com.example.demo.dtos.QuizDTO;
+import com.example.demo.models.*;
 //import com.example.demo.models.Notification;
-import com.example.demo.models.Student;
 import com.example.demo.repository.CourseRepository;
 import com.example.demo.repository.InstructorRepository;
 //import com.example.demo.repository.NotificationRepository;
@@ -31,6 +29,8 @@ public class InstructorService {
 
     @Autowired
     private StudentService studentService;
+    @Autowired
+    private QuizService quizService;
 
     // Get all instructors
     public List<Instructor> getAllInstructors() {
@@ -127,6 +127,14 @@ public class InstructorService {
 
         courseService.addLesson(courseId, lesson);
         return lesson;
+    }
+
+    public Quiz createQuiz(Long instructorId, Long courseId, QuizDTO quizDTO) {
+        if(instructorId == courseService.getCourseById(courseId).getInstructor().getId()) {
+            Quiz quiz = quizService.createQuiz(quizDTO);
+            return quiz;
+        }
+        throw new IllegalArgumentException("Course does not belong to the instructor");
     }
 
     public void removeStudentFromCourse(Long instructorId, Long courseId, Long studentId) {

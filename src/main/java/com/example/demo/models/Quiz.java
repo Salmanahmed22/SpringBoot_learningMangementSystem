@@ -1,17 +1,17 @@
 package com.example.demo.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 @Getter
@@ -25,7 +25,12 @@ public class Quiz {
 
     private String title;
     private String description;
-    private LocalDateTime deadline;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime quizDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private Duration duration;
 
     @ManyToOne
     @JoinColumn(name = "course_id")
@@ -37,7 +42,10 @@ public class Quiz {
     private List<Question> questions = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Submission> submissions = new ArrayList<>();;
+    @JoinColumn(name = "quiz_id")
+    @JsonManagedReference(value = "quiz-submission")
+    private List<Submission> submissions = new ArrayList<>();
+
 
     // Default constructor
     public Quiz() {}

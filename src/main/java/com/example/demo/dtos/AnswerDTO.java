@@ -4,14 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @AllArgsConstructor
-public class SubmissionDTO {
-    private List<AnswerDTO> answers;
+public class AnswerDTO {
+    private long id;
+    private Long questionId;
+    private String answer;
 
     // Default constructor
-    public SubmissionDTO() {}
+    public AnswerDTO() {}
 }

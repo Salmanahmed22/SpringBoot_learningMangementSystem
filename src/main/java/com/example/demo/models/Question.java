@@ -17,7 +17,7 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String text;
+    private String question;
 
     @ElementCollection
     private List<String> options;

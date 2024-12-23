@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dtos.AssignmentSubmissionDTO;
 import com.example.demo.dtos.StudentDTO;
 import com.example.demo.dtos.SubmissionDTO;
 import com.example.demo.models.Course;
@@ -81,9 +82,9 @@ public class  StudentController {
     }
 
     @PostMapping("/{studentId}/assignments/{assignmentId}/submit")
-    public ResponseEntity<String> submitAssignment(@PathVariable Long studentId, @PathVariable Long assignmentId, @RequestBody SubmissionDTO submissionRequest) {
+    public ResponseEntity<String> submitAssignment(@PathVariable Long studentId, @PathVariable Long assignmentId, @RequestBody AssignmentSubmissionDTO assignmentSubmissionDTO) {
         try {
-            studentService.submitAssignment(studentId, assignmentId, submissionRequest.getSubmissionContent());
+            studentService.submitAssignment(studentId, assignmentId, assignmentSubmissionDTO.getSubmissionContent());
             return ResponseEntity.ok("Assignment submitted successfully");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -99,10 +100,10 @@ public class  StudentController {
 
     // unsupported media problem
     @PostMapping("/{studentId}/quizzes/{quizId}/submit")
-    public ResponseEntity<String> takeQuiz(@PathVariable Long studentId, @PathVariable Long quizId, @RequestBody Submission submission) {
+    public ResponseEntity<String> submitQuiz(@PathVariable Long studentId, @PathVariable Long quizId, @RequestBody SubmissionDTO submissionDTO) {
         try {
-            studentService.takeQuiz(studentId, quizId, submission);
-            return ResponseEntity.ok("Quiz submission successful.");
+
+            return ResponseEntity.ok("Grade " + studentService.takeQuiz(studentId, quizId, submissionDTO)*100 + "%");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
