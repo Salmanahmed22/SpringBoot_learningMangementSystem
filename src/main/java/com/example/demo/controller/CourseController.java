@@ -20,15 +20,6 @@ public class CourseController {
     @Autowired
     private LessonService lessonService;
 
-    @PostMapping("/create")
-    public ResponseEntity<Course> createCourse(@RequestBody CourseDTO courseRequest) {
-        try {
-            return ResponseEntity.ok(courseService.createCourse(courseRequest));
-        }
-        catch (IllegalArgumentException ex) {
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Course> getCourseById(@PathVariable Long id) {
@@ -44,11 +35,6 @@ public class CourseController {
     @PutMapping("/{id}")
     public ResponseEntity<Course> updateCourse(@PathVariable Long id, @RequestBody CourseDTO updatedCourse) {
         return ResponseEntity.ok(courseService.updateCourse(id, updatedCourse));
-    }
-
-    @PostMapping("{id}/lessons")
-    public ResponseEntity<Course> addLessonToCourse(@PathVariable Long id, @RequestBody Lesson lesson) {
-        return ResponseEntity.ok(courseService.addLesson(id, lesson));
     }
 
     @DeleteMapping("/{id}")

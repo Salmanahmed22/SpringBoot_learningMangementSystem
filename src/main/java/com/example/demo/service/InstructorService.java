@@ -1,16 +1,28 @@
 package com.example.demo.service;
 
 import com.example.demo.dtos.CourseDTO;
+import com.example.demo.dtos.LessonDTO;
+import com.example.demo.dtos.QuestionDTO;
 import com.example.demo.dtos.QuizDTO;
 import com.example.demo.models.*;
 //import com.example.demo.models.Notification;
 import com.example.demo.repository.CourseRepository;
+import com.example.demo.repository.MediaFileRepository;
 import com.example.demo.repository.InstructorRepository;
 //import com.example.demo.repository.NotificationRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.criteria.CriteriaBuilder;
+import java.io.File;
+import java.io.IOException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -25,12 +37,18 @@ public class InstructorService {
     private CourseService courseService;
 
     @Autowired
-    private LessonService lessonService;
+    private QuestionService questionService;
 
     @Autowired
+    private MediaFileRepository mediaFileRepository;  // Inject the repositor
+    @Autowired
     private StudentService studentService;
+
     @Autowired
     private QuizService quizService;
+
+    @Autowired
+    private QuestionBankService questionBankService;
 
     // Get all instructors
     public List<Instructor> getAllInstructors() {
@@ -87,10 +105,12 @@ public class InstructorService {
 //        notificationRepository.saveAll(notifications);
 //    }
 
-    // Create a new course
-    public Course createCourse(CourseDTO courseDTO) {
-        Instructor instructor = getInstructorById(courseDTO.getInstructorId());
-        Course course = courseService.createCourse(courseDTO);
+    public Course createCourse(Long instructorId, CourseDTO courseDTO) {
+        Instructor instructor = getInstructorById(instructorId);
+        if(instructor == null){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Instructor not found");
+        }
+        Course course = courseService.createCourse(instructor, courseDTO);
         List<Course> courses = instructor.getCourses();
         courses.add(course);
         instructor.setCourses(courses);
@@ -98,12 +118,15 @@ public class InstructorService {
         return course;
     }
 
-    // Update a course
-    public Course updateCourse(Long id, CourseDTO updatedCourse) {
-        return courseService.updateCourse(id, updatedCourse);
+    public Course updateCourse(Long instructorId, Long courseId, CourseDTO updatedCourse) {
+        Course course = courseService.getCourseById(courseId);
+        Instructor instructor = getInstructorById(instructorId);
+        if (!course.getInstructor().equals(instructor)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Instructor has no authority on this course");
+        }
+        return courseService.updateCourse(courseId, updatedCourse);
     }
 
-    // Delete an instructor
     public void deleteCourse(Long instructorid, Long courseId) {
         Instructor instructor = getInstructorById(instructorid);
         Course course = courseService.getCourseById(courseId);
@@ -114,24 +137,47 @@ public class InstructorService {
         courseService.deleteCourse(courseId);
     }
 
-    // Add a lesson to course
-    public Lesson addLessonToCourse(Long instructorId, Long courseId, Lesson lesson) {
+    public Course addLessonToCourse(Long instructorId, Long courseId, LessonDTO lessonDTO) {
 
         Instructor instructor = instructorRepository.findById(instructorId).orElse(null);
 
-        Course course = courseService.getCourseById(courseId);
+        Course course = courseRepository.findById(courseId).orElseThrow(() ->
+                new EntityNotFoundException("Course not found")
+        );
 
         if (!course.getInstructor().equals(instructor)) {
-            throw new IllegalArgumentException("Course does not belong to the instructor");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Instructor has no authority on this course");
         }
+        Lesson lesson = new Lesson();
+        if(lessonDTO.getTitle() != null)
+            lesson.setTitle(lessonDTO.getTitle());
+        if(lessonDTO.getContent() != null)
+            lesson.setContent(lessonDTO.getContent());
 
-        courseService.addLesson(courseId, lesson);
-        return lesson;
+        return courseService.addLesson(course, lesson);
+    }
+
+    public QuestionBank addQuestionToBank(Long instructorId, Long courseId, QuestionDTO questionDTO){
+        Instructor instructor = getInstructorById(instructorId);
+        Course course = courseService.getCourseById(courseId);
+        if (!course.getInstructor().equals(instructor)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Instructor has no authority on this course");
+        }
+        QuestionBank questionBank = course.getQuestionBank();
+        Question question = questionService.createQuestion(questionBank, questionDTO);
+        List<Question> questions = questionBank.getQuestions();
+        questions.add(question);
+        questionBank.setQuestions(questions);
+        return questionBankService.saveQuestionBank(questionBank);
     }
 
     public Quiz createQuiz(Long instructorId, Long courseId, QuizDTO quizDTO) {
-        if(instructorId == courseService.getCourseById(courseId).getInstructor().getId()) {
-            Quiz quiz = quizService.createQuiz(quizDTO);
+        if(Objects.equals(instructorId, courseService.getCourseById(courseId).getInstructor().getId())) {
+            Course course = courseService.getCourseById(courseId);
+            Quiz quiz = quizService.createQuiz(course, quizDTO);
+            List<Quiz> quizzes = course.getQuizzes();
+            quizzes.add(quiz);
+            course.setQuizzes(quizzes);
             return quiz;
         }
         throw new IllegalArgumentException("Course does not belong to the instructor");
@@ -151,4 +197,27 @@ public class InstructorService {
         courseService.removeStudentFromCourse(course, student);
 
     }
+
+    // Method to save media file path for a course
+    public MediaFile saveMediaFile(Long instructorId, Long courseId, String filePath) {
+        // Retrieve the instructor by ID
+        Instructor instructor = instructorRepository.findById(instructorId)
+                .orElseThrow(() -> new RuntimeException("Instructor not found"));
+
+        // Retrieve the course by ID
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+
+        // Ensure the instructor is associated with the course
+        if (!course.getInstructor().equals(instructor)) {
+            throw new RuntimeException("Instructor is not associated with the course");
+        }
+
+        // Create a new MediaFile with the provided file path and course
+        MediaFile mediaFile = new MediaFile(filePath, course);
+
+        // Save the media file record in the database
+        return mediaFileRepository.save(mediaFile);
+    }
+
 }
