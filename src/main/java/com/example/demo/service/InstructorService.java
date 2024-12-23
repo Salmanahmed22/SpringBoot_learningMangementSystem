@@ -1,9 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.dtos.CourseDTO;
-import com.example.demo.dtos.LessonDTO;
-import com.example.demo.dtos.QuestionDTO;
-import com.example.demo.dtos.QuizDTO;
+import com.example.demo.dtos.*;
 import com.example.demo.models.*;
 //import com.example.demo.models.Notification;
 import com.example.demo.repository.CourseRepository;
@@ -13,6 +10,7 @@ import com.example.demo.repository.InstructorRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -40,7 +38,8 @@ public class InstructorService {
     private QuestionService questionService;
 
     @Autowired
-    private MediaFileRepository mediaFileRepository;  // Inject the repositor
+    private MediaFileRepository mediaFileRepository;
+    // Inject the repositor
     @Autowired
     private StudentService studentService;
 
@@ -48,7 +47,16 @@ public class InstructorService {
     private QuizService quizService;
 
     @Autowired
+    private AssignmentService assignmentService;
+
+    @Autowired
+    private NotificationService notificationService;
+    
+    @Autowired
     private QuestionBankService questionBankService;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     // Get all instructors
     public List<Instructor> getAllInstructors() {
@@ -87,23 +95,10 @@ public class InstructorService {
     }
 
 
-//    @Autowired
-//    private NotificationRepository notificationRepository;
-//
-//    public List<Notification> getNotifications(Long studentId, Boolean unread) {
-//        if (unread != null && unread) {
-//            return notificationRepository.findByUserIdAndIsRead(studentId, false);
-//        }
-//        return notificationRepository.findByUserId(studentId);
-//    }
-//
-//    public void markNotificationsAsRead(Long studentId) {
-//        List<Notification> notifications = notificationRepository.findByUserIdAndIsRead(studentId, false);
-//        for (Notification notification : notifications) {
-//            notification.setRead(true);
-//        }
-//        notificationRepository.saveAll(notifications);
-//    }
+    // Fetch notifications for the instructor
+    public List<Notification> getNotifications(Long instructorId, Boolean unread) {
+        return notificationService.getNotifications(instructorId, unread);
+    }
 
     public Course createCourse(Long instructorId, CourseDTO courseDTO) {
         Instructor instructor = getInstructorById(instructorId);
@@ -220,4 +215,45 @@ public class InstructorService {
         return mediaFileRepository.save(mediaFile);
     }
 
+    public Instructor updateInstructorProfile(Long instructorId, InstructorDTO instructorDTO) {
+        Instructor instructor = instructorRepository.findById(instructorId).orElse(null);
+
+        if (instructor != null) {
+            if (instructorDTO.getName() != null)
+                instructor.setName(instructorDTO.getName());
+            if (instructorDTO.getEmail() != null)
+                instructor.setEmail(instructorDTO.getEmail());
+            if (instructorDTO.getDepartment() != null)
+                instructor.setDepartment(instructorDTO.getDepartment());
+            if (instructorDTO.getEmployeeId() != null)
+                instructor.setEmployeeId(instructorDTO.getEmployeeId());
+            if (instructorDTO.getPassword() != null){
+                instructor.setPassword(bCryptPasswordEncoder.encode(instructorDTO.getPassword()));
+            }
+
+            return instructorRepository.save(instructor);
+        }
+        throw new IllegalArgumentException("Student not found");
+    }
+
+    public Course addAssignmentToCourse(Long instructorId, Long courseId, AssignmentDTO assignmentDTO) {
+        Instructor instructor = instructorRepository.findById(instructorId).orElse(null);
+
+        Course course = courseRepository.findById(courseId).orElseThrow(() ->
+                new EntityNotFoundException("Course not found")
+        );
+
+        if (!course.getInstructor().equals(instructor)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Instructor has no authority on this course");
+        }
+        Assignment assignment = new Assignment();
+        if(assignmentDTO.getTitle() != null)
+            assignment.setTitle(assignmentDTO.getTitle());
+        if(assignmentDTO.getDescription() != null)
+            assignment.setDescription(assignmentDTO.getDescription());
+        if(assignmentDTO.getDueDate() != null)
+            assignment.setDueDate(assignmentDTO.getDueDate());
+
+        return courseService.addAssignment(course, assignment);
+    }
 }

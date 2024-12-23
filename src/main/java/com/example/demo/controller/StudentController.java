@@ -98,32 +98,25 @@ public class  StudentController {
         return ResponseEntity.ok(quizzes);
     }
 
-    // unsupported media problem
+    //
     @PostMapping("/{studentId}/quizzes/{quizId}/submit")
     public ResponseEntity<String> submitQuiz(@PathVariable Long studentId, @PathVariable Long quizId, @RequestBody SubmissionDTO submissionDTO) {
         try {
-
-            return ResponseEntity.ok("Grade " + studentService.takeQuiz(studentId, quizId, submissionDTO)*100 + "%");
+            return ResponseEntity.ok("Grade " + studentService.takeQuiz(studentId, quizId, submissionDTO));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @GetMapping("/{id}/notifications")
-    public ResponseEntity<List<Notification>> viewNotifications(@PathVariable Long id, @RequestParam(required = false) Boolean unread) {
-        List<Notification> notifications = studentService.getNotifications(id, unread);
-        return ResponseEntity.ok(notifications);
-    }
 
-    @PutMapping("/{id}/notifications/mark-as-read")
-    public ResponseEntity<Void> markNotificationsAsRead(@PathVariable Long id) {
-        studentService.markNotificationsAsRead(id);
-        return ResponseEntity.ok().build();
+    @GetMapping("/{studentId}/notifications")
+    public ResponseEntity<List<Notification>> viewNotifications(@PathVariable Long studentId, @RequestParam(required = false) Boolean unread) {
+        return ResponseEntity.ok(studentService.getNotifications(studentId, unread));
     }
 
     //done test
     @PutMapping("{id}/editProfile")
-    public ResponseEntity<Student> editSudentProfile(@PathVariable Long id, @RequestBody StudentDTO studentDTO) {
+    public ResponseEntity<Student> editStudentProfile(@PathVariable Long id, @RequestBody StudentDTO studentDTO) {
         return ResponseEntity.ok(studentService.updateStudentProfile(id, studentDTO));
     }
 
@@ -139,6 +132,7 @@ public class  StudentController {
         studentService.deleteStudent(id);
         return ResponseEntity.noContent().build();
     }
+
 
 
 
