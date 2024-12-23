@@ -1,6 +1,7 @@
 
 package com.example.demo.serviceTest;
 
+import com.example.demo.dtos.AssignmentDTO;
 import com.example.demo.dtos.CourseDTO;
 import com.example.demo.models.*;
 import com.example.demo.repository.CourseRepository;
@@ -166,11 +167,11 @@ public class CourseServiceTest {
     @Test
     public void testAddLesson() {
         // Arrange
-        when(lessonService.createLesson(any(Course.class), any(Lesson.class))).thenReturn(lesson);
+        when(lessonService.createLesson(any(Lesson.class))).thenReturn(lesson);
         when(courseRepository.save(any(Course.class))).thenReturn(course);
 
         // Act
-        Course result = courseService.addLesson(course, lesson);
+        Course result = courseService.addLesson(course.getId(), lesson);
 
         // Assert
         assertNotNull(result);
@@ -198,11 +199,18 @@ public class CourseServiceTest {
     @Test
     public void testAddAssignment() {
         // Arrange
-        when(assignmentService.createAssignment(any(Course.class), any(Assignment.class))).thenReturn(assignment);
+        when(assignmentService.createAssignment(any(Assignment.class))).thenReturn(assignment);
         when(courseRepository.save(any(Course.class))).thenReturn(course);
 
         // Act
-        Course result = courseService.addAssignment(course, assignment);
+        AssignmentDTO assignmentDTO = new AssignmentDTO();
+        assignmentDTO.setTitle(assignment.getTitle());
+        assignmentDTO.setDescription(assignment.getDescription());
+        assignmentDTO.setMark(assignment.getMark());
+        assignmentDTO.setDueDate(assignment.getDueDate());
+        assignmentDTO.setSubmissions(assignment.getSubmissions());
+        assignmentDTO.setCourseId(assignment.getCourse().getId());
+        Course result = courseService.addAssignment(assignmentDTO);
 
         // Assert
         assertNotNull(result);
