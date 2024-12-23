@@ -9,6 +9,8 @@ import lombok.Setter;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,11 +24,13 @@ public class Submission {
 
     @ManyToOne
     @JoinColumn(name = "student_id")
+    @JsonBackReference
     Student student;
 
-    @OneToMany
-    @JoinColumn(name = "answer_id")
-    List<Answer> answers;
+    @ElementCollection
+    @CollectionTable(name = "submission_answers", joinColumns = @JoinColumn(name = "submission_id"))
+    @Column(name = "answer")
+    private List<String> answers;
 
     @ManyToOne
     @JoinColumn(name = "quiz_id")
@@ -36,5 +40,7 @@ public class Submission {
     private String grade = "";
 
     // Default constructor
-    public Submission() {}
+    public Submission() {
+        answers = new ArrayList<>();
+    }
 }

@@ -1,16 +1,12 @@
 package com.example.demo.service;
 
-import com.example.demo.dtos.QuestionDTO;
-import java.util.Collections;
+import java.util.*;
+
 import com.example.demo.dtos.QuizDTO;
 import com.example.demo.models.*;
 import com.example.demo.repository.QuizRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
 
 @Service
 public class QuizService {
@@ -19,7 +15,7 @@ public class QuizService {
     private QuizRepository quizRepository;
 
     @Autowired
-    private QuestionBankService questionBankService;
+    private StudentService studentService;
 
     @Autowired
     private QuestionService questionService;
@@ -67,29 +63,37 @@ public class QuizService {
         return quizRepository.save(quiz);
     }
 
-    public String submitQuiz(Long quizId, Submission submission) {
+    public String submitQuiz(Student student, Long quizId, Submission submission) {
         Quiz quiz = getQuizById(quizId);
-        List<Submission> submissions = quiz.getSubmissions();
+
         String grade = calculateGrades(quiz, submission);
+
+        Map<Long, String> submissionGrades = student.getQuizGrades();
+        submissionGrades.put(quizId, grade);
+        student.setQuizGrades(submissionGrades);
+
+        List<Submission> submissions = quiz.getSubmissions();
         submission.setGrade(grade);
         submissions.add(submission);
+
         quiz.setSubmissions(submissions);
         quizRepository.save(quiz);
+        studentService.saveStudent(student);
         return grade;
     }
 
     public String calculateGrades(Quiz quiz ,Submission submission) {
         List<Question> questions = quiz.getQuestions();
-        List<Answer> answers = submission.getAnswers();
+        List<String> answers = submission.getAnswers();
         int grade = 0;
         for(int i = 0; i < answers.size(); i++)
         {
-            if(Objects.equals(answers.get(i).getAnswer(), questions.get(i).getCorrectAnswer()))
+            if(Objects.equals(answers.get(i), questions.get(i).getCorrectAnswer()))
             {
                 grade++;
             }
         }
-        return grade+" / "+ questions.size();
+        return grade + " / " + questions.size();
     }
 
     public Quiz updateQuiz(Long id, Quiz updatedQuiz) {

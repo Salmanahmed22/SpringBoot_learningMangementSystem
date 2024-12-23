@@ -23,8 +23,8 @@ public class Assignment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    private int mark;
     private String title;
-
     private String description;
 
     private LocalDateTime dueDate;
@@ -33,14 +33,16 @@ public class Assignment {
     @ElementCollection
     @MapKeyColumn(name = "student_id")
     @Column(name = "submission_content")
-    private Map<Long, String> submissions = new HashMap<>();
+    private Map<Long, String> submissions;
 
     @ManyToOne
     @JoinColumn(name = "course_id")
     @JsonBackReference(value = "course-assignment")
     private Course course;
 
+    // default constructor
     public Assignment() {
+        course = new Course();
         submissions = new HashMap<>();
     }
 

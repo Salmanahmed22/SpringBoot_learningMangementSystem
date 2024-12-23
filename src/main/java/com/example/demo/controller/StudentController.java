@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/students")
@@ -68,6 +69,7 @@ public class  StudentController {
 
     // tested
     @GetMapping("/{studentId}/courses/{courseId}/lessons/{lessonId}")
+    // pass the OTP ?XXXXXX (request param)
     public ResponseEntity<String> viewLessonContent(@PathVariable Long studentId, @PathVariable Long courseId, @PathVariable Long lessonId ,@RequestParam String enterdOTP) {
         String lessonContent = studentService.getLessonContent(studentId, courseId, lessonId , enterdOTP);
         return ResponseEntity.ok(lessonContent);
@@ -82,7 +84,9 @@ public class  StudentController {
     }
 
     @PostMapping("/{studentId}/assignments/{assignmentId}/submit")
-    public ResponseEntity<String> submitAssignment(@PathVariable Long studentId, @PathVariable Long assignmentId, @RequestBody AssignmentSubmissionDTO assignmentSubmissionDTO) {
+    public ResponseEntity<String> submitAssignment(@PathVariable Long studentId,
+                                                   @PathVariable Long assignmentId,
+                                                   @RequestBody AssignmentSubmissionDTO assignmentSubmissionDTO) {
         try {
             studentService.submitAssignment(studentId, assignmentId, assignmentSubmissionDTO.getSubmissionContent());
             return ResponseEntity.ok("Assignment submitted successfully");
@@ -98,9 +102,11 @@ public class  StudentController {
         return ResponseEntity.ok(quizzes);
     }
 
-    //
+    // unsupported media problem
     @PostMapping("/{studentId}/quizzes/{quizId}/submit")
-    public ResponseEntity<String> submitQuiz(@PathVariable Long studentId, @PathVariable Long quizId, @RequestBody SubmissionDTO submissionDTO) {
+        public ResponseEntity<String> submitQuiz(@PathVariable Long studentId,
+                                                 @PathVariable Long quizId,
+                                                 @RequestBody SubmissionDTO submissionDTO) {
         try {
             return ResponseEntity.ok("Grade " + studentService.takeQuiz(studentId, quizId, submissionDTO));
         } catch (IllegalArgumentException e) {
@@ -133,6 +139,15 @@ public class  StudentController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/{studentId}/assignmentsGrades")
+    public ResponseEntity<Map<Long,String>> viewAssignmentsGrades(@PathVariable Long studentId) {
+        return ResponseEntity.ok(studentService.viewAssignmentsGrades(studentId));
+    }
+
+    @GetMapping("/{studentId}/quizzesGrades")
+    public ResponseEntity<Map<Long,String>> viewQuizzesGrades(@PathVariable Long studentId) {
+        return ResponseEntity.ok(studentService.viewQuizzesGrades(studentId));
+    }
 
 
 

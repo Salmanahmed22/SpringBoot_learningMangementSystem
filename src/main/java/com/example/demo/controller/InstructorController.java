@@ -8,10 +8,10 @@ import com.example.demo.repository.CourseRepository;
 import com.example.demo.repository.MediaFileRepository;
 import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.dtos.CourseDTO;
+import com.example.demo.dtos.LessonDTO;
+import com.example.demo.dtos.QuestionDTO;
 import com.example.demo.dtos.QuizDTO;
-import com.example.demo.models.Course;
-import com.example.demo.models.Instructor;
-import com.example.demo.models.Lesson;
+import com.example.demo.models.*;
 //import com.example.demo.models.Notification;
 import com.example.demo.models.Quiz;
 import com.example.demo.service.InstructorService;
@@ -34,19 +34,20 @@ public class InstructorController {
     @Autowired
     private InstructorService instructorService;
 
-
     @Autowired
     private LessonService lessonService;
     @Autowired
     private MediaFileRepository mediaFileRepository; // Autowire the MediaFileRepository
-
-    @Autowired
-    private CourseRepository courseRepository;
-
     // Get all instructors
     @GetMapping
     public ResponseEntity<List<Instructor>> getAllInstructors() {
         return ResponseEntity.ok(instructorService.getAllInstructors());
+    }
+
+    @GetMapping("/lessons/{lessonId}/attendance")
+    public ResponseEntity<List<Student>> getAttendance(@PathVariable Long lessonId) {
+        Lesson lesson = lessonService.getLessonById(lessonId);
+        return ResponseEntity.ok(lesson.getAttendance());
     }
 
     // Get an instructor by ID
@@ -155,7 +156,7 @@ public class InstructorController {
     }
 
 
-    // Endpoint to upload media file to a course
+    // Tested
     @PostMapping("/{instructorId}/courses/{courseId}/media/upload")
     public ResponseEntity<String> uploadMediaToCourse(
             @PathVariable Long instructorId,
@@ -165,7 +166,6 @@ public class InstructorController {
         try {
             instructorService.saveMediaFile(instructorId, courseId, filePath);
 
-            // Return a successful response
             return ResponseEntity.ok("File path saved successfully: " + filePath);
         }
         catch (RuntimeException e) {
@@ -186,7 +186,11 @@ public class InstructorController {
         return ResponseEntity.ok(instructorService.addAssignmentToCourse(instructorId, courseId, assignmentDTO));
     }
 
-    // Endpoint to upload media file to a course
-
-
+    // Tested
+    @PostMapping("{instructorId}/grade/{assignmentId}/{studentId}")
+    public ResponseEntity<String> gradeAssignment(@PathVariable Long assignmentId,
+                                                  @PathVariable Long studentId,
+                                                  @RequestParam int grade) {
+        return instructorService.gradeAssignment(assignmentId, studentId, grade);
+    }
 }

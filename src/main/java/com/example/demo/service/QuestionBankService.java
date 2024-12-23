@@ -15,6 +15,10 @@ public class QuestionBankService {
     @Autowired
     private QuestionBankRepository questionBankRepository;
 
+    public QuestionBank getQuestionBankById(Long id) {
+        return questionBankRepository.findById(id).orElse(null);
+    }
+
     public QuestionBank saveQuestionBank(QuestionBank questionBank) {
         return questionBankRepository.save(questionBank);
     }

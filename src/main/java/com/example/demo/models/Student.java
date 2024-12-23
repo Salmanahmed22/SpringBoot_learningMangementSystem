@@ -6,9 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -25,12 +26,24 @@ public class Student extends User {
     @JsonManagedReference(value = "student-course")
     private List<Course> enrolledCourses;
 
+
+    @ElementCollection
+    @MapKeyColumn(name = "assignment_id")
+    @Column(name = "assignment_grade")
+    private Map<Long, String> assginmentsGrades;
+
+    @ElementCollection
+    @MapKeyColumn(name = "quiz_id")
+    @Column(name = "quiz_grade")
+    private Map<Long, String> quizGrades;
+
     @Column(nullable = false)
     private short level;
 
     // default constructor
     public Student() {
         super();
+        assginmentsGrades = new HashMap<>();
         enrolledCourses = new ArrayList<>();
         level = 1;
     }

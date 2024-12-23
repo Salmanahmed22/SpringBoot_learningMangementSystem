@@ -7,21 +7,17 @@ import com.example.demo.repository.CourseRepository;
 import com.example.demo.repository.MediaFileRepository;
 import com.example.demo.repository.InstructorRepository;
 //import com.example.demo.repository.NotificationRepository;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.criteria.CriteriaBuilder;
-import java.io.File;
-import java.io.IOException;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -30,8 +26,6 @@ public class InstructorService {
 
     @Autowired
     private InstructorRepository instructorRepository;
-    @Autowired
-    private CourseRepository courseRepository;
 
     @Autowired
     private CourseService courseService;
@@ -111,7 +105,7 @@ public class InstructorService {
         List<Course> courses = instructor.getCourses();
         courses.add(course);
         instructor.setCourses(courses);
-        courseRepository.save(course);
+        instructorRepository.save(instructor);
         return course;
     }
 
@@ -146,9 +140,11 @@ public class InstructorService {
 
         Instructor instructor = instructorRepository.findById(instructorId).orElse(null);
 
-        Course course = courseRepository.findById(courseId).orElseThrow(() ->
-                new EntityNotFoundException("Course not found")
-        );
+        Course course = courseService.getCourseById(courseId);
+
+        if(course == null){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Course not found");
+        }
 
         if (!course.getInstructor().equals(instructor)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Instructor has no authority on this course");
@@ -166,7 +162,7 @@ public class InstructorService {
             notificationService.createNotification(student.getId(), message);
         }
 
-        return courseService.addLesson(course, lesson);
+        return courseService.addLesson(courseId, lesson);
     }
 
     public QuestionBank addQuestionToBank(Long instructorId, Long courseId, QuestionDTO questionDTO){
@@ -223,22 +219,20 @@ public class InstructorService {
 
     // Method to save media file path for a course
     public MediaFile saveMediaFile(Long instructorId, Long courseId, String filePath) {
-        // Retrieve the instructor by ID
         Instructor instructor = instructorRepository.findById(instructorId)
                 .orElseThrow(() -> new RuntimeException("Instructor not found"));
-        // Retrieve the course by ID
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new RuntimeException("Course not found"));
+        Course course = courseService.getCourseById(courseId);
 
-        // Ensure the instructor is associated with the course
+        if (course == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Course not found");
+        }
+
         if (!course.getInstructor().equals(instructor)) {
             throw new RuntimeException("Instructor is not associated with the course");
         }
 
-        // Create a new MediaFile with the provided file path and course
         MediaFile mediaFile = new MediaFile(filePath, course);
 
-        // Save the media file record in the database
         return mediaFileRepository.save(mediaFile);
     }
 
@@ -266,20 +260,17 @@ public class InstructorService {
     public Course addAssignmentToCourse(Long instructorId, Long courseId, AssignmentDTO assignmentDTO) {
         Instructor instructor = instructorRepository.findById(instructorId).orElse(null);
 
-        Course course = courseRepository.findById(courseId).orElseThrow(() ->
-                new EntityNotFoundException("Course not found")
-        );
+        Course course = courseService.getCourseById(courseId);
+
+        if (course == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Course not found");
+        }
 
         if (!course.getInstructor().equals(instructor)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Instructor has no authority on this course");
         }
-        Assignment assignment = new Assignment();
-        if(assignmentDTO.getTitle() != null)
-            assignment.setTitle(assignmentDTO.getTitle());
-        if(assignmentDTO.getDescription() != null)
-            assignment.setDescription(assignmentDTO.getDescription());
-        if(assignmentDTO.getDueDate() != null)
-            assignment.setDueDate(assignmentDTO.getDueDate());
+
+        assignmentDTO.setCourseId(courseId);
 
         // Notify all enrolled students about the new assignment
         List<Student> enrolledStudents = course.getEnrolledStudents();
@@ -288,7 +279,27 @@ public class InstructorService {
             notificationService.createNotification(student.getId(), message); // Use NotificationService
         }
 
-        return courseService.addAssignment(course, assignment);
+
+        return courseService.addAssignment(assignmentDTO);
+    }
+
+    public ResponseEntity<String> gradeAssignment(Long assignmentId, Long studentId, int grade) {
+        Assignment assignment = assignmentService.getAssignmentById(assignmentId);
+        Student student = studentService.getStudentById(studentId);
+        if (assignment != null && student != null) {
+            if(student.getAssginmentsGrades().containsKey(assignmentId))
+                return ResponseEntity.badRequest().body("This assignment has already been graded for this student.");
+            if (!assignment.getSubmissions().containsKey(studentId))
+                grade = 0;
+            String studentGrade = grade + " / " + assignment.getMark();
+            Map<Long, String> studentGrades = student.getAssginmentsGrades();
+            studentGrades.put(assignment.getId(), studentGrade);
+            student.setAssginmentsGrades(studentGrades);
+            studentService.saveStudent(student);
+
+            return ResponseEntity.ok("Grade submitted successfully.");
+        }
+        return ResponseEntity.badRequest().body("Failed to submit grade.");
     }
 
 }
