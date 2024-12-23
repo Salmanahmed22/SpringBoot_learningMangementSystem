@@ -40,12 +40,8 @@ public class InstructorService {
     private QuestionService questionService;
 
     @Autowired
-<<<<<<< Updated upstream
     private MediaFileRepository mediaFileRepository;
-    // Inject the repositor
-=======
-    private MediaFileRepository mediaFileRepository;  // Inject the repositor
->>>>>>> Stashed changes
+
     @Autowired
     private StudentService studentService;
 
@@ -200,34 +196,25 @@ public class InstructorService {
     }
 
     // Method to save media file path for a course
-<<<<<<< Updated upstream
     public MediaFile saveMediaFile(Long instructorId, Long courseId, String filePath) {
         // Retrieve the instructor by ID
         Instructor instructor = instructorRepository.findById(instructorId)
                 .orElseThrow(() -> new RuntimeException("Instructor not found"));
-
-=======
-    public MediaFile saveMediaFile(Long courseId, String filePath) {
->>>>>>> Stashed changes
         // Retrieve the course by ID
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Course not found"));
 
-<<<<<<< Updated upstream
         // Ensure the instructor is associated with the course
         if (!course.getInstructor().equals(instructor)) {
             throw new RuntimeException("Instructor is not associated with the course");
         }
 
-=======
->>>>>>> Stashed changes
         // Create a new MediaFile with the provided file path and course
         MediaFile mediaFile = new MediaFile(filePath, course);
 
         // Save the media file record in the database
         return mediaFileRepository.save(mediaFile);
     }
-<<<<<<< Updated upstream
 
     public Instructor updateInstructorProfile(Long instructorId, InstructorDTO instructorDTO) {
         Instructor instructor = instructorRepository.findById(instructorId).orElse(null);
@@ -270,6 +257,5 @@ public class InstructorService {
 
         return courseService.addAssignment(course, assignment);
     }
-=======
->>>>>>> Stashed changes
+
 }
