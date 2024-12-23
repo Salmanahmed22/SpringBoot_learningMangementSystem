@@ -1,21 +1,19 @@
 package com.example.demo.service;
 
-import com.example.demo.dtos.AnswerDTO;
 import com.example.demo.dtos.StudentDTO;
 import com.example.demo.dtos.SubmissionDTO;
 import com.example.demo.models.*;
-import com.example.demo.repository.LessonRepository;
-import com.example.demo.repository.CourseRepository;
-import com.example.demo.repository.InstructorRepository;
 import com.example.demo.repository.NotificationRepository;
 import com.example.demo.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +24,7 @@ public class StudentService {
     @Autowired
     private NotificationRepository notificationRepository;
     @Autowired
+    @Lazy
     private QuizService quizService;
     @Autowired
     private CourseService courseService;
@@ -35,8 +34,9 @@ public class StudentService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private LessonService lessonService;
+
     @Autowired
-    private LessonRepository lessonRepository;
+    private QuestionService questionService;
 
     @Autowired
     private NotificationService notificationService;
@@ -223,15 +223,9 @@ public class StudentService {
                     }
                     Submission submission = new Submission();
                     submission.setStudent(student);
-                    List<Answer> answers = new ArrayList<>();
-                    for(AnswerDTO answerDTO : submissionDTO.getAnswers()) {
-                        Answer answer = new Answer();
-                        answer.setId(answerDTO.getId());
-                        answer.setAnswer(answerDTO.getAnswer());
-                        answers.add(answer);
-                    }
+                    List<String> answers = new ArrayList<>(submissionDTO.getAnswers());
                     submission.setAnswers(answers);
-                    return quizService.submitQuiz(quizId, submission);
+                    return quizService.submitQuiz(student, quizId, submission);
                 }
             }
         }
@@ -293,8 +287,23 @@ public class StudentService {
         studentRepository.save(student);
     }
 
-
     public void saveStudent(Student student) {
         studentRepository.save(student);
+    }
+
+    public Map<Long, String> viewAssignmentsGrades(Long studentId) {
+        Student student = studentRepository.findById(studentId).orElse(null);
+        if (student == null) {
+            throw new IllegalArgumentException("Student not found");
+        }
+        return student.getAssginmentsGrades();
+    }
+
+    public Map<Long, String> viewQuizzesGrades(Long studentId) {
+        Student student = studentRepository.findById(studentId).orElse(null);
+        if (student == null) {
+            throw new IllegalArgumentException("Student not found");
+        }
+        return student.getQuizGrades();
     }
 }

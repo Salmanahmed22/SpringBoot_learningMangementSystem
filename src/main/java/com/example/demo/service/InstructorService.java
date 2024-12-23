@@ -7,7 +7,6 @@ import com.example.demo.repository.CourseRepository;
 import com.example.demo.repository.MediaFileRepository;
 import com.example.demo.repository.InstructorRepository;
 //import com.example.demo.repository.NotificationRepository;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.criteria.CriteriaBuilder;
-import java.io.File;
-import java.io.IOException;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -262,14 +256,14 @@ public class InstructorService {
         Assignment assignment = assignmentService.getAssignmentById(assignmentId);
         Student student = studentService.getStudentById(studentId);
         if (assignment != null && student != null) {
-            if(student.getGrades().containsKey(assignmentId))
+            if(student.getAssginmentsGrades().containsKey(assignmentId))
                 return ResponseEntity.badRequest().body("This assignment has already been graded for this student.");
             if (!assignment.getSubmissions().containsKey(studentId))
                 grade = 0;
             String studentGrade = grade + " / " + assignment.getMark();
-            Map<Long, String> studentGrades = student.getGrades();
+            Map<Long, String> studentGrades = student.getAssginmentsGrades();
             studentGrades.put(assignment.getId(), studentGrade);
-            student.setGrades(studentGrades);
+            student.setAssginmentsGrades(studentGrades);
             studentService.saveStudent(student);
 
             return ResponseEntity.ok("Grade submitted successfully.");

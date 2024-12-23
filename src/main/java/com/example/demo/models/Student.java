@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,9 +28,14 @@ public class Student extends User {
 
 
     @ElementCollection
-    @MapKeyColumn(name = "Assignment_id")
-    @Column(name = "final_grade")
-    private Map<Long, String> grades;
+    @MapKeyColumn(name = "assignment_id")
+    @Column(name = "assignment_grade")
+    private Map<Long, String> assginmentsGrades;
+
+    @ElementCollection
+    @MapKeyColumn(name = "quiz_id")
+    @Column(name = "quiz_grade")
+    private Map<Long, String> quizGrades;
 
     @Column(nullable = false)
     private short level;
@@ -39,7 +43,7 @@ public class Student extends User {
     // default constructor
     public Student() {
         super();
-        grades = new HashMap<>();
+        assginmentsGrades = new HashMap<>();
         enrolledCourses = new ArrayList<>();
         level = 1;
     }

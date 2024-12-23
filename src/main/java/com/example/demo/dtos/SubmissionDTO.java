@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 public class SubmissionDTO {
-    private List<AnswerDTO> answers;
+    private List<String> answers;
 
     // Default constructor
     public SubmissionDTO() {}

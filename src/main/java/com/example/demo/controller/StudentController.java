@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/students")
@@ -103,7 +104,9 @@ public class  StudentController {
 
     //
     @PostMapping("/{studentId}/quizzes/{quizId}/submit")
-    public ResponseEntity<String> submitQuiz(@PathVariable Long studentId, @PathVariable Long quizId, @RequestBody SubmissionDTO submissionDTO) {
+        public ResponseEntity<String> submitQuiz(@PathVariable Long studentId,
+                                                 @PathVariable Long quizId,
+                                                 @RequestBody SubmissionDTO submissionDTO) {
         try {
             return ResponseEntity.ok("Grade " + studentService.takeQuiz(studentId, quizId, submissionDTO));
         } catch (IllegalArgumentException e) {
@@ -136,6 +139,15 @@ public class  StudentController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/{studentId}/assignmentsGrades")
+    public ResponseEntity<Map<Long,String>> viewAssignmentsGrades(@PathVariable Long studentId) {
+        return ResponseEntity.ok(studentService.viewAssignmentsGrades(studentId));
+    }
+
+    @GetMapping("/{studentId}/quizzesGrades")
+    public ResponseEntity<Map<Long,String>> viewQuizzesGrades(@PathVariable Long studentId) {
+        return ResponseEntity.ok(studentService.viewQuizzesGrades(studentId));
+    }
 
 
 
