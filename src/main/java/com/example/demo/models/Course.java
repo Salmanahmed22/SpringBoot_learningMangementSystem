@@ -27,6 +27,9 @@ public class Course {
 
     private String description;
 
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<MediaFile> mediaFiles = new ArrayList<>();
     @ManyToOne
     @JoinColumn(name = "instructor_id")
     @JsonBackReference(value = "instructor_course")

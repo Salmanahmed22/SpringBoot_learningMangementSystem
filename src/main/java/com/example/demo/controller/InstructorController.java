@@ -1,5 +1,8 @@
 package com.example.demo.controller;
 
+import com.example.demo.repository.CourseRepository;
+import com.example.demo.repository.MediaFileRepository;
+import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.dtos.CourseDTO;
 import com.example.demo.dtos.LessonDTO;
 import com.example.demo.dtos.QuestionDTO;
@@ -13,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.demo.models.MediaFile; // To use the MediaFile entity.
 import java.util.List;
 
 @RestController
@@ -23,6 +27,11 @@ public class InstructorController {
     @Autowired
     private InstructorService instructorService;
 
+    @Autowired
+    private CourseRepository courseRepository;
+
+    @Autowired
+    private MediaFileRepository mediaFileRepository; // Autowire the MediaFileRepository
     // Get all instructors
     @GetMapping
     public ResponseEntity<List<Instructor>> getAllInstructors() {
@@ -133,6 +142,30 @@ public class InstructorController {
     }
 
     // TODO
+
+
+    // Endpoint to upload media file to a course
+    @PostMapping("/{instructorId}/courses/{courseId}/media/upload")
+    public ResponseEntity<String> uploadMediaToCourse(
+            @PathVariable Long instructorId,
+            @PathVariable Long courseId,
+            @RequestParam("filePath") String filePath) {
+
+        try {
+            instructorService.saveMediaFile(instructorId, courseId, filePath);
+
+            // Return a successful response
+            return ResponseEntity.ok("File path saved successfully: " + filePath);
+        }
+        catch (RuntimeException e) {
+
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Failed to save file path: " + e.getMessage());
+        }
+    }
 
 
 }

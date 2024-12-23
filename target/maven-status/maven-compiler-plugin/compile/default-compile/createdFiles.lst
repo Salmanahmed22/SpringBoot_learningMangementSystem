@@ -16,14 +16,15 @@ com\example\demo\service\StudentService.class
 com\example\demo\controller\CourseController.class
 com\example\demo\service\AdminService.class
 com\example\demo\models\User.class
+com\example\demo\DTO\CourseRequest.class
 com\example\demo\controller\LessonController.class
 com\example\demo\config\SecurityConfig.class
 com\example\demo\models\Notification.class
 com\example\demo\controller\InstructorController.class
+com\example\demo\DTO\AssignmentRequest.class
 com\example\demo\models\Role.class
 com\example\demo\DemoApplication.class
 com\example\demo\controller\QuizController.class
-com\example\demo\controller\StudentController$SubmissionRequest.class
 com\example\demo\service\LessonService.class
 com\example\demo\controller\StudentController.class
 com\example\demo\repository\UserRepository.class
@@ -32,6 +33,7 @@ com\example\demo\service\QuizService.class
 com\example\demo\models\Answer.class
 com\example\demo\models\Course.class
 com\example\demo\controller\UserController.class
+com\example\demo\DTO\SubmissionRequest.class
 com\example\demo\models\Submission.class
 com\example\demo\controller\AssignmentController.class
 com\example\demo\service\CourseService.class

@@ -7,6 +7,7 @@ import com.example.demo.dtos.QuizDTO;
 import com.example.demo.models.*;
 //import com.example.demo.models.Notification;
 import com.example.demo.repository.CourseRepository;
+import com.example.demo.repository.MediaFileRepository;
 import com.example.demo.repository.InstructorRepository;
 //import com.example.demo.repository.NotificationRepository;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,6 +18,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaBuilder;
+import java.io.File;
+import java.io.IOException;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -35,6 +39,8 @@ public class InstructorService {
     @Autowired
     private QuestionService questionService;
 
+    @Autowired
+    private MediaFileRepository mediaFileRepository;  // Inject the repositor
     @Autowired
     private StudentService studentService;
 
@@ -191,4 +197,27 @@ public class InstructorService {
         courseService.removeStudentFromCourse(course, student);
 
     }
+
+    // Method to save media file path for a course
+    public MediaFile saveMediaFile(Long instructorId, Long courseId, String filePath) {
+        // Retrieve the instructor by ID
+        Instructor instructor = instructorRepository.findById(instructorId)
+                .orElseThrow(() -> new RuntimeException("Instructor not found"));
+
+        // Retrieve the course by ID
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+
+        // Ensure the instructor is associated with the course
+        if (!course.getInstructor().equals(instructor)) {
+            throw new RuntimeException("Instructor is not associated with the course");
+        }
+
+        // Create a new MediaFile with the provided file path and course
+        MediaFile mediaFile = new MediaFile(filePath, course);
+
+        // Save the media file record in the database
+        return mediaFileRepository.save(mediaFile);
+    }
+
 }
