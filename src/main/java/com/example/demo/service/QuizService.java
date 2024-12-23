@@ -1,11 +1,9 @@
 package com.example.demo.service;
 
 import com.example.demo.dtos.QuestionDTO;
+import java.util.Collections;
 import com.example.demo.dtos.QuizDTO;
-import com.example.demo.models.Answer;
-import com.example.demo.models.Question;
-import com.example.demo.models.Quiz;
-import com.example.demo.models.Submission;
+import com.example.demo.models.*;
 import com.example.demo.repository.QuizRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +20,13 @@ public class QuizService {
 
     @Autowired
     private QuestionBankService questionBankService;
+
+    @Autowired
+    private QuestionService questionService;
+
+    @Autowired
+    private SubmissionService submissionService;
+
     @Autowired
     private CourseService courseService;
 
@@ -34,30 +39,27 @@ public class QuizService {
         return quizRepository.findAll();
     }
 
-    public Quiz createQuiz(QuizDTO  quizDTO) {
+    public Quiz createQuiz(Course course, QuizDTO quizDTO) {
         Quiz quiz = new Quiz();
         quiz.setTitle(quizDTO.getTitle());
+        quiz.setCourse(course);
         quiz.setDescription(quizDTO.getDescription());
-        if(courseService.getCourseById(quizDTO.getCourseId()) != null) {
-            quiz.setCourse(courseService.getCourseById(quizDTO.getCourseId()));
-        }
-        else throw new RuntimeException("Course not found");
         quiz.setQuizDate(quizDTO.getQuizDate());
         quiz.setDuration(quizDTO.getDuration());
-        if (quizDTO.getQuestionDTOs() != null) {
-            // add the question list to quiz if exist
-            for (QuestionDTO questionDTO : quizDTO.getQuestionDTOs()) {
-                // create the question
-                Question question = new Question();
-                question.setQuestion(questionDTO.getQuestion());
-                question.setOptions(questionDTO.getOptions());
-                question.setCorrectAnswer(questionDTO.getCorrectAnswer());
-                List<Question> questions = quiz.getQuestions();
-                questions.add(question);
-                // set the questions list
-                quiz.setQuestions(questions);
-            }
+        quiz.setNumOfQuestions(quizDTO.getNumOfQuestions());
+
+        QuestionBank questionBank = course.getQuestionBank();
+
+        if (quiz.getNumOfQuestions() > questionBank.getQuestions().size()) {
+            throw new IllegalStateException("Not enough questions (in question bank) to create the quiz.");
         }
+
+        List<Question> questions = questionBank.getQuestions();
+        Collections.shuffle(questions);
+        List<Question> selectedQuestions = questions.subList(0, quiz.getNumOfQuestions());
+
+        quiz.setQuestions(selectedQuestions);
+
         return quizRepository.save(quiz);
     }
 
@@ -101,7 +103,11 @@ public class QuizService {
         Quiz quiz = getQuizById(id);
         List<Question> questions = quiz.getQuestions();
         for(Question question : questions){
-
+            questionService.deleteQuestion(question.getId());
+        }
+        List<Submission> submissions = quiz.getSubmissions();
+        for(Submission submission : submissions){
+            submissionService.deleteSubmission(submission.getId());
         }
         quizRepository.deleteById(id);
     }

@@ -23,6 +23,7 @@ public class Quiz {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    private int numOfQuestions;
     private String title;
     private String description;
 

@@ -20,15 +20,6 @@ public class CourseController {
     @Autowired
     private LessonService lessonService;
 
-    @PostMapping("/create")
-    public ResponseEntity<Course> createCourse(@RequestBody CourseDTO courseRequest) {
-        try {
-            return ResponseEntity.ok(courseService.createCourse(courseRequest));
-        }
-        catch (IllegalArgumentException ex) {
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Course> getCourseById(@PathVariable Long id) {

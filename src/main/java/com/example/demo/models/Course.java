@@ -48,7 +48,13 @@ public class Course {
     @JsonManagedReference(value = "course-quiz")
     private List<Quiz> quizzes;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JsonManagedReference(value = "course-questionBank")
+    private QuestionBank questionBank;
+
+
     public Course() {
+        this.questionBank = new QuestionBank();
         this.enrolledStudents = new ArrayList<>();
         this.lessons = new ArrayList<>();
         this.assignments = new ArrayList<>();

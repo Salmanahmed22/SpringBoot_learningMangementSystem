@@ -1,21 +1,23 @@
 package com.example.demo.controller;
 
 import com.example.demo.dtos.CourseDTO;
+import com.example.demo.dtos.LessonDTO;
+import com.example.demo.dtos.QuestionDTO;
 import com.example.demo.dtos.QuizDTO;
-import com.example.demo.models.Course;
-import com.example.demo.models.Instructor;
-import com.example.demo.models.Lesson;
+import com.example.demo.models.*;
 //import com.example.demo.models.Notification;
-import com.example.demo.models.Quiz;
 import com.example.demo.service.InstructorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/instructors")
+@Validated
 public class InstructorController {
 
     @Autowired
@@ -69,10 +71,9 @@ public class InstructorController {
 //
     // Create a new course
     // Tested
-    @PostMapping("/{id}/courses")
-    public ResponseEntity<Course> createCourse(@PathVariable Long id, @RequestBody CourseDTO courseDTO) {
-        courseDTO.setInstructorId(id);
-        return ResponseEntity.ok(instructorService.createCourse(courseDTO));
+    @PostMapping("/{instructorId}/courses")
+    public ResponseEntity<Course> createCourse(@PathVariable Long instructorId, @RequestBody CourseDTO courseDTO) {
+        return ResponseEntity.ok(instructorService.createCourse(instructorId, courseDTO));
     }
 
     // Update a course
@@ -81,7 +82,7 @@ public class InstructorController {
     public ResponseEntity<Course> updateCourse(@PathVariable Long instructorId,
                                                @PathVariable Long courseId,
                                                @RequestBody CourseDTO updatedCourse) {
-        Course course = instructorService.updateCourse(courseId, updatedCourse);
+        Course course = instructorService.updateCourse(instructorId, courseId, updatedCourse);
         if (course != null) {
             return ResponseEntity.ok(course);
         }
@@ -103,16 +104,24 @@ public class InstructorController {
     public ResponseEntity<Lesson> addLessonToCourse(
             @PathVariable Long instructorId,
             @PathVariable Long courseId,
-            @RequestBody Lesson lesson) {
+            @RequestBody LessonDTO lesson) {
         return ResponseEntity.ok(instructorService.addLessonToCourse(instructorId, courseId, lesson));
     }
 
-    // tested
+    @PostMapping("/{instructorId}/courses/{courseId}/questionBank")
+    public ResponseEntity<QuestionBank> addQuestionToBank(
+            @PathVariable Long instructorId,
+            @PathVariable Long courseId,
+            @Valid @RequestBody QuestionDTO questionDTO) {
+        return ResponseEntity.ok(instructorService.addQuestionToBank(instructorId, courseId, questionDTO));
+    }
+
+
     @PostMapping("/{instructorId}/courses/{courseId}/quiz")
     public ResponseEntity<Quiz> addQuiz(
             @PathVariable Long instructorId,
             @PathVariable Long courseId,
-            @RequestBody QuizDTO quizDTO) {
+            @Valid @RequestBody QuizDTO quizDTO) {
         return ResponseEntity.ok(instructorService.createQuiz(instructorId, courseId, quizDTO));
     }
 
@@ -125,11 +134,5 @@ public class InstructorController {
         return ResponseEntity.noContent().build();
     }
 
-    // Delete an instructor
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteInstructor(@PathVariable Long id) {
-        instructorService.deleteInstructor(id);
-        return ResponseEntity.noContent().build();
-    }
 
 }

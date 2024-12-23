@@ -15,9 +15,6 @@ public class LessonService {
     @Autowired
     private LessonRepository lessonRepository;
 
-    @Autowired
-    private StudentRepository studentRepository;
-
     public Lesson getLessonById(Long id) {
         return lessonRepository.findById(id).orElse(null);
     }

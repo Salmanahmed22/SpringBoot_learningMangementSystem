@@ -45,17 +45,15 @@ public class CourseService {
         return courseRepository.findAll();
     }
 
-    public Course createCourse(CourseDTO courseDTO) {
+    public Course createCourse(Instructor instructor, CourseDTO courseDTO) {
         Course course = new Course();
-        course.setMinLevel(courseDTO.getMinLevel());
-        course.setTitle(courseDTO.getTitle());
-        course.setDescription(courseDTO.getDescription());
-        Instructor instructor = instructorService.getInstructorById(courseDTO.getInstructorId());
-        if (instructor != null) {
-            course.setInstructor(instructor);
-        }
-        else throw new RuntimeException("instructor not found");
-
+        if(courseDTO.getMinLevel() != 0)
+            course.setMinLevel(courseDTO.getMinLevel());
+        if(courseDTO.getTitle() != null)
+            course.setTitle(courseDTO.getTitle());
+        if(courseDTO.getDescription() != null)
+            course.setDescription(courseDTO.getDescription());
+        course.setInstructor(instructor);
         return courseRepository.save(course);
     }
 
