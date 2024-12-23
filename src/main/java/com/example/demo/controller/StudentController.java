@@ -123,7 +123,7 @@ public class  StudentController {
 
     //done test
     @PutMapping("{id}/editProfile")
-    public ResponseEntity<Student> editSudentProfile(@PathVariable Long id, @RequestBody StudentDTO studentDTO) {
+    public ResponseEntity<Student> editStudentProfile(@PathVariable Long id, @RequestBody StudentDTO studentDTO) {
         return ResponseEntity.ok(studentService.updateStudentProfile(id, studentDTO));
     }
 

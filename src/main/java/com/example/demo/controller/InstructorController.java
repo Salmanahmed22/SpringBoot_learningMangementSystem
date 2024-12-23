@@ -1,12 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.repository.CourseRepository;
+import com.example.demo.dtos.*;
 import com.example.demo.repository.MediaFileRepository;
-import org.springframework.web.multipart.MultipartFile;
-import com.example.demo.dtos.CourseDTO;
-import com.example.demo.dtos.LessonDTO;
-import com.example.demo.dtos.QuestionDTO;
-import com.example.demo.dtos.QuizDTO;
 import com.example.demo.models.*;
 //import com.example.demo.models.Notification;
 import com.example.demo.service.InstructorService;
@@ -16,7 +11,6 @@ import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.models.MediaFile; // To use the MediaFile entity.
 import java.util.List;
 
 @RestController
@@ -28,10 +22,8 @@ public class InstructorController {
     private InstructorService instructorService;
 
     @Autowired
-    private CourseRepository courseRepository;
-
-    @Autowired
     private MediaFileRepository mediaFileRepository; // Autowire the MediaFileRepository
+
     // Get all instructors
     @GetMapping
     public ResponseEntity<List<Instructor>> getAllInstructors() {
@@ -125,7 +117,7 @@ public class InstructorController {
 
     // Tested
     @PostMapping("/{instructorId}/courses/{courseId}/quiz")
-    public ResponseEntity<Quiz> addQuiz(
+    public ResponseEntity<Quiz> addQuizToCourse(
             @PathVariable Long instructorId,
             @PathVariable Long courseId,
             @Valid @RequestBody QuizDTO quizDTO) {
@@ -141,7 +133,11 @@ public class InstructorController {
         return ResponseEntity.noContent().build();
     }
 
-    // TODO
+    // Tested
+    @PutMapping("/{instructorId}/edit")
+    public ResponseEntity<Instructor> editInstructorProfile(@PathVariable Long instructorId, @RequestBody InstructorDTO instructorDTO) {
+        return ResponseEntity.ok(instructorService.updateInstructorProfile(instructorId, instructorDTO));
+    }
 
 
     // Endpoint to upload media file to a course
@@ -167,5 +163,12 @@ public class InstructorController {
         }
     }
 
-
+    // Tested
+    @PostMapping("/{instructorId}/courses/{courseId}/assignments")
+    public ResponseEntity<Course> addAssignmentToCourse(@PathVariable Long instructorId,
+                                                   @PathVariable Long courseId,
+                                                   @Valid @RequestBody AssignmentDTO assignmentDTO) {
+        return ResponseEntity.ok(instructorService.addAssignmentToCourse(instructorId, courseId, assignmentDTO));
+    }
+    
 }

@@ -107,4 +107,15 @@ public class CourseService {
         courseRepository.save(course);
         studentService.removeEnrolledCourse(course, student);
     }
+
+    public Course addAssignment(Course course, Assignment assignment) {
+        Assignment newAssignment = assignmentService.createAssignment(course, assignment);
+        List<Assignment> courseAssignments = course.getAssignments();
+        if (!courseAssignments.contains(newAssignment)) {
+            courseAssignments.add(newAssignment);
+            course.setAssignments(courseAssignments);
+        }
+
+        return courseRepository.save(course);
+    }
 }
