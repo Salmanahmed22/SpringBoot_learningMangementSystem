@@ -1,5 +1,6 @@
 package com.example.demo.dtos;
 
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +17,10 @@ public class AssignmentDTO {
 
     @NotBlank(message = "Title is required and cannot be blank")
     private String title;
+
+    @NotNull(message = "Mark is required")
+    @Positive(message = "Mark must be positive")
+    private int mark;
 
     @NotBlank(message = "Description is required and cannot be blank")
     private String description;
