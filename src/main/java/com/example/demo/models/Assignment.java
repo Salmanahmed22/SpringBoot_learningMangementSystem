@@ -40,9 +40,7 @@ public class Assignment {
     @JsonBackReference(value = "course-assignment")
     private Course course;
 
-    // default constructor
     public Assignment() {
-        course = new Course();
         submissions = new HashMap<>();
     }
 

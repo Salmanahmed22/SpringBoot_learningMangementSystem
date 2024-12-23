@@ -127,4 +127,15 @@ public class CourseService {
         Notification notification = new Notification(message, student);
         notificationService.createNotification(student.getId(),message);
     }
+
+    public Course addAssignment(Course course, Assignment assignment) {
+        Assignment newAssignment = assignmentService.createAssignment(course, assignment);
+        List<Assignment> courseAssignments = course.getAssignments();
+        if (!courseAssignments.contains(newAssignment)) {
+            courseAssignments.add(newAssignment);
+            course.setAssignments(courseAssignments);
+        }
+
+        return courseRepository.save(course);
+    }
 }

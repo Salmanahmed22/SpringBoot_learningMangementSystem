@@ -68,8 +68,8 @@ public class  StudentController {
 
     // tested
     @GetMapping("/{studentId}/courses/{courseId}/lessons/{lessonId}")
-    public ResponseEntity<String> viewLessonContent(@PathVariable Long studentId, @PathVariable Long courseId, @PathVariable Long lessonId) {
-        String lessonContent = studentService.getLessonContent(studentId, courseId, lessonId);
+    public ResponseEntity<String> viewLessonContent(@PathVariable Long studentId, @PathVariable Long courseId, @PathVariable Long lessonId ,@RequestParam String enterdOTP) {
+        String lessonContent = studentService.getLessonContent(studentId, courseId, lessonId , enterdOTP);
         return ResponseEntity.ok(lessonContent);
     }
 
@@ -98,12 +98,11 @@ public class  StudentController {
         return ResponseEntity.ok(quizzes);
     }
 
-    // unsupported media problem
+    //
     @PostMapping("/{studentId}/quizzes/{quizId}/submit")
     public ResponseEntity<String> submitQuiz(@PathVariable Long studentId, @PathVariable Long quizId, @RequestBody SubmissionDTO submissionDTO) {
         try {
-
-            return ResponseEntity.ok("Grade " + studentService.takeQuiz(studentId, quizId, submissionDTO)*100 + "%");
+            return ResponseEntity.ok("Grade " + studentService.takeQuiz(studentId, quizId, submissionDTO));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -117,7 +116,7 @@ public class  StudentController {
 
     //done test
     @PutMapping("{id}/editProfile")
-    public ResponseEntity<Student> editSudentProfile(@PathVariable Long id, @RequestBody StudentDTO studentDTO) {
+    public ResponseEntity<Student> editStudentProfile(@PathVariable Long id, @RequestBody StudentDTO studentDTO) {
         return ResponseEntity.ok(studentService.updateStudentProfile(id, studentDTO));
     }
 
@@ -133,5 +132,8 @@ public class  StudentController {
         studentService.deleteStudent(id);
         return ResponseEntity.noContent().build();
     }
+
+
+
 
 }

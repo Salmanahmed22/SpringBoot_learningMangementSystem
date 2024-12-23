@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
 @Setter
@@ -25,6 +26,9 @@ public class Lesson {
     private String content;
 
 
+    private String otp;
+
+
     @ManyToOne
     @JoinColumn(name = "course_id")
     @JsonBackReference(value = "course-lesson")
@@ -35,5 +39,14 @@ public class Lesson {
 
     public Lesson() {
         this.Attendance = new ArrayList<>();
+        this.otp = generateRandomOtp();
     }
+
+
+    private String generateRandomOtp() {
+        Random random = new Random();
+        int otp = 100000 + random.nextInt(900000); // Generate a 6-digit OTP
+        return String.valueOf(otp);
+    }
+
 }
