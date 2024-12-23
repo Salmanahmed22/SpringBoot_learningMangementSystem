@@ -121,6 +121,14 @@ public class InstructorService {
         if (!course.getInstructor().equals(instructor)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Instructor has no authority on this course");
         }
+
+        // Notify all enrolled students about the course update
+        List<Student> enrolledStudents = course.getEnrolledStudents();
+        String message = "The course '" + course.getTitle() + "' has been updated by instructor: " + instructor.getName() + ".";
+        for (Student student : enrolledStudents) {
+            notificationService.createNotification(student.getId(), message);
+        }
+
         return courseService.updateCourse(courseId, updatedCourse);
     }
 
@@ -151,6 +159,13 @@ public class InstructorService {
         if(lessonDTO.getContent() != null)
             lesson.setContent(lessonDTO.getContent());
 
+        // Notify all enrolled students about the new lesson
+        List<Student> enrolledStudents = course.getEnrolledStudents();
+        String message = "A new lesson titled '" + lesson.getTitle() + "' has been added to the course: '" + course.getTitle() + "'.";
+        for (Student student : enrolledStudents) {
+            notificationService.createNotification(student.getId(), message);
+        }
+
         return courseService.addLesson(course, lesson);
     }
 
@@ -175,6 +190,13 @@ public class InstructorService {
             List<Quiz> quizzes = course.getQuizzes();
             quizzes.add(quiz);
             course.setQuizzes(quizzes);
+
+            // Notify all enrolled students about the new quiz
+            List<Student> enrolledStudents = course.getEnrolledStudents();
+            String message = "A new quiz titled '" + quiz.getTitle() + "' has been added to the course: '" + course.getTitle() + "'.";
+            for (Student student : enrolledStudents) {
+                notificationService.createNotification(student.getId(), message);
+            }
             return quiz;
         }
         throw new IllegalArgumentException("Course does not belong to the instructor");
@@ -192,6 +214,10 @@ public class InstructorService {
             throw new IllegalArgumentException("Course does not belong to the instructor");
         }
         courseService.removeStudentFromCourse(course, student);
+
+        // Notify the student about removal from the course
+        String message = "You have been removed from the course: '" + course.getTitle() + "'.";
+        notificationService.createNotification(student.getId(),message);
 
     }
 
@@ -254,6 +280,13 @@ public class InstructorService {
             assignment.setDescription(assignmentDTO.getDescription());
         if(assignmentDTO.getDueDate() != null)
             assignment.setDueDate(assignmentDTO.getDueDate());
+
+        // Notify all enrolled students about the new assignment
+        List<Student> enrolledStudents = course.getEnrolledStudents();
+        String message = "A new assignment titled '" + assignment.getTitle() + "' has been added to the course: '" + course.getTitle() + "'.";
+        for (Student student : enrolledStudents) {
+            notificationService.createNotification(student.getId(), message); // Use NotificationService
+        }
 
         return courseService.addAssignment(course, assignment);
     }

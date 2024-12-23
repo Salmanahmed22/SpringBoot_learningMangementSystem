@@ -77,13 +77,6 @@ public class CourseService {
             if(updatedCourse.getDescription() != null)
                 existingCourse.setDescription(updatedCourse.getDescription());
 
-            // Notify all enrolled students about the update
-            List<Student> enrolledStudents = existingCourse.getEnrolledStudents();
-            for (Student student : enrolledStudents) {
-                String message = "The course '" + existingCourse.getTitle() + "' has been updated.";
-                notificationService.createNotification(student.getId(),message);
-            }
-
             return courseRepository.save(existingCourse);
         }
         return null;
@@ -122,10 +115,7 @@ public class CourseService {
         courseRepository.save(course);
         studentService.removeEnrolledCourse(course, student);
 
-        // Notify the student about removal from the course
-        String message = "You have been removed from the course: '" + course.getTitle() + "'.";
-        Notification notification = new Notification(message, student);
-        notificationService.createNotification(student.getId(),message);
+
     }
 
     public Course addAssignment(Course course, Assignment assignment) {

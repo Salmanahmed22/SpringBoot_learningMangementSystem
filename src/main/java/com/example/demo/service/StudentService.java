@@ -76,16 +76,15 @@ public class StudentService {
             studentRepository.save(student);
             // Notify the student
             String messageStud = "You have successfully enrolled in the course: " + course.getTitle();
-            Notification notification = new Notification(messageStud, student);
             notificationService.createNotification(student.getId(),messageStud);
 
             // Notify the instructor
             Instructor instructor = course.getInstructor();
 
+
             if (instructor != null) {
                 String messageInst = "Student " + student.getName() + " (ID: " + student.getId() + ") has enrolled in your course: " + course.getTitle();
-                Notification instructorNotification = new Notification(messageInst, instructor);
-                notificationService.createNotification(student.getId(),messageInst);
+                notificationService.createNotification(instructor.getId(),messageInst);
             } else {
                 throw new IllegalArgumentException("Instructor not found for this course");
             }

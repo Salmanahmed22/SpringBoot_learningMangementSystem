@@ -1,6 +1,7 @@
 com\example\demo\models\Student.class
 com\example\demo\models\Assignment.class
 com\example\demo\dtos\AnswerDTO.class
+com\example\demo\repository\MediaFileRepository.class
 com\example\demo\service\JwtService.class
 com\example\demo\service\UserService.class
 com\example\demo\repository\NotificationRepository.class
@@ -26,6 +27,7 @@ com\example\demo\dtos\AssignmentDTO.class
 com\example\demo\controller\LessonController.class
 com\example\demo\config\SecurityConfig.class
 com\example\demo\models\Notification.class
+com\example\demo\dtos\InstructorDTO.class
 com\example\demo\controller\InstructorController.class
 com\example\demo\models\Role.class
 com\example\demo\dtos\SubmissionDTO.class
@@ -42,10 +44,10 @@ com\example\demo\models\Course.class
 com\example\demo\models\NotificationType.class
 com\example\demo\controller\UserController.class
 com\example\demo\models\Submission.class
-com\example\demo\controller\AssignmentController.class
 com\example\demo\service\CourseService.class
 com\example\demo\service\QuestionBankService.class
 com\example\demo\repository\QuizRepository.class
+com\example\demo\models\MediaFile.class
 com\example\demo\repository\AssignmentRepository.class
 com\example\demo\repository\InstructorRepository.class
 com\example\demo\repository\CourseRepository.class

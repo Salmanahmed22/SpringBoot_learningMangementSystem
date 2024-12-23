@@ -30,6 +30,9 @@ public class QuizService {
     @Autowired
     private CourseService courseService;
 
+    @Autowired
+    private NotificationService notificationService;
+
 
     public Quiz getQuizById(Long id) {
         return quizRepository.findById(id).orElse(null);
@@ -59,6 +62,7 @@ public class QuizService {
         List<Question> selectedQuestions = questions.subList(0, quiz.getNumOfQuestions());
 
         quiz.setQuestions(selectedQuestions);
+
 
         return quizRepository.save(quiz);
     }
