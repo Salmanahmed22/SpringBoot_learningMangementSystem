@@ -274,7 +274,7 @@ public class InstructorService {
 
         // Notify all enrolled students about the new assignment
         List<Student> enrolledStudents = course.getEnrolledStudents();
-        String message = "A new assignment titled '" + assignment.getTitle() + "' has been added to the course: '" + course.getTitle() + "'.";
+        String message = "A new assignment titled '" + assignmentDTO.getTitle() + "' has been added to the course: '" + course.getTitle() + "'.";
         for (Student student : enrolledStudents) {
             notificationService.createNotification(student.getId(), message); // Use NotificationService
         }
@@ -296,6 +296,11 @@ public class InstructorService {
             studentGrades.put(assignment.getId(), studentGrade);
             student.setAssginmentsGrades(studentGrades);
             studentService.saveStudent(student);
+
+            // Notify the student about their grade
+            String message = "You have been graded for the assignment '" + assignment.getTitle() +
+                    "'. Your grade is: " + studentGrade + ".";
+            notificationService.createNotification(student.getId(), message);
 
             return ResponseEntity.ok("Grade submitted successfully.");
         }
