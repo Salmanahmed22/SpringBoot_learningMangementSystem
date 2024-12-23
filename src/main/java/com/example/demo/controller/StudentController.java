@@ -83,7 +83,9 @@ public class  StudentController {
     }
 
     @PostMapping("/{studentId}/assignments/{assignmentId}/submit")
-    public ResponseEntity<String> submitAssignment(@PathVariable Long studentId, @PathVariable Long assignmentId, @RequestBody AssignmentSubmissionDTO assignmentSubmissionDTO) {
+    public ResponseEntity<String> submitAssignment(@PathVariable Long studentId,
+                                                   @PathVariable Long assignmentId,
+                                                   @RequestBody AssignmentSubmissionDTO assignmentSubmissionDTO) {
         try {
             studentService.submitAssignment(studentId, assignmentId, assignmentSubmissionDTO.getSubmissionContent());
             return ResponseEntity.ok("Assignment submitted successfully");
@@ -99,7 +101,7 @@ public class  StudentController {
         return ResponseEntity.ok(quizzes);
     }
 
-    //
+    // unsupported media problem
     @PostMapping("/{studentId}/quizzes/{quizId}/submit")
     public ResponseEntity<String> submitQuiz(@PathVariable Long studentId, @PathVariable Long quizId, @RequestBody SubmissionDTO submissionDTO) {
         try {

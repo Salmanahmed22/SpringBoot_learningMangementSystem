@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dtos.AssignmentDTO;
 import com.example.demo.dtos.CourseDTO;
 import com.example.demo.models.*;
 import com.example.demo.repository.CourseRepository;
@@ -91,14 +92,14 @@ public class CourseService {
         courseRepository.deleteById(id);
     }
 
-    public Course addLesson(Course course, Lesson lesson) {
-        Lesson newLesson = lessonService.createLesson(course,lesson);
-        List<Lesson> courseLessons = course.getLessons();
-        if (!courseLessons.contains(newLesson)) {
+    public Course addLesson(Long courseId, Lesson lesson) {
+        Course course = courseRepository.findById(courseId).orElseThrow(null);
+        Lesson newLesson = lessonService.createLesson(lesson);
+        List <Lesson> courseLessons = course.getLessons();
+        if(!courseLessons.contains(newLesson)) {
             courseLessons.add(newLesson);
             course.setLessons(courseLessons);
         }
-
         return courseRepository.save(course);
     }
 
@@ -108,8 +109,9 @@ public class CourseService {
         studentService.removeEnrolledCourse(course, student);
     }
 
-    public Course addAssignment(Course course, Assignment assignment) {
-        Assignment newAssignment = assignmentService.createAssignment(course, assignment);
+    public Course addAssignment(AssignmentDTO assignmentDTO) {
+        Course course = getCourseById(assignmentDTO.getCourseId());
+        Assignment newAssignment = assignmentService.createAssignment(assignmentDTO);
         List<Assignment> courseAssignments = course.getAssignments();
         if (!courseAssignments.contains(newAssignment)) {
             courseAssignments.add(newAssignment);

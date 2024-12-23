@@ -10,6 +10,7 @@ import com.example.demo.repository.InstructorRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -30,8 +32,6 @@ public class InstructorService {
 
     @Autowired
     private InstructorRepository instructorRepository;
-    @Autowired
-    private CourseRepository courseRepository;
 
     @Autowired
     private CourseService courseService;
@@ -248,14 +248,31 @@ public class InstructorService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Instructor has no authority on this course");
         }
         Assignment assignment = new Assignment();
-        if(assignmentDTO.getTitle() != null)
             assignment.setTitle(assignmentDTO.getTitle());
-        if(assignmentDTO.getDescription() != null)
             assignment.setDescription(assignmentDTO.getDescription());
-        if(assignmentDTO.getDueDate() != null)
             assignment.setDueDate(assignmentDTO.getDueDate());
+            assignment.setMark(assignmentDTO.getMark());
 
         return courseService.addAssignment(course, assignment);
+    }
+
+    public ResponseEntity<String> gradeAssignment(Long assignmentId, Long studentId, int grade) {
+        Assignment assignment = assignmentService.getAssignmentById(assignmentId);
+        Student student = studentService.getStudentById(studentId);
+        if (assignment != null && student != null) {
+            if(student.getGrades().containsKey(assignmentId))
+                return ResponseEntity.badRequest().body("This assignment has already been graded for this student.");
+            if (!assignment.getSubmissions().containsKey(studentId))
+                grade = 0;
+            String studentGrade = grade + " / " + assignment.getMark();
+            Map<Long, String> studentGrades = student.getGrades();
+            studentGrades.put(assignment.getId(), studentGrade);
+            student.setGrades(studentGrades);
+            studentService.saveStudent(student);
+
+            return ResponseEntity.ok("Grade submitted successfully.");
+        }
+        return ResponseEntity.badRequest().body("Failed to submit grade.");
     }
 
 }

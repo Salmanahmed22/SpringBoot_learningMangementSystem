@@ -36,9 +36,6 @@ public class StudentService {
     @Autowired
     private LessonService lessonService;
     @Autowired
-    private LessonRepository lessonRepository;
-
-    @Autowired
     private NotificationService notificationService;
 
     // tested
@@ -294,5 +291,7 @@ public class StudentService {
     }
 
 
-
+    public void saveStudent(Student student) {
+        studentRepository.save(student);
+    }
 }

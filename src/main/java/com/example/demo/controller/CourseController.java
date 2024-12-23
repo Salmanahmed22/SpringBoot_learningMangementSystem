@@ -37,6 +37,11 @@ public class CourseController {
         return ResponseEntity.ok(courseService.updateCourse(id, updatedCourse));
     }
 
+    @PostMapping("{id}/lessons")
+    public ResponseEntity<Course> addLessonToCourse(@PathVariable Long id, @RequestBody Lesson lesson) {
+        return ResponseEntity.ok(courseService.addLesson(id, lesson));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
         courseService.deleteCourse(id);

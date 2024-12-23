@@ -15,5 +15,6 @@ public class CourseDTO {
     public CourseDTO() {
 
     }
+    private Long instructorId = null;
 }
 
