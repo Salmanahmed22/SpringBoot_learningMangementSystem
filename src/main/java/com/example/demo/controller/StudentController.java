@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dtos.StudentDTO;
 import com.example.demo.dtos.SubmissionDTO;
 import com.example.demo.models.Course;
 import com.example.demo.models.Lesson;
@@ -119,9 +120,10 @@ public class  StudentController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("{id}/edit")
-    public ResponseEntity<Student> setStudentLevel(@PathVariable Long id, @RequestBody short level) {
-        return ResponseEntity.ok(studentService.updateStudentLevel(id, level));
+    //done test
+    @PutMapping("{id}/editProfile")
+    public ResponseEntity<Student> editSudentProfile(@PathVariable Long id, @RequestBody StudentDTO studentDTO) {
+        return ResponseEntity.ok(studentService.updateStudentProfile(id, studentDTO));
     }
 
     //done test
@@ -130,6 +132,7 @@ public class  StudentController {
         return ResponseEntity.ok(studentService.unrollCourse(studentId, courseId));
     }
 
+    //move it to admin as delete user
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
         studentService.deleteStudent(id);

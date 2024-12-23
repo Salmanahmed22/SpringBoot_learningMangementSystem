@@ -1,15 +1,14 @@
 package com.example.demo.service;
 
+import com.example.demo.dtos.StudentDTO;
 import com.example.demo.models.*;
 import com.example.demo.repository.NotificationRepository;
-import com.example.demo.service.QuizService;
 import com.example.demo.repository.StudentRepository;
-import com.example.demo.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +25,8 @@ public class StudentService {
     private CourseService courseService;
     @Autowired
     private AssignmentService assignmentService;
-
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
     // tested
     public Student createStudent(Student student) {
         return studentRepository.save(student);
@@ -207,14 +207,23 @@ public class StudentService {
         notificationRepository.saveAll(notifications);
     }
 
-    public Student updateStudentLevel(Long id, short level) {
+    public Student updateStudentProfile(Long id, StudentDTO studentDTO) {
         Student student = studentRepository.findById(id).orElse(null);
 
         if (student != null) {
-            student.setLevel(level);
+            if (studentDTO.getName() != null)
+                student.setName(studentDTO.getName());
+            if (studentDTO.getLevel() != 0)
+                student.setLevel(studentDTO.getLevel());
+            if (studentDTO.getEmail() != null)
+                student.setEmail(studentDTO.getEmail());
+            if (studentDTO.getPassword() != null){
+                student.setPassword(bCryptPasswordEncoder.encode(studentDTO.getPassword()));
+            }
+
             return studentRepository.save(student);
         }
-        return null;
+        throw new IllegalArgumentException("Student not found");
     }
 
     public Student unrollCourse(Long studentId, Long courseId) {
