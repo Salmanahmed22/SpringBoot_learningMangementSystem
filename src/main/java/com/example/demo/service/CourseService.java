@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dtos.CourseDTO;
 import com.example.demo.models.*;
 import com.example.demo.repository.CourseRepository;
+import com.example.demo.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,12 @@ public class CourseService {
     @Autowired
     @Lazy
     private StudentService studentService;
+
+    @Autowired
+    @Lazy
+    private NotificationService notificationService;
+
+
 
 
 
@@ -69,6 +76,14 @@ public class CourseService {
                 existingCourse.setTitle(updatedCourse.getTitle());
             if(updatedCourse.getDescription() != null)
                 existingCourse.setDescription(updatedCourse.getDescription());
+
+            // Notify all enrolled students about the update
+            List<Student> enrolledStudents = existingCourse.getEnrolledStudents();
+            for (Student student : enrolledStudents) {
+                String message = "The course '" + existingCourse.getTitle() + "' has been updated.";
+                notificationService.createNotification(student.getId(),message);
+            }
+
             return courseRepository.save(existingCourse);
         }
         return null;
@@ -106,5 +121,10 @@ public class CourseService {
         course.getEnrolledStudents().remove(student);
         courseRepository.save(course);
         studentService.removeEnrolledCourse(course, student);
+
+        // Notify the student about removal from the course
+        String message = "You have been removed from the course: '" + course.getTitle() + "'.";
+        Notification notification = new Notification(message, student);
+        notificationService.createNotification(student.getId(),message);
     }
 }

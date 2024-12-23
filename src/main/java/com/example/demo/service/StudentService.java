@@ -23,8 +23,6 @@ public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
     @Autowired
-    private NotificationRepository notificationRepository;
-    @Autowired
     private QuizService quizService;
     @Autowired
     private CourseService courseService;
@@ -73,15 +71,15 @@ public class StudentService {
             // Notify the student
             String messageStud = "You have successfully enrolled in the course: " + course.getTitle();
             Notification notification = new Notification(messageStud, student);
-            notificationRepository.save(notification);
+            notificationService.createNotification(student.getId(),messageStud);
 
             // Notify the instructor
             Instructor instructor = course.getInstructor();
 
             if (instructor != null) {
-                String instructorMessage = "Student " + student.getName() + " (ID: " + student.getId() + ") has enrolled in your course: " + course.getTitle();
-                Notification instructorNotification = new Notification(instructorMessage, instructor);
-                notificationRepository.save(instructorNotification);
+                String messageInst = "Student " + student.getName() + " (ID: " + student.getId() + ") has enrolled in your course: " + course.getTitle();
+                Notification instructorNotification = new Notification(messageInst, instructor);
+                notificationService.createNotification(student.getId(),messageInst);
             } else {
                 throw new IllegalArgumentException("Instructor not found for this course");
             }

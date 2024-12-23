@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.models.Notification;
+import com.example.demo.models.Student;
 import com.example.demo.models.User;
 import com.example.demo.repository.NotificationRepository;
 import com.example.demo.repository.UserRepository;
@@ -23,6 +24,7 @@ public class NotificationService {
         Notification notification = new Notification(message, user);
         return notificationRepository.save(notification);
     }
+
 
     public List<Notification> getNotifications(Long userId, Boolean unread) {
         List<Notification> notifications;
