@@ -23,8 +23,6 @@ public class InstructorController {
     @Autowired
     private InstructorService instructorService;
 
-    @Autowired
-    private CourseRepository courseRepository;
 
     @Autowired
     private LessonService lessonService;
