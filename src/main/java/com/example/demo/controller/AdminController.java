@@ -55,12 +55,12 @@ public class AdminController { // All methods had been tested
 
     }
 
-    // Delete an admin
+    // Delete an User
     //tested
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAdmin(@PathVariable Long id) {
+    @DeleteMapping("deleteUser/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
 
-        adminService.deleteAdmin(id);
+        adminService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 }

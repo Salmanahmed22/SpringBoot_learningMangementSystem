@@ -1,7 +1,10 @@
 package com.example.demo.service;
 
 import com.example.demo.models.Admin;
+import com.example.demo.models.Role;
+import com.example.demo.models.User;
 import com.example.demo.repository.AdminRepository;
+import com.example.demo.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,12 @@ public class AdminService {
 
     @Autowired
     private AdminRepository adminRepository;
+    @Autowired
+    private StudentService studentService;
+    @Autowired
+    private InstructorService instructorService;
+    @Autowired
+    private UserService userService;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -60,8 +69,16 @@ public class AdminService {
         return null;
     }
 
-    // Delete an admin
-    public void deleteAdmin(Long id) {
-        adminRepository.deleteById(id);
+    // Delete an User
+    public void deleteUser(Long id) {
+        User user = userService.getUserById(id);
+        if (user != null) {
+            if (user.getRole().equals(Role.STUDENT))
+                studentService.deleteStudent(id);
+            else if (user.getRole().equals(Role.INSTRUCTOR))
+                instructorService.deleteInstructor(id);
+            else
+                adminRepository.deleteById(id);
+        }
     }
 }
