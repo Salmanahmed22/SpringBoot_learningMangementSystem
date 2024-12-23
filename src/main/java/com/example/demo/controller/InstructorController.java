@@ -1,9 +1,22 @@
 package com.example.demo.controller;
 
+<<<<<<< Updated upstream
 import com.example.demo.dtos.*;
 import com.example.demo.repository.MediaFileRepository;
 import com.example.demo.models.*;
 import com.example.demo.models.Notification;
+=======
+import com.example.demo.repository.CourseRepository;
+import com.example.demo.repository.MediaFileRepository;
+import org.springframework.web.multipart.MultipartFile;
+import com.example.demo.dtos.CourseDTO;
+import com.example.demo.dtos.QuizDTO;
+import com.example.demo.models.Course;
+import com.example.demo.models.Instructor;
+import com.example.demo.models.Lesson;
+//import com.example.demo.models.Notification;
+import com.example.demo.models.Quiz;
+>>>>>>> Stashed changes
 import com.example.demo.service.InstructorService;
 import com.example.demo.service.LessonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +25,7 @@ import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.demo.models.MediaFile; // To use the MediaFile entity.
 import java.util.List;
 import java.util.Random;
 
@@ -23,12 +37,20 @@ public class InstructorController {
     @Autowired
     private InstructorService instructorService;
 
+<<<<<<< Updated upstream
 
     @Autowired
     private LessonService lessonService;
     @Autowired
     private MediaFileRepository mediaFileRepository; // Autowire the MediaFileRepository
 
+=======
+    @Autowired
+    private CourseRepository courseRepository;
+
+    @Autowired
+    private MediaFileRepository mediaFileRepository; // Autowire the MediaFileRepository
+>>>>>>> Stashed changes
     // Get all instructors
     @GetMapping
     public ResponseEntity<List<Instructor>> getAllInstructors() {
@@ -170,6 +192,26 @@ public class InstructorController {
                                                    @PathVariable Long courseId,
                                                    @Valid @RequestBody AssignmentDTO assignmentDTO) {
         return ResponseEntity.ok(instructorService.addAssignmentToCourse(instructorId, courseId, assignmentDTO));
+    }
+
+    // Endpoint to upload media file to a course
+    @PostMapping("/{instructorId}/courses/{courseId}/media/upload")
+    public ResponseEntity<String> uploadMediaToCourse(
+            @PathVariable Long instructorId,
+            @PathVariable Long courseId,
+            @RequestParam("filePath") String filePath) {
+
+        try {
+            // Call the service method to save the media file path
+            instructorService.saveMediaFile(courseId, filePath);
+
+            return ResponseEntity.ok("File path saved successfully: " + filePath);
+        }
+
+        catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Failed to save file path: " + e.getMessage());
+        }
     }
 
 }
