@@ -40,6 +40,10 @@ public class AssignmentService {
 
     }
 
+    public Assignment createAssignment(Assignment assignment) {
+        return assignmentRepository.save(assignment);
+    }
+
     public Assignment updateAssignment(Long id, Assignment updatedAssignment) {
         // Fetch the existing assignment by ID
         Assignment existingAssignment = assignmentRepository.findById(id).orElse(null);

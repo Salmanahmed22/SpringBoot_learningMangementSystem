@@ -2,6 +2,7 @@
 package com.example.demo.serviceTest;
 
 import com.example.demo.models.Assignment;
+import com.example.demo.dtos.AssignmentDTO;
 import com.example.demo.models.Course;
 import com.example.demo.repository.AssignmentRepository;
 import com.example.demo.repository.StudentRepository;
@@ -96,8 +97,15 @@ public class AssignmentServiceTest {
         // Arrange
         when(assignmentRepository.save(assignment)).thenReturn(assignment);
 
+        AssignmentDTO assignmentDTO = new AssignmentDTO();
+        assignmentDTO.setTitle(assignment.getTitle());
+        assignmentDTO.setDescription(assignment.getDescription());
+        assignmentDTO.setMark(assignment.getMark());
+        assignmentDTO.setDueDate(assignment.getDueDate());
+        assignmentDTO.setSubmissions(assignment.getSubmissions());
+        assignmentDTO.setCourseId(assignment.getCourse().getId());
         // Act
-        Assignment result = assignmentService.createAssignment(course, assignment);
+        Assignment result = assignmentService.createAssignment(assignmentDTO);
 
         // Assert
         assertNotNull(result);
