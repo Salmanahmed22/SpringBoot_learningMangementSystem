@@ -169,8 +169,5 @@ public class AdminController {
     // Submission Management
     
 
-    @PutMapping("/submissions/{id}")
-    public ResponseEntity<Submission> updateSubmission(@PathVariable Long id, @RequestBody SubmissionDTO updatedSubmissionDTO) {
-        return ResponseEntity.ok(adminService.updateSubmission(id, updatedSubmissionDTO));
-    }
+
 }
