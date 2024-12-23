@@ -35,8 +35,9 @@ public class Lesson {
     private Course course;
 
     @OneToMany
-    private List<Student> Attendance;
+    private List<Student> Attendance = new ArrayList<>();
 
+    // default constructor
     public Lesson() {
         this.Attendance = new ArrayList<>();
         this.otp = generateRandomOtp();

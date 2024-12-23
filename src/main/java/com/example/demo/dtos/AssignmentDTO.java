@@ -9,10 +9,13 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Future;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 @Setter
 @AllArgsConstructor
+
 public class AssignmentDTO {
 
     @NotBlank(message = "Title is required and cannot be blank")
@@ -28,7 +31,11 @@ public class AssignmentDTO {
     @NotNull(message = "Due date is required")
     @Future(message = "Due date must be in the future")
     private LocalDateTime dueDate;
-
-    // Default constructor
-    public AssignmentDTO() {}
+    private Map<Long, String> submissions;
+    private Long courseId;
+    public AssignmentDTO() {
+        submissions = new HashMap<>();
+    }
 }
+
+

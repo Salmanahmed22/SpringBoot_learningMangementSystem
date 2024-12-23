@@ -102,7 +102,7 @@ public class  StudentController {
         return ResponseEntity.ok(quizzes);
     }
 
-    //
+    // unsupported media problem
     @PostMapping("/{studentId}/quizzes/{quizId}/submit")
         public ResponseEntity<String> submitQuiz(@PathVariable Long studentId,
                                                  @PathVariable Long quizId,
