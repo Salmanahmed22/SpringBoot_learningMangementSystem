@@ -200,7 +200,7 @@ public class StudentService {
     }
 
     // unsupported media problem
-    public double takeQuiz(Long studentId, Long quizId, SubmissionDTO submissionDTO) {
+    public String takeQuiz(Long studentId, Long quizId, SubmissionDTO submissionDTO) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new IllegalArgumentException("Student not found"));
         List<Course> enrolledCourses = student.getEnrolledCourses();

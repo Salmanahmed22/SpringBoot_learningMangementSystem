@@ -98,12 +98,11 @@ public class  StudentController {
         return ResponseEntity.ok(quizzes);
     }
 
-    // unsupported media problem
+    //
     @PostMapping("/{studentId}/quizzes/{quizId}/submit")
     public ResponseEntity<String> submitQuiz(@PathVariable Long studentId, @PathVariable Long quizId, @RequestBody SubmissionDTO submissionDTO) {
         try {
-
-            return ResponseEntity.ok("Grade " + studentService.takeQuiz(studentId, quizId, submissionDTO)*100 + "%");
+            return ResponseEntity.ok("Grade " + studentService.takeQuiz(studentId, quizId, submissionDTO));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -133,5 +132,6 @@ public class  StudentController {
         studentService.deleteStudent(id);
         return ResponseEntity.noContent().build();
     }
+
 
 }
