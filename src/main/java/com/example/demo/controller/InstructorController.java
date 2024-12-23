@@ -86,13 +86,13 @@ public class InstructorController {
 
 
     // Create a new course
-    // Tested
+    // Tested final
     @PostMapping("/{instructorId}/courses")
     public ResponseEntity<Course> createCourse(@PathVariable Long instructorId, @RequestBody CourseDTO courseDTO) {
         return ResponseEntity.ok(instructorService.createCourse(instructorId, courseDTO));
     }
 
-    // Tested
+    // Tested final
     @PutMapping("/{instructorId}/courses/{courseId}")
     public ResponseEntity<Course> updateCourse(@PathVariable Long instructorId,
                                                @PathVariable Long courseId,
@@ -104,7 +104,7 @@ public class InstructorController {
         return ResponseEntity.notFound().build();
     }
 
-    // Tested
+    // Tested final
     @DeleteMapping("/{instructorId}/courses/{courseId}")
     public ResponseEntity<Void> deleteCourse(@PathVariable Long instructorId,
                                              @PathVariable Long courseId) {
@@ -112,7 +112,7 @@ public class InstructorController {
         return ResponseEntity.noContent().build();
     }
 
-    // Tested
+    // Tested final
     @PostMapping("/{instructorId}/courses/{courseId}/lessons")
     public ResponseEntity<Course> addLessonToCourse(
             @PathVariable Long instructorId,
@@ -121,7 +121,7 @@ public class InstructorController {
         return ResponseEntity.ok(instructorService.addLessonToCourse(instructorId, courseId, lesson));
     }
 
-    // Tested
+    // Tested final
     @PostMapping("/{instructorId}/courses/{courseId}/questionBank")
     public ResponseEntity<QuestionBank> addQuestionToBank(
             @PathVariable Long instructorId,
@@ -131,7 +131,7 @@ public class InstructorController {
     }
 
 
-    // Tested
+    // Tested final
     @PostMapping("/{instructorId}/courses/{courseId}/quiz")
     public ResponseEntity<Quiz> addQuizToCourse(
             @PathVariable Long instructorId,
@@ -140,7 +140,7 @@ public class InstructorController {
         return ResponseEntity.ok(instructorService.createQuiz(instructorId, courseId, quizDTO));
     }
 
-    // Tested
+    // Tested final
     @DeleteMapping("/{instructorId}/courses/{courseId}/students/{studentId}")
     public ResponseEntity<Void> removeStudentFromCourse(@PathVariable Long instructorId,
                                                         @PathVariable Long courseId,
@@ -149,14 +149,14 @@ public class InstructorController {
         return ResponseEntity.noContent().build();
     }
 
-    // Tested
+    // Tested final
     @PutMapping("/{instructorId}/edit")
     public ResponseEntity<Instructor> editInstructorProfile(@PathVariable Long instructorId, @RequestBody InstructorDTO instructorDTO) {
         return ResponseEntity.ok(instructorService.updateInstructorProfile(instructorId, instructorDTO));
     }
 
 
-    // Tested
+    // Tested final
     @PostMapping("/{instructorId}/courses/{courseId}/media/upload")
     public ResponseEntity<String> uploadMediaToCourse(
             @PathVariable Long instructorId,
@@ -178,7 +178,7 @@ public class InstructorController {
         }
     }
 
-    // Tested
+    // Tested final
     @PostMapping("/{instructorId}/courses/{courseId}/assignments")
     public ResponseEntity<Course> addAssignmentToCourse(@PathVariable Long instructorId,
                                                    @PathVariable Long courseId,
@@ -186,7 +186,7 @@ public class InstructorController {
         return ResponseEntity.ok(instructorService.addAssignmentToCourse(instructorId, courseId, assignmentDTO));
     }
 
-    // Tested
+    // Tested final
     @PostMapping("{instructorId}/grade/{assignmentId}/{studentId}")
     public ResponseEntity<String> gradeAssignment(@PathVariable Long assignmentId,
                                                   @PathVariable Long studentId,

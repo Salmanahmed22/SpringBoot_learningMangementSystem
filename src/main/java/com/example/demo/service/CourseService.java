@@ -103,11 +103,11 @@ public class CourseService {
     public Course addLesson(Long courseId, Lesson lesson) {
         Course course = courseRepository.findById(courseId).orElseThrow(null);
         Lesson newLesson = lessonService.createLesson(lesson);
+        newLesson.setCourse(course);
         List <Lesson> courseLessons = course.getLessons();
-        if(!courseLessons.contains(newLesson)) {
-            courseLessons.add(newLesson);
-            course.setLessons(courseLessons);
-        }
+        courseLessons.add(newLesson);
+        course.setLessons(courseLessons);
+
         return courseRepository.save(course);
     }
 
