@@ -8,10 +8,10 @@ import com.example.demo.repository.CourseRepository;
 import com.example.demo.repository.MediaFileRepository;
 import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.dtos.CourseDTO;
+import com.example.demo.dtos.LessonDTO;
+import com.example.demo.dtos.QuestionDTO;
 import com.example.demo.dtos.QuizDTO;
-import com.example.demo.models.Course;
-import com.example.demo.models.Instructor;
-import com.example.demo.models.Lesson;
+import com.example.demo.models.*;
 //import com.example.demo.models.Notification;
 import com.example.demo.models.Quiz;
 import com.example.demo.service.InstructorService;
@@ -34,15 +34,10 @@ public class InstructorController {
     @Autowired
     private InstructorService instructorService;
 
-
     @Autowired
     private LessonService lessonService;
     @Autowired
     private MediaFileRepository mediaFileRepository; // Autowire the MediaFileRepository
-
-    @Autowired
-    private CourseRepository courseRepository;
-
     // Get all instructors
     @GetMapping
     public ResponseEntity<List<Instructor>> getAllInstructors() {

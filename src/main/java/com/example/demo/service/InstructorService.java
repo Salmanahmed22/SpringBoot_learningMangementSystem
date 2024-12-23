@@ -30,8 +30,6 @@ public class InstructorService {
 
     @Autowired
     private InstructorRepository instructorRepository;
-    @Autowired
-    private CourseRepository courseRepository;
 
     @Autowired
     private CourseService courseService;

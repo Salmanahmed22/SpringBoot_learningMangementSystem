@@ -36,9 +36,6 @@ public class StudentService {
     @Autowired
     private LessonService lessonService;
     @Autowired
-    private LessonRepository lessonRepository;
-
-    @Autowired
     private NotificationService notificationService;
 
     // tested

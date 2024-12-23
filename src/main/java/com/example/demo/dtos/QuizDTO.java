@@ -33,6 +33,8 @@ public class QuizDTO {
     @Positive(message = "Number of questions must be positive")
     private int numOfQuestions;
 
+    private Long courseId;
+
     // Default constructor
     public QuizDTO() {}
 }

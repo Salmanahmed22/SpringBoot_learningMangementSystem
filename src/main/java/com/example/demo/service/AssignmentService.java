@@ -19,9 +19,6 @@ public class AssignmentService {
     private AssignmentRepository assignmentRepository;
 
     @Autowired
-    private StudentRepository studentRepository;
-
-    @Autowired
     private CourseService courseService;
 
     public Assignment getAssignmentById(Long id) {
@@ -32,8 +29,12 @@ public class AssignmentService {
         return assignmentRepository.findAll();
     }
 
-    public Assignment createAssignment(Course course, Assignment assignment) {
-        assignment.setCourse(course);
+    public Assignment createAssignment(AssignmentDTO assignmentDTO) {
+        Assignment assignment = new Assignment();
+        assignment.setTitle(assignmentDTO.getTitle());
+        assignment.setDescription(assignmentDTO.getDescription());
+        assignment.setDueDate(assignmentDTO.getDueDate());
+        assignment.setCourse(courseService.getCourseById(assignmentDTO.getCourseId())) ;
         return assignmentRepository.save(assignment);
     }
 
@@ -70,7 +71,6 @@ public class AssignmentService {
         }
         return null;
     }
-
 //    public void submitAssignment(Long studentId, Long assignmentId, String submissionContent) {
 //        // Find the student by ID
 //        Student student = studentRepository.findById(studentId)
@@ -86,5 +86,4 @@ public class AssignmentService {
     public void deleteAssignment(Long id) {
         assignmentRepository.deleteById(id);
     }
-
 }
