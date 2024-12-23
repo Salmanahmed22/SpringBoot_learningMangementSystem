@@ -152,16 +152,20 @@ public class InstructorController {
             @RequestParam("filePath") String filePath) {
 
         try {
-            // Call the service method to save the media file path
-            instructorService.saveMediaFile(courseId, filePath);
+            instructorService.saveMediaFile(instructorId, courseId, filePath);
 
+            // Return a successful response
             return ResponseEntity.ok("File path saved successfully: " + filePath);
         }
+        catch (RuntimeException e) {
 
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
         catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Failed to save file path: " + e.getMessage());
         }
     }
+
 
 }

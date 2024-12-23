@@ -16,12 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-<<<<<<< Updated upstream
 import javax.persistence.criteria.CriteriaBuilder;
-=======
 import java.io.File;
 import java.io.IOException;
->>>>>>> Stashed changes
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -196,10 +194,19 @@ public class InstructorService {
     }
 
     // Method to save media file path for a course
-    public MediaFile saveMediaFile(Long courseId, String filePath) {
+    public MediaFile saveMediaFile(Long instructorId, Long courseId, String filePath) {
+        // Retrieve the instructor by ID
+        Instructor instructor = instructorRepository.findById(instructorId)
+                .orElseThrow(() -> new RuntimeException("Instructor not found"));
+
         // Retrieve the course by ID
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Course not found"));
+
+        // Ensure the instructor is associated with the course
+        if (!course.getInstructor().equals(instructor)) {
+            throw new RuntimeException("Instructor is not associated with the course");
+        }
 
         // Create a new MediaFile with the provided file path and course
         MediaFile mediaFile = new MediaFile(filePath, course);
@@ -207,4 +214,5 @@ public class InstructorService {
         // Save the media file record in the database
         return mediaFileRepository.save(mediaFile);
     }
+
 }
