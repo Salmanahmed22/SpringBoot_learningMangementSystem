@@ -43,4 +43,8 @@ public class LessonService {
     public void deleteLesson(Long id) {
         lessonRepository.deleteById(id);
     }
+
+    public void saveLesson(Lesson lesson) {
+
+    }
 }

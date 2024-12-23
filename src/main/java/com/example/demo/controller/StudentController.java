@@ -68,8 +68,8 @@ public class  StudentController {
 
     // tested
     @GetMapping("/{studentId}/courses/{courseId}/lessons/{lessonId}")
-    public ResponseEntity<String> viewLessonContent(@PathVariable Long studentId, @PathVariable Long courseId, @PathVariable Long lessonId) {
-        String lessonContent = studentService.getLessonContent(studentId, courseId, lessonId);
+    public ResponseEntity<String> viewLessonContent(@PathVariable Long studentId, @PathVariable Long courseId, @PathVariable Long lessonId ,@RequestParam String enterdOTP) {
+        String lessonContent = studentService.getLessonContent(studentId, courseId, lessonId , enterdOTP);
         return ResponseEntity.ok(lessonContent);
     }
 
@@ -139,5 +139,7 @@ public class  StudentController {
         studentService.deleteStudent(id);
         return ResponseEntity.noContent().build();
     }
+
+
 
 }

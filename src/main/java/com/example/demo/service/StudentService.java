@@ -4,6 +4,7 @@ import com.example.demo.dtos.AnswerDTO;
 import com.example.demo.dtos.StudentDTO;
 import com.example.demo.dtos.SubmissionDTO;
 import com.example.demo.models.*;
+import com.example.demo.repository.LessonRepository;
 import com.example.demo.repository.NotificationRepository;
 import com.example.demo.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,11 @@ public class StudentService {
     private AssignmentService assignmentService;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private LessonService lessonService;
+    @Autowired
+    private LessonRepository lessonRepository;
+
     // tested
     public Student createStudent(Student student) {
         return studentRepository.save(student);
@@ -103,7 +109,7 @@ public class StudentService {
     }
 
     // tested
-    public String getLessonContent(Long studentId, Long courseId, Long lessonId) {
+    public String getLessonContent(Long studentId, Long courseId, Long lessonId , String enteredOtp) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new IllegalArgumentException("Student not found"));
         List<Course> enrolledCourses = student.getEnrolledCourses();
@@ -111,7 +117,9 @@ public class StudentService {
             if (course.getId().equals(courseId)) {
                 List<Lesson> lessons = course.getLessons();
                 for (Lesson lesson : lessons) {
-                    if (lesson.getId().equals(lessonId)) {
+                    if (lesson.getId().equals(lessonId) && lesson.getOtp().equals(enteredOtp)) {
+                        lesson.getAttendance().add(student);
+                        lessonService.saveLesson(lesson);
                         return lesson.getContent();
                     }
                 }
@@ -268,4 +276,7 @@ public class StudentService {
         student.getEnrolledCourses().remove(course);
         studentRepository.save(student);
     }
+
+
+
 }

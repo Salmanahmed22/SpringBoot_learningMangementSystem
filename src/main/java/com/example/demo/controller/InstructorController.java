@@ -10,6 +10,7 @@ import com.example.demo.dtos.QuizDTO;
 import com.example.demo.models.*;
 //import com.example.demo.models.Notification;
 import com.example.demo.service.InstructorService;
+import com.example.demo.service.LessonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.models.MediaFile; // To use the MediaFile entity.
 import java.util.List;
+import java.util.Random;
 
 @RestController
 @RequestMapping("/api/instructors")
@@ -30,6 +32,8 @@ public class InstructorController {
     @Autowired
     private CourseRepository courseRepository;
 
+    @Autowired
+    private LessonService lessonService;
     @Autowired
     private MediaFileRepository mediaFileRepository; // Autowire the MediaFileRepository
     // Get all instructors
