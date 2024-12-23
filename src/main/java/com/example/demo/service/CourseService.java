@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
@@ -53,6 +54,8 @@ public class CourseService {
             course.setTitle(courseDTO.getTitle());
         if(courseDTO.getDescription() != null)
             course.setDescription(courseDTO.getDescription());
+
+        course.getQuestionBank().setCourse(course);
         course.setInstructor(instructor);
         return courseRepository.save(course);
     }
@@ -88,14 +91,14 @@ public class CourseService {
         courseRepository.deleteById(id);
     }
 
-    public Course addLesson(Long courseId, Lesson lesson) {
-        Course course = courseRepository.findById(courseId).orElseThrow(null);
-        Lesson newLesson = lessonService.createLesson(lesson);
-        List <Lesson> courseLessons = course.getLessons();
-        if(!courseLessons.contains(newLesson)) {
+    public Course addLesson(Course course, Lesson lesson) {
+        Lesson newLesson = lessonService.createLesson(course,lesson);
+        List<Lesson> courseLessons = course.getLessons();
+        if (!courseLessons.contains(newLesson)) {
             courseLessons.add(newLesson);
             course.setLessons(courseLessons);
         }
+
         return courseRepository.save(course);
     }
 

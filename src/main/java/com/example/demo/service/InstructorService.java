@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 import java.util.Objects;
@@ -36,8 +37,12 @@ public class InstructorService {
 
     @Autowired
     private StudentService studentService;
+
     @Autowired
     private QuizService quizService;
+
+    @Autowired
+    private QuestionBankService questionBankService;
 
     // Get all instructors
     public List<Instructor> getAllInstructors() {
@@ -94,7 +99,6 @@ public class InstructorService {
 //        notificationRepository.saveAll(notifications);
 //    }
 
-    // Create a new course
     public Course createCourse(Long instructorId, CourseDTO courseDTO) {
         Instructor instructor = getInstructorById(instructorId);
         if(instructor == null){
@@ -127,11 +131,13 @@ public class InstructorService {
         courseService.deleteCourse(courseId);
     }
 
-    public Lesson addLessonToCourse(Long instructorId, Long courseId, LessonDTO lessonDTO) {
+    public Course addLessonToCourse(Long instructorId, Long courseId, LessonDTO lessonDTO) {
 
         Instructor instructor = instructorRepository.findById(instructorId).orElse(null);
 
-        Course course = courseService.getCourseById(courseId);
+        Course course = courseRepository.findById(courseId).orElseThrow(() ->
+                new EntityNotFoundException("Course not found")
+        );
 
         if (!course.getInstructor().equals(instructor)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Instructor has no authority on this course");
@@ -142,8 +148,7 @@ public class InstructorService {
         if(lessonDTO.getContent() != null)
             lesson.setContent(lessonDTO.getContent());
 
-        courseService.addLesson(courseId, lesson);
-        return lesson;
+        return courseService.addLesson(course, lesson);
     }
 
     public QuestionBank addQuestionToBank(Long instructorId, Long courseId, QuestionDTO questionDTO){
@@ -157,7 +162,7 @@ public class InstructorService {
         List<Question> questions = questionBank.getQuestions();
         questions.add(question);
         questionBank.setQuestions(questions);
-        return questionBank;
+        return questionBankService.saveQuestionBank(questionBank);
     }
 
     public Quiz createQuiz(Long instructorId, Long courseId, QuizDTO quizDTO) {

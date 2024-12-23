@@ -69,14 +69,12 @@ public class InstructorController {
 ////        return ResponseEntity.ok(notifications);
 ////    }
 //
-    // Create a new course
     // Tested
     @PostMapping("/{instructorId}/courses")
     public ResponseEntity<Course> createCourse(@PathVariable Long instructorId, @RequestBody CourseDTO courseDTO) {
         return ResponseEntity.ok(instructorService.createCourse(instructorId, courseDTO));
     }
 
-    // Update a course
     // Tested
     @PutMapping("/{instructorId}/courses/{courseId}")
     public ResponseEntity<Course> updateCourse(@PathVariable Long instructorId,
@@ -89,7 +87,6 @@ public class InstructorController {
         return ResponseEntity.notFound().build();
     }
 
-    // Delete a course
     // Tested
     @DeleteMapping("/{instructorId}/courses/{courseId}")
     public ResponseEntity<Void> deleteCourse(@PathVariable Long instructorId,
@@ -98,16 +95,16 @@ public class InstructorController {
         return ResponseEntity.noContent().build();
     }
 
-    // Add a lesson to course
     // Tested
     @PostMapping("/{instructorId}/courses/{courseId}/lessons")
-    public ResponseEntity<Lesson> addLessonToCourse(
+    public ResponseEntity<Course> addLessonToCourse(
             @PathVariable Long instructorId,
             @PathVariable Long courseId,
             @RequestBody LessonDTO lesson) {
         return ResponseEntity.ok(instructorService.addLessonToCourse(instructorId, courseId, lesson));
     }
 
+    // Tested
     @PostMapping("/{instructorId}/courses/{courseId}/questionBank")
     public ResponseEntity<QuestionBank> addQuestionToBank(
             @PathVariable Long instructorId,
@@ -117,6 +114,7 @@ public class InstructorController {
     }
 
 
+    // Tested
     @PostMapping("/{instructorId}/courses/{courseId}/quiz")
     public ResponseEntity<Quiz> addQuiz(
             @PathVariable Long instructorId,
@@ -125,14 +123,16 @@ public class InstructorController {
         return ResponseEntity.ok(instructorService.createQuiz(instructorId, courseId, quizDTO));
     }
 
-    // Remove student from course
-    @DeleteMapping("/{instructorId}/courses/{courseId}/{studentId}")
+    // Tested
+    @DeleteMapping("/{instructorId}/courses/{courseId}/students/{studentId}")
     public ResponseEntity<Void> removeStudentFromCourse(@PathVariable Long instructorId,
                                                         @PathVariable Long courseId,
                                                         @PathVariable Long studentId){
         instructorService.removeStudentFromCourse(instructorId, courseId, studentId);
         return ResponseEntity.noContent().build();
     }
+
+    // TODO
 
 
 }

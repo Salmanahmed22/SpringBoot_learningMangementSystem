@@ -36,9 +36,10 @@ public class Course {
     @JsonBackReference(value = "student-course")
     private List<Student> enrolledStudents;
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course", cascade = CascadeType.PERSIST)
     @JsonManagedReference(value = "course-lesson")
     private List<Lesson> lessons;
+
 
     @OneToMany(mappedBy = "course")
     @JsonManagedReference(value = "course-assignment")
