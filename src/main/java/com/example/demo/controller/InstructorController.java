@@ -156,7 +156,7 @@ public class InstructorController {
     }
 
 
-    // Endpoint to upload media file to a course
+    // Tested
     @PostMapping("/{instructorId}/courses/{courseId}/media/upload")
     public ResponseEntity<String> uploadMediaToCourse(
             @PathVariable Long instructorId,
@@ -166,7 +166,6 @@ public class InstructorController {
         try {
             instructorService.saveMediaFile(instructorId, courseId, filePath);
 
-            // Return a successful response
             return ResponseEntity.ok("File path saved successfully: " + filePath);
         }
         catch (RuntimeException e) {
@@ -187,7 +186,11 @@ public class InstructorController {
         return ResponseEntity.ok(instructorService.addAssignmentToCourse(instructorId, courseId, assignmentDTO));
     }
 
-    // Endpoint to upload media file to a course
-
-
+    // Tested
+    @PostMapping("{instructorId}/grade/{assignmentId}/{studentId}")
+    public ResponseEntity<String> gradeAssignment(@PathVariable Long assignmentId,
+                                                  @PathVariable Long studentId,
+                                                  @RequestParam int grade) {
+        return instructorService.gradeAssignment(assignmentId, studentId, grade);
+    }
 }

@@ -8,7 +8,9 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -25,12 +27,19 @@ public class Student extends User {
     @JsonManagedReference(value = "student-course")
     private List<Course> enrolledCourses;
 
+
+    @ElementCollection
+    @MapKeyColumn(name = "Assignment_id")
+    @Column(name = "final_grade")
+    private Map<Long, String> grades;
+
     @Column(nullable = false)
     private short level;
 
     // default constructor
     public Student() {
         super();
+        grades = new HashMap<>();
         enrolledCourses = new ArrayList<>();
         level = 1;
     }
