@@ -109,16 +109,10 @@ public class  StudentController {
         }
     }
 
-    @GetMapping("/{id}/notifications")
-    public ResponseEntity<List<Notification>> viewNotifications(@PathVariable Long id, @RequestParam(required = false) Boolean unread) {
-        List<Notification> notifications = studentService.getNotifications(id, unread);
-        return ResponseEntity.ok(notifications);
-    }
 
-    @PutMapping("/{id}/notifications/mark-as-read")
-    public ResponseEntity<Void> markNotificationsAsRead(@PathVariable Long id) {
-        studentService.markNotificationsAsRead(id);
-        return ResponseEntity.ok().build();
+    @GetMapping("/{studentId}/notifications")
+    public ResponseEntity<List<Notification>> viewNotifications(@PathVariable Long studentId, @RequestParam(required = false) Boolean unread) {
+        return ResponseEntity.ok(studentService.getNotifications(studentId, unread));
     }
 
     //done test

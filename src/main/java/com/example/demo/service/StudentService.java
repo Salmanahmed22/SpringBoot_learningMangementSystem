@@ -4,6 +4,8 @@ import com.example.demo.dtos.AnswerDTO;
 import com.example.demo.dtos.StudentDTO;
 import com.example.demo.dtos.SubmissionDTO;
 import com.example.demo.models.*;
+import com.example.demo.repository.CourseRepository;
+import com.example.demo.repository.InstructorRepository;
 import com.example.demo.repository.NotificationRepository;
 import com.example.demo.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,9 @@ public class StudentService {
     private AssignmentService assignmentService;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private NotificationService notificationService;
+
     // tested
     public Student createStudent(Student student) {
         return studentRepository.save(student);
@@ -48,6 +53,7 @@ public class StudentService {
     // tested
     public Student enrollCourse(Long studentId, Long courseId) {
         Student student = studentRepository.findById(studentId).orElse(null);
+
         if (student == null) {
             throw new IllegalArgumentException("Student not found");
         }
@@ -62,7 +68,25 @@ public class StudentService {
         if (!enrolledCourses.contains(course)) {
             enrolledCourses.add(course);
             student.setEnrolledCourses(enrolledCourses);
-            return studentRepository.save(student);
+
+            studentRepository.save(student);
+            // Notify the student
+            String messageStud = "You have successfully enrolled in the course: " + course.getTitle();
+            Notification notification = new Notification(messageStud, student);
+            notificationRepository.save(notification);
+
+            // Notify the instructor
+            Instructor instructor = course.getInstructor();
+
+            if (instructor != null) {
+                String instructorMessage = "Student " + student.getName() + " (ID: " + student.getId() + ") has enrolled in your course: " + course.getTitle();
+                Notification instructorNotification = new Notification(instructorMessage, instructor);
+                notificationRepository.save(instructorNotification);
+            } else {
+                throw new IllegalArgumentException("Instructor not found for this course");
+            }
+
+            return student;
         } else {
             throw new IllegalArgumentException("Student is already enrolled in this course");
         }
@@ -205,18 +229,8 @@ public class StudentService {
     }
 
     public List<Notification> getNotifications(Long studentId, Boolean unread) {
-        if (unread != null && unread) {
-            return notificationRepository.findByUserIdAndIsRead(studentId, false);
-        }
-        return notificationRepository.findByUserId(studentId);
-    }
-
-    public void markNotificationsAsRead(Long studentId) {
-        List<Notification> notifications = notificationRepository.findByUserIdAndIsRead(studentId, false);
-        for (Notification notification : notifications) {
-            notification.setRead(true);
-        }
-        notificationRepository.saveAll(notifications);
+        // Delegate to NotificationService
+        return notificationService.getNotifications(studentId, unread);
     }
 
     public Student updateStudentProfile(Long id, StudentDTO studentDTO) {

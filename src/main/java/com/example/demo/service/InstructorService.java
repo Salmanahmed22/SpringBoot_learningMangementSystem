@@ -39,6 +39,9 @@ public class InstructorService {
     @Autowired
     private QuizService quizService;
 
+    @Autowired
+    private NotificationService notificationService;
+
     // Get all instructors
     public List<Instructor> getAllInstructors() {
         return instructorRepository.findAll();
@@ -76,23 +79,10 @@ public class InstructorService {
     }
 
 
-//    @Autowired
-//    private NotificationRepository notificationRepository;
-//
-//    public List<Notification> getNotifications(Long studentId, Boolean unread) {
-//        if (unread != null && unread) {
-//            return notificationRepository.findByUserIdAndIsRead(studentId, false);
-//        }
-//        return notificationRepository.findByUserId(studentId);
-//    }
-//
-//    public void markNotificationsAsRead(Long studentId) {
-//        List<Notification> notifications = notificationRepository.findByUserIdAndIsRead(studentId, false);
-//        for (Notification notification : notifications) {
-//            notification.setRead(true);
-//        }
-//        notificationRepository.saveAll(notifications);
-//    }
+    // Fetch notifications for the instructor
+    public List<Notification> getNotifications(Long instructorId, Boolean unread) {
+        return notificationService.getNotifications(instructorId, unread);
+    }
 
     // Create a new course
     public Course createCourse(Long instructorId, CourseDTO courseDTO) {

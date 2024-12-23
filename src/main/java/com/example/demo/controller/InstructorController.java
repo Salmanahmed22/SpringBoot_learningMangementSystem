@@ -5,7 +5,7 @@ import com.example.demo.dtos.LessonDTO;
 import com.example.demo.dtos.QuestionDTO;
 import com.example.demo.dtos.QuizDTO;
 import com.example.demo.models.*;
-//import com.example.demo.models.Notification;
+import com.example.demo.models.Notification;
 import com.example.demo.service.InstructorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -56,19 +56,14 @@ public class InstructorController {
     }
 
 
-//    //notification
-////    @PutMapping("/{id}/notifications/mark-as-read")
-////    public ResponseEntity<Void> markNotificationsAsRead(@PathVariable Long id) {
-////        instructorService.markNotificationsAsRead(id);
-////        return ResponseEntity.ok().build();
-////    }
-//
-////    @GetMapping("/{id}/notifications")
-////    public ResponseEntity<List<Notification>> getNotifications(@PathVariable Long id, @RequestParam(required = false) Boolean unread) {
-////        List<Notification> notifications = instructorService.getNotifications(id, unread);
-////        return ResponseEntity.ok(notifications);
-////    }
-//
+    // Fetch notifications for the instructor
+    @GetMapping("/{instructorId}/notifications")
+    public ResponseEntity<List<Notification>> getNotifications(@PathVariable Long instructorId, @RequestParam(required = false) Boolean unread) {
+        return ResponseEntity.ok(instructorService.getNotifications(instructorId, unread));
+    }
+
+
+
     // Create a new course
     // Tested
     @PostMapping("/{instructorId}/courses")
