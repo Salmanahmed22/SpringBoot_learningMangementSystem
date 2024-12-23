@@ -196,11 +196,7 @@ public class AdminService {
         return questionService.updateQuestion(id, updatedQuestion);
     }
 
-    // Update Submission
-    public Submission updateSubmission(Long id, SubmissionDTO updatedSubmissionDTO) {
-        Submission updatedSubmission = submissionService.createSubmission(updatedSubmissionDTO);
-        return submissionService.updateSubmission(id, updatedSubmission);
-    }
+
 
 
     // Deletion
