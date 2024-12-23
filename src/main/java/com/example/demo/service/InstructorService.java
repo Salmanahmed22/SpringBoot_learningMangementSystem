@@ -111,7 +111,7 @@ public class InstructorService {
         List<Course> courses = instructor.getCourses();
         courses.add(course);
         instructor.setCourses(courses);
-        courseRepository.save(course);
+        instructorRepository.save(instructor);
         return course;
     }
 
@@ -138,9 +138,11 @@ public class InstructorService {
 
         Instructor instructor = instructorRepository.findById(instructorId).orElse(null);
 
-        Course course = courseRepository.findById(courseId).orElseThrow(() ->
-                new EntityNotFoundException("Course not found")
-        );
+        Course course = courseService.getCourseById(courseId);
+
+        if(course == null){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Course not found");
+        }
 
         if (!course.getInstructor().equals(instructor)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Instructor has no authority on this course");
@@ -151,7 +153,7 @@ public class InstructorService {
         if(lessonDTO.getContent() != null)
             lesson.setContent(lessonDTO.getContent());
 
-        return courseService.addLesson(course, lesson);
+        return courseService.addLesson(courseId, lesson);
     }
 
     public QuestionBank addQuestionToBank(Long instructorId, Long courseId, QuestionDTO questionDTO){
@@ -197,22 +199,20 @@ public class InstructorService {
 
     // Method to save media file path for a course
     public MediaFile saveMediaFile(Long instructorId, Long courseId, String filePath) {
-        // Retrieve the instructor by ID
         Instructor instructor = instructorRepository.findById(instructorId)
                 .orElseThrow(() -> new RuntimeException("Instructor not found"));
-        // Retrieve the course by ID
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new RuntimeException("Course not found"));
+        Course course = courseService.getCourseById(courseId);
 
-        // Ensure the instructor is associated with the course
+        if (course == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Course not found");
+        }
+
         if (!course.getInstructor().equals(instructor)) {
             throw new RuntimeException("Instructor is not associated with the course");
         }
 
-        // Create a new MediaFile with the provided file path and course
         MediaFile mediaFile = new MediaFile(filePath, course);
 
-        // Save the media file record in the database
         return mediaFileRepository.save(mediaFile);
     }
 
@@ -240,20 +240,19 @@ public class InstructorService {
     public Course addAssignmentToCourse(Long instructorId, Long courseId, AssignmentDTO assignmentDTO) {
         Instructor instructor = instructorRepository.findById(instructorId).orElse(null);
 
-        Course course = courseRepository.findById(courseId).orElseThrow(() ->
-                new EntityNotFoundException("Course not found")
-        );
+        Course course = courseService.getCourseById(courseId);
+
+        if (course == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Course not found");
+        }
 
         if (!course.getInstructor().equals(instructor)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Instructor has no authority on this course");
         }
-        Assignment assignment = new Assignment();
-            assignment.setTitle(assignmentDTO.getTitle());
-            assignment.setDescription(assignmentDTO.getDescription());
-            assignment.setDueDate(assignmentDTO.getDueDate());
-            assignment.setMark(assignmentDTO.getMark());
 
-        return courseService.addAssignment(course, assignment);
+        assignmentDTO.setCourseId(courseId);
+
+        return courseService.addAssignment(assignmentDTO);
     }
 
     public ResponseEntity<String> gradeAssignment(Long assignmentId, Long studentId, int grade) {
