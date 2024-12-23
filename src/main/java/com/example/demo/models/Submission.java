@@ -33,7 +33,7 @@ public class Submission {
     @JsonBackReference(value = "quiz-submission")
     Quiz quiz;
 
-    private double grade = 0.0;
+    private String grade = "";
 
     // Default constructor
     public Submission() {}

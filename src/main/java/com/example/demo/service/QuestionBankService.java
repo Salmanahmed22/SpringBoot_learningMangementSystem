@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
 
-import com.example.demo.models.Assignment;
 import com.example.demo.models.Question;
 import com.example.demo.models.QuestionBank;
 import com.example.demo.repository.QuestionBankRepository;
@@ -16,8 +15,8 @@ public class QuestionBankService {
     @Autowired
     private QuestionBankRepository questionBankRepository;
 
-    public QuestionBank getQuestionBankById(Long id) {
-        return questionBankRepository.findById(id).orElse(null);
+    public QuestionBank saveQuestionBank(QuestionBank questionBank) {
+        return questionBankRepository.save(questionBank);
     }
 
     public void addQuestion(Long QuestionBankId, Question question) {

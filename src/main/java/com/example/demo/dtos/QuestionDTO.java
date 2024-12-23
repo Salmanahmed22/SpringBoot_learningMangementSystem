@@ -22,7 +22,5 @@ public class QuestionDTO {
     @NotBlank(message = "Correct answer must not be blank")
     private String correctAnswer;
 
-    private Long QuestionBankId;
-
     QuestionDTO() {}
 }

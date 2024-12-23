@@ -39,15 +39,16 @@ public class Course {
     @JsonBackReference(value = "student-course")
     private List<Student> enrolledStudents;
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course", cascade = CascadeType.PERSIST)
     @JsonManagedReference(value = "course-lesson")
     private List<Lesson> lessons;
 
-    @OneToMany(mappedBy = "course")
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.PERSIST)
     @JsonManagedReference(value = "course-assignment")
     private List<Assignment> assignments;
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course", cascade = CascadeType.PERSIST)
     @JsonManagedReference(value = "course-quiz")
     private List<Quiz> quizzes;
 

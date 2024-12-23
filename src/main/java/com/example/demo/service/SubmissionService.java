@@ -1,14 +1,10 @@
 package com.example.demo.service;
 
-import com.example.demo.dtos.AnswerDTO;
-import com.example.demo.dtos.SubmissionDTO;
-import com.example.demo.models.Answer;
 import com.example.demo.models.Submission;
 import com.example.demo.repository.SubmissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,16 +21,7 @@ public class SubmissionService {
         return submissionRepository.findAll();
     }
 
-    public Submission createSubmission(SubmissionDTO submissionDTO) {
-        Submission submission = new Submission();
-        List<Answer> answers = new ArrayList<>();
-        for(AnswerDTO answerDTO : submissionDTO.getAnswers()) {
-            Answer answer = new Answer();
-            answer.setId(answerDTO.getId());
-            answer.setAnswer(answerDTO.getAnswer());
-            answers.add(answer);
-        }
-        submission.setAnswers(answers);
+    public Submission createSubmission(Submission submission) {
         return submissionRepository.save(submission);
     }
 

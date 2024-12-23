@@ -33,7 +33,7 @@ public class QuestionService {
        question.setQuestion(questionDTO.getQuestion());
        question.setOptions(questionDTO.getOptions());
        question.setCorrectAnswer(questionDTO.getCorrectAnswer());
-       return question;
+       return questionRepository.save(question);
     }
 
 
