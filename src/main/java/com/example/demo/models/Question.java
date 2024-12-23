@@ -1,5 +1,6 @@
 package com.example.demo.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class Question {
 
     @ManyToOne
     @JoinColumn(name = "question_bank_id")
+    @JsonBackReference
     private QuestionBank questionBank;
 
     // Default constructor

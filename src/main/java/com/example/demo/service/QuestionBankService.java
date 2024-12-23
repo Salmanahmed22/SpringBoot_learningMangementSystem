@@ -15,6 +15,10 @@ public class QuestionBankService {
     @Autowired
     private QuestionBankRepository questionBankRepository;
 
+    public QuestionBank saveQuestionBank(QuestionBank questionBank) {
+        return questionBankRepository.save(questionBank);
+    }
+
     public void addQuestion(Long QuestionBankId, Question question) {
         QuestionBank questionBank = questionBankRepository.findById(QuestionBankId)
                 .orElseThrow(() -> new IllegalArgumentException("Question Bank not found"));

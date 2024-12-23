@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.models.Course;
 import com.example.demo.models.Lesson;
 import com.example.demo.models.Student;
 import com.example.demo.repository.LessonRepository;
@@ -23,7 +24,8 @@ public class LessonService {
         return lessonRepository.findAll();
     }
 
-    public Lesson createLesson(Lesson lesson) {
+    public Lesson createLesson(Course course, Lesson lesson) {
+        lesson.setCourse(course);
         return lessonRepository.save(lesson);
     }
 

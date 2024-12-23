@@ -1,8 +1,6 @@
 package com.example.demo.models;
 
-import com.example.demo.models.Student;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +17,7 @@ import java.util.List;
 public class Lesson {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String title;
@@ -33,9 +31,9 @@ public class Lesson {
     private Course course;
 
     @OneToMany
-    private List<Student> Attendance = new ArrayList<>();
+    private List<Student> Attendance;
 
-    // default constructor
     public Lesson() {
+        this.Attendance = new ArrayList<>();
     }
 }
