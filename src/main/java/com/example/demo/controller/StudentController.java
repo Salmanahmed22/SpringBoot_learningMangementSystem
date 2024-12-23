@@ -68,6 +68,7 @@ public class  StudentController {
 
     // tested
     @GetMapping("/{studentId}/courses/{courseId}/lessons/{lessonId}")
+    // pass the OTP ?XXXXXX (request param)
     public ResponseEntity<String> viewLessonContent(@PathVariable Long studentId, @PathVariable Long courseId, @PathVariable Long lessonId ,@RequestParam String enterdOTP) {
         String lessonContent = studentService.getLessonContent(studentId, courseId, lessonId , enterdOTP);
         return ResponseEntity.ok(lessonContent);
