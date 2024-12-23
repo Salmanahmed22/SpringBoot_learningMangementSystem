@@ -7,6 +7,7 @@ import com.example.demo.dtos.QuizDTO;
 import com.example.demo.models.*;
 //import com.example.demo.models.Notification;
 import com.example.demo.repository.CourseRepository;
+import com.example.demo.repository.MediaFileRepository;
 import com.example.demo.repository.InstructorRepository;
 //import com.example.demo.repository.NotificationRepository;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,7 +16,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+<<<<<<< Updated upstream
 import javax.persistence.criteria.CriteriaBuilder;
+=======
+import java.io.File;
+import java.io.IOException;
+>>>>>>> Stashed changes
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -34,6 +40,8 @@ public class InstructorService {
     @Autowired
     private QuestionService questionService;
 
+    @Autowired
+    private MediaFileRepository mediaFileRepository;  // Inject the repositor
     @Autowired
     private StudentService studentService;
     @Autowired
@@ -185,5 +193,18 @@ public class InstructorService {
         }
         courseService.removeStudentFromCourse(course, student);
 
+    }
+
+    // Method to save media file path for a course
+    public MediaFile saveMediaFile(Long courseId, String filePath) {
+        // Retrieve the course by ID
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+
+        // Create a new MediaFile with the provided file path and course
+        MediaFile mediaFile = new MediaFile(filePath, course);
+
+        // Save the media file record in the database
+        return mediaFileRepository.save(mediaFile);
     }
 }
