@@ -63,10 +63,10 @@ public class QuizService {
         return quizRepository.save(quiz);
     }
 
-    public String submitQuiz(Long quizId, Submission submission) {
+    public double submitQuiz(Long quizId, Submission submission) {
         Quiz quiz = getQuizById(quizId);
         List<Submission> submissions = quiz.getSubmissions();
-        String grade = calculateGrades(quiz, submission);
+        double grade = calculateGrades(quiz, submission);
         submission.setGrade(grade);
         submissions.add(submission);
         quiz.setSubmissions(submissions);
@@ -74,10 +74,10 @@ public class QuizService {
         return grade;
     }
 
-    public String calculateGrades(Quiz quiz ,Submission submission) {
+    public double calculateGrades(Quiz quiz ,Submission submission) {
         List<Question> questions = quiz.getQuestions();
         List<Answer> answers = submission.getAnswers();
-        int grade = 0;
+        double grade = 0;
         for(int i = 0; i < answers.size(); i++)
         {
             if(Objects.equals(answers.get(i).getAnswer(), questions.get(i).getCorrectAnswer()))
@@ -85,7 +85,7 @@ public class QuizService {
                 grade++;
             }
         }
-        return grade+" / "+ questions.size();
+        return (grade / questions.size());
     }
 
     public Quiz updateQuiz(Long id, Quiz updatedQuiz) {

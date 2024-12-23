@@ -14,8 +14,9 @@ public class LessonDTO {
 
     private String title;
     private String content;
+    private Long courseId;
 
-
+    // Default constructor for serialization/deserialization
     public LessonDTO() {
     }
 }

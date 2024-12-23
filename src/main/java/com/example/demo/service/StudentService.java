@@ -4,9 +4,6 @@ import com.example.demo.dtos.AnswerDTO;
 import com.example.demo.dtos.StudentDTO;
 import com.example.demo.dtos.SubmissionDTO;
 import com.example.demo.models.*;
-import com.example.demo.repository.LessonRepository;
-import com.example.demo.repository.CourseRepository;
-import com.example.demo.repository.InstructorRepository;
 import com.example.demo.repository.NotificationRepository;
 import com.example.demo.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,14 +30,6 @@ public class StudentService {
     private AssignmentService assignmentService;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-    @Autowired
-    private LessonService lessonService;
-    @Autowired
-    private LessonRepository lessonRepository;
-
-    @Autowired
-    private NotificationService notificationService;
-
     // tested
     public Student createStudent(Student student) {
         return studentRepository.save(student);
@@ -59,7 +48,6 @@ public class StudentService {
     // tested
     public Student enrollCourse(Long studentId, Long courseId) {
         Student student = studentRepository.findById(studentId).orElse(null);
-
         if (student == null) {
             throw new IllegalArgumentException("Student not found");
         }
@@ -74,25 +62,7 @@ public class StudentService {
         if (!enrolledCourses.contains(course)) {
             enrolledCourses.add(course);
             student.setEnrolledCourses(enrolledCourses);
-
-            studentRepository.save(student);
-            // Notify the student
-            String messageStud = "You have successfully enrolled in the course: " + course.getTitle();
-            Notification notification = new Notification(messageStud, student);
-            notificationRepository.save(notification);
-
-            // Notify the instructor
-            Instructor instructor = course.getInstructor();
-
-            if (instructor != null) {
-                String instructorMessage = "Student " + student.getName() + " (ID: " + student.getId() + ") has enrolled in your course: " + course.getTitle();
-                Notification instructorNotification = new Notification(instructorMessage, instructor);
-                notificationRepository.save(instructorNotification);
-            } else {
-                throw new IllegalArgumentException("Instructor not found for this course");
-            }
-
-            return student;
+            return studentRepository.save(student);
         } else {
             throw new IllegalArgumentException("Student is already enrolled in this course");
         }
@@ -133,7 +103,7 @@ public class StudentService {
     }
 
     // tested
-    public String getLessonContent(Long studentId, Long courseId, Long lessonId , String enteredOtp) {
+    public String getLessonContent(Long studentId, Long courseId, Long lessonId) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new IllegalArgumentException("Student not found"));
         List<Course> enrolledCourses = student.getEnrolledCourses();
@@ -141,11 +111,7 @@ public class StudentService {
             if (course.getId().equals(courseId)) {
                 List<Lesson> lessons = course.getLessons();
                 for (Lesson lesson : lessons) {
-                    if (lesson.getId().equals(lessonId) && lesson.getOtp().equals(enteredOtp)) {
-                        List <Student> attendence = lesson.getAttendance() ;
-                        attendence.add(student);
-                        lesson.setAttendance(attendence);
-                        lessonService.saveLesson(lesson);
+                    if (lesson.getId().equals(lessonId)) {
                         return lesson.getContent();
                     }
                 }
@@ -210,7 +176,7 @@ public class StudentService {
     }
 
     // unsupported media problem
-    public String takeQuiz(Long studentId, Long quizId, SubmissionDTO submissionDTO) {
+    public double takeQuiz(Long studentId, Long quizId, SubmissionDTO submissionDTO) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new IllegalArgumentException("Student not found"));
         List<Course> enrolledCourses = student.getEnrolledCourses();
@@ -239,8 +205,18 @@ public class StudentService {
     }
 
     public List<Notification> getNotifications(Long studentId, Boolean unread) {
-        // Delegate to NotificationService
-        return notificationService.getNotifications(studentId, unread);
+        if (unread != null && unread) {
+            return notificationRepository.findByUserIdAndIsRead(studentId, false);
+        }
+        return notificationRepository.findByUserId(studentId);
+    }
+
+    public void markNotificationsAsRead(Long studentId) {
+        List<Notification> notifications = notificationRepository.findByUserIdAndIsRead(studentId, false);
+        for (Notification notification : notifications) {
+            notification.setRead(true);
+        }
+        notificationRepository.saveAll(notifications);
     }
 
     public Student updateStudentProfile(Long id, StudentDTO studentDTO) {
@@ -292,7 +268,4 @@ public class StudentService {
         student.getEnrolledCourses().remove(course);
         studentRepository.save(student);
     }
-
-
-
 }

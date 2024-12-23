@@ -1,6 +1,8 @@
 package com.example.demo.models;
 
+import com.example.demo.models.Student;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +10,6 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 
 @Setter
@@ -18,15 +19,12 @@ import java.util.Random;
 public class Lesson {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
 
     private String content;
-
-
-    private String otp;
 
 
     @ManyToOne
@@ -35,18 +33,9 @@ public class Lesson {
     private Course course;
 
     @OneToMany
-    private List<Student> Attendance;
+    private List<Student> Attendance = new ArrayList<>();
 
+    // default constructor
     public Lesson() {
-        this.Attendance = new ArrayList<>();
-        this.otp = generateRandomOtp();
     }
-
-
-    private String generateRandomOtp() {
-        Random random = new Random();
-        int otp = 100000 + random.nextInt(900000); // Generate a 6-digit OTP
-        return String.valueOf(otp);
-    }
-
 }

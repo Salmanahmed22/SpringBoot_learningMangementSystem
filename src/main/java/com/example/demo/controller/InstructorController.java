@@ -1,21 +1,15 @@
 package com.example.demo.controller;
 
-import com.example.demo.dtos.*;
-import com.example.demo.repository.MediaFileRepository;
-import com.example.demo.models.*;
-import com.example.demo.models.Notification;
 import com.example.demo.repository.CourseRepository;
 import com.example.demo.repository.MediaFileRepository;
 import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.dtos.CourseDTO;
+import com.example.demo.dtos.LessonDTO;
+import com.example.demo.dtos.QuestionDTO;
 import com.example.demo.dtos.QuizDTO;
-import com.example.demo.models.Course;
-import com.example.demo.models.Instructor;
-import com.example.demo.models.Lesson;
+import com.example.demo.models.*;
 //import com.example.demo.models.Notification;
-import com.example.demo.models.Quiz;
 import com.example.demo.service.InstructorService;
-import com.example.demo.service.LessonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -24,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.models.MediaFile; // To use the MediaFile entity.
 import java.util.List;
-import java.util.Random;
 
 @RestController
 @RequestMapping("/api/instructors")
@@ -34,15 +27,11 @@ public class InstructorController {
     @Autowired
     private InstructorService instructorService;
 
-
-    @Autowired
-    private LessonService lessonService;
-    @Autowired
-    private MediaFileRepository mediaFileRepository; // Autowire the MediaFileRepository
-
     @Autowired
     private CourseRepository courseRepository;
 
+    @Autowired
+    private MediaFileRepository mediaFileRepository; // Autowire the MediaFileRepository
     // Get all instructors
     @GetMapping
     public ResponseEntity<List<Instructor>> getAllInstructors() {
@@ -76,14 +65,19 @@ public class InstructorController {
     }
 
 
-    // Fetch notifications for the instructor
-    @GetMapping("/{instructorId}/notifications")
-    public ResponseEntity<List<Notification>> getNotifications(@PathVariable Long instructorId, @RequestParam(required = false) Boolean unread) {
-        return ResponseEntity.ok(instructorService.getNotifications(instructorId, unread));
-    }
-
-
-
+//    //notification
+////    @PutMapping("/{id}/notifications/mark-as-read")
+////    public ResponseEntity<Void> markNotificationsAsRead(@PathVariable Long id) {
+////        instructorService.markNotificationsAsRead(id);
+////        return ResponseEntity.ok().build();
+////    }
+//
+////    @GetMapping("/{id}/notifications")
+////    public ResponseEntity<List<Notification>> getNotifications(@PathVariable Long id, @RequestParam(required = false) Boolean unread) {
+////        List<Notification> notifications = instructorService.getNotifications(id, unread);
+////        return ResponseEntity.ok(notifications);
+////    }
+//
     // Create a new course
     // Tested
     @PostMapping("/{instructorId}/courses")
@@ -91,6 +85,7 @@ public class InstructorController {
         return ResponseEntity.ok(instructorService.createCourse(instructorId, courseDTO));
     }
 
+    // Update a course
     // Tested
     @PutMapping("/{instructorId}/courses/{courseId}")
     public ResponseEntity<Course> updateCourse(@PathVariable Long instructorId,
@@ -103,6 +98,7 @@ public class InstructorController {
         return ResponseEntity.notFound().build();
     }
 
+    // Delete a course
     // Tested
     @DeleteMapping("/{instructorId}/courses/{courseId}")
     public ResponseEntity<Void> deleteCourse(@PathVariable Long instructorId,
@@ -111,16 +107,16 @@ public class InstructorController {
         return ResponseEntity.noContent().build();
     }
 
+    // Add a lesson to course
     // Tested
     @PostMapping("/{instructorId}/courses/{courseId}/lessons")
-    public ResponseEntity<Course> addLessonToCourse(
+    public ResponseEntity<Lesson> addLessonToCourse(
             @PathVariable Long instructorId,
             @PathVariable Long courseId,
             @RequestBody LessonDTO lesson) {
         return ResponseEntity.ok(instructorService.addLessonToCourse(instructorId, courseId, lesson));
     }
 
-    // Tested
     @PostMapping("/{instructorId}/courses/{courseId}/questionBank")
     public ResponseEntity<QuestionBank> addQuestionToBank(
             @PathVariable Long instructorId,
@@ -130,28 +126,21 @@ public class InstructorController {
     }
 
 
-    // Tested
     @PostMapping("/{instructorId}/courses/{courseId}/quiz")
-    public ResponseEntity<Quiz> addQuizToCourse(
+    public ResponseEntity<Quiz> addQuiz(
             @PathVariable Long instructorId,
             @PathVariable Long courseId,
             @Valid @RequestBody QuizDTO quizDTO) {
         return ResponseEntity.ok(instructorService.createQuiz(instructorId, courseId, quizDTO));
     }
 
-    // Tested
-    @DeleteMapping("/{instructorId}/courses/{courseId}/students/{studentId}")
+    // Remove student from course
+    @DeleteMapping("/{instructorId}/courses/{courseId}/{studentId}")
     public ResponseEntity<Void> removeStudentFromCourse(@PathVariable Long instructorId,
                                                         @PathVariable Long courseId,
                                                         @PathVariable Long studentId){
         instructorService.removeStudentFromCourse(instructorId, courseId, studentId);
         return ResponseEntity.noContent().build();
-    }
-
-    // Tested
-    @PutMapping("/{instructorId}/edit")
-    public ResponseEntity<Instructor> editInstructorProfile(@PathVariable Long instructorId, @RequestBody InstructorDTO instructorDTO) {
-        return ResponseEntity.ok(instructorService.updateInstructorProfile(instructorId, instructorDTO));
     }
 
 
@@ -177,16 +166,6 @@ public class InstructorController {
             return ResponseEntity.status(500).body("Failed to save file path: " + e.getMessage());
         }
     }
-
-    // Tested
-    @PostMapping("/{instructorId}/courses/{courseId}/assignments")
-    public ResponseEntity<Course> addAssignmentToCourse(@PathVariable Long instructorId,
-                                                   @PathVariable Long courseId,
-                                                   @Valid @RequestBody AssignmentDTO assignmentDTO) {
-        return ResponseEntity.ok(instructorService.addAssignmentToCourse(instructorId, courseId, assignmentDTO));
-    }
-
-    // Endpoint to upload media file to a course
 
 
 }

@@ -1,7 +1,6 @@
 package com.example.demo.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +21,6 @@ public class QuestionBank {
 
 
     @OneToMany(mappedBy = "questionBank", cascade = CascadeType.ALL)
-    @JsonManagedReference
     private List<Question> questions;
 
     @OneToOne

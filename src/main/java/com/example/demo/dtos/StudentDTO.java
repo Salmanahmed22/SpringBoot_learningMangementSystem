@@ -9,8 +9,8 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 public class StudentDTO {
-    private String name;
-    private String email;
-    private short level;
-    private String password;
+    String name;
+    String email;
+    short level;
+    String password;
 }

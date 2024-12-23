@@ -4,36 +4,29 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
-@Entity
 @Getter
 @Setter
+@Entity
 public class Notification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String message;
-
+    private String content;
     private boolean isRead;
 
-    private LocalDateTime createdAt;
-
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Notification() {
-        this.createdAt = LocalDateTime.now();
-        this.isRead = false;
+    public Notification() {}
+
+    public Notification(String content, boolean isRead, User user) {
+        this.content = content;
+        this.isRead = isRead;
+        this.user = user;
     }
 
-    public Notification(String message, User user) {
-        this.message = message;
-        this.user = user;
-        this.createdAt = LocalDateTime.now();
-        this.isRead = false;
-    }
+
 }
