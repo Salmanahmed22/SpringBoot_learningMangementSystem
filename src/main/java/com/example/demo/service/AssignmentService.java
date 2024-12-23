@@ -32,6 +32,7 @@ public class AssignmentService {
     public Assignment createAssignment(AssignmentDTO assignmentDTO) {
         Assignment assignment = new Assignment();
         assignment.setTitle(assignmentDTO.getTitle());
+        assignment.setMark(assignmentDTO.getMark());
         assignment.setDescription(assignmentDTO.getDescription());
         assignment.setDueDate(assignmentDTO.getDueDate());
         assignment.setCourse(courseService.getCourseById(assignmentDTO.getCourseId())) ;

@@ -42,7 +42,7 @@ public class  StudentController {
         return ResponseEntity.ok(studentService.getAllStudents());
     }
 
-    // tested
+    // tested final
     @PutMapping("/{studentId}/enroll/{courseId}")
     public ResponseEntity<Student> enrollCourse(@PathVariable Long studentId, @PathVariable Long courseId) {
         return ResponseEntity.ok(studentService.enrollCourse(studentId, courseId));
@@ -83,6 +83,7 @@ public class  StudentController {
         return ResponseEntity.ok(assignments);
     }
 
+    // Tested final
     @PostMapping("/{studentId}/assignments/{assignmentId}/submit")
     public ResponseEntity<String> submitAssignment(@PathVariable Long studentId,
                                                    @PathVariable Long assignmentId,
@@ -102,7 +103,7 @@ public class  StudentController {
         return ResponseEntity.ok(quizzes);
     }
 
-    // unsupported media problem
+    //
     @PostMapping("/{studentId}/quizzes/{quizId}/submit")
         public ResponseEntity<String> submitQuiz(@PathVariable Long studentId,
                                                  @PathVariable Long quizId,
@@ -126,7 +127,7 @@ public class  StudentController {
         return ResponseEntity.ok(studentService.updateStudentProfile(id, studentDTO));
     }
 
-    //done test
+    // Tested final
     @PutMapping("/{studentId}/unroll/{courseId}")
     public ResponseEntity<Student> unrollCourse(@PathVariable Long studentId, @PathVariable Long courseId) {
         return ResponseEntity.ok(studentService.unrollCourse(studentId, courseId));
