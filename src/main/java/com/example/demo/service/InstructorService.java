@@ -50,6 +50,9 @@ public class InstructorService {
     private AssignmentService assignmentService;
 
     @Autowired
+    private NotificationService notificationService;
+    
+    @Autowired
     private QuestionBankService questionBankService;
 
     @Autowired
@@ -92,23 +95,10 @@ public class InstructorService {
     }
 
 
-//    @Autowired
-//    private NotificationRepository notificationRepository;
-//
-//    public List<Notification> getNotifications(Long studentId, Boolean unread) {
-//        if (unread != null && unread) {
-//            return notificationRepository.findByUserIdAndIsRead(studentId, false);
-//        }
-//        return notificationRepository.findByUserId(studentId);
-//    }
-//
-//    public void markNotificationsAsRead(Long studentId) {
-//        List<Notification> notifications = notificationRepository.findByUserIdAndIsRead(studentId, false);
-//        for (Notification notification : notifications) {
-//            notification.setRead(true);
-//        }
-//        notificationRepository.saveAll(notifications);
-//    }
+    // Fetch notifications for the instructor
+    public List<Notification> getNotifications(Long instructorId, Boolean unread) {
+        return notificationService.getNotifications(instructorId, unread);
+    }
 
     public Course createCourse(Long instructorId, CourseDTO courseDTO) {
         Instructor instructor = getInstructorById(instructorId);
