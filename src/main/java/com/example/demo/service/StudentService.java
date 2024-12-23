@@ -142,7 +142,9 @@ public class StudentService {
                 List<Lesson> lessons = course.getLessons();
                 for (Lesson lesson : lessons) {
                     if (lesson.getId().equals(lessonId) && lesson.getOtp().equals(enteredOtp)) {
-                        lesson.getAttendance().add(student);
+                        List <Student> attendence = lesson.getAttendance() ;
+                        attendence.add(student);
+                        lesson.setAttendance(attendence);
                         lessonService.saveLesson(lesson);
                         return lesson.getContent();
                     }
