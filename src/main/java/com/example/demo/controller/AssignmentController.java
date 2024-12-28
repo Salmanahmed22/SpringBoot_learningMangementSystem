@@ -27,16 +27,16 @@ public class AssignmentController {
         return ResponseEntity.ok(assignmentService.getAllAssignments());
     }
 
-    // tested
-    @PostMapping
-    public ResponseEntity<Assignment> createAssignment(@RequestBody AssignmentDTO assignmentDTO) {
-        return ResponseEntity.ok(assignmentService.createAssignment(assignmentDTO));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Assignment> updateAssignment(@PathVariable Long id, @RequestBody Assignment updatedAssignment) {
-        return ResponseEntity.ok(assignmentService.updateAssignment(id, updatedAssignment));
-    }
+//    // tested
+//    @PostMapping
+//    public ResponseEntity<Assignment> createAssignment(@RequestBody AssignmentDTO assignmentDTO) {
+//        return ResponseEntity.ok(assignmentService.createAssignment(assignmentDTO));
+//    }
+//
+//    @PutMapping("/{id}")
+//    public ResponseEntity<Assignment> updateAssignment(@PathVariable Long id, @RequestBody Assignment updatedAssignment) {
+//        return ResponseEntity.ok(assignmentService.updateAssignment(id, updatedAssignment));
+//    }
 
 //    @PostMapping("/submit")
 //    public void submitAssignment(@RequestParam Long studentId,
@@ -45,9 +45,9 @@ public class AssignmentController {
 //        assignmentService.submitAssignment(studentId, assignmentId, submissionContent);
 //    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAssignment(@PathVariable Long id) {
-        assignmentService.deleteAssignment(id);
-        return ResponseEntity.noContent().build();
-    }
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Void> deleteAssignment(@PathVariable Long id) {
+//        assignmentService.deleteAssignment(id);
+//        return ResponseEntity.noContent().build();
+//    }
 }

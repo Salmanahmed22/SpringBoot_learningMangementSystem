@@ -27,16 +27,6 @@ public class LessonController {
     }
 
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Lesson> updateLesson(@PathVariable Long id,
-                                               @RequestBody Lesson updatedLesson) {
-        return ResponseEntity.ok(lessonService.updateLesson(id, updatedLesson));
-    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteLesson(@PathVariable Long id) {
-        lessonService.deleteLesson(id);
-        return ResponseEntity.noContent().build();
-    }
 
 }
