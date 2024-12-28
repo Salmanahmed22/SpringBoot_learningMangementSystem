@@ -62,21 +62,21 @@ public class InstructorController {
         return ResponseEntity.notFound().build();
     }
 
-    // Create a new instructor
-    @PostMapping
-    public ResponseEntity<Instructor> createInstructor(@RequestBody Instructor instructor) {
-        return ResponseEntity.ok(instructorService.createInstructor(instructor));
-    }
-
-    // Update an existing instructor
-    @PutMapping("/{id}")
-    public ResponseEntity<Instructor> updateInstructor(@PathVariable Long id, @RequestBody Instructor updatedInstructor) {
-        Instructor instructor = instructorService.updateInstructor(id, updatedInstructor);
-        if (instructor != null) {
-            return ResponseEntity.ok(instructor);
-        }
-        return ResponseEntity.notFound().build();
-    }
+//    // Create a new instructor
+//    @PostMapping
+//    public ResponseEntity<Instructor> createInstructor(@RequestBody Instructor instructor) {
+//        return ResponseEntity.ok(instructorService.createInstructor(instructor));
+//    }
+//
+//    // Update an existing instructor
+//    @PutMapping("/{id}")
+//    public ResponseEntity<Instructor> updateInstructor(@PathVariable Long id, @RequestBody Instructor updatedInstructor) {
+//        Instructor instructor = instructorService.updateInstructor(id, updatedInstructor);
+//        if (instructor != null) {
+//            return ResponseEntity.ok(instructor);
+//        }
+//        return ResponseEntity.notFound().build();
+//    }
 
 
     // Fetch notifications for the instructor
@@ -194,5 +194,19 @@ public class InstructorController {
                                                   @PathVariable Long studentId,
                                                   @RequestParam int grade) {
         return instructorService.gradeAssignment(user.getId(), studentId, grade);
+    }
+
+    //lessons
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Lesson> updateLesson(@PathVariable Long id,
+                                               @RequestBody Lesson updatedLesson) {
+        return ResponseEntity.ok(lessonService.updateLesson(id, updatedLesson));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteLesson(@PathVariable Long id) {
+        lessonService.deleteLesson(id);
+        return ResponseEntity.noContent().build();
     }
 }
