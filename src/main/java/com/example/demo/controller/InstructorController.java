@@ -6,6 +6,8 @@ import com.example.demo.models.*;
 import com.example.demo.models.Notification;
 import com.example.demo.repository.CourseRepository;
 import com.example.demo.repository.MediaFileRepository;
+import jakarta.annotation.security.RolesAllowed;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.dtos.CourseDTO;
 import com.example.demo.dtos.LessonDTO;
@@ -87,17 +89,17 @@ public class InstructorController {
 
     // Create a new course
     // Tested final
-    @PostMapping("/{instructorId}/courses")
-    public ResponseEntity<Course> createCourse(@PathVariable Long instructorId, @RequestBody CourseDTO courseDTO) {
-        return ResponseEntity.ok(instructorService.createCourse(instructorId, courseDTO));
+    @PostMapping("/courses")
+    public ResponseEntity<Course> createCourse(@AuthenticationPrincipal User user, @RequestBody CourseDTO courseDTO) {
+        return ResponseEntity.ok(instructorService.createCourse(user.getId(), courseDTO));
     }
 
     // Tested final
-    @PutMapping("/{instructorId}/courses/{courseId}")
-    public ResponseEntity<Course> updateCourse(@PathVariable Long instructorId,
+    @PutMapping("/courses/{courseId}")
+    public ResponseEntity<Course> updateCourse(@AuthenticationPrincipal User user,
                                                @PathVariable Long courseId,
                                                @RequestBody CourseDTO updatedCourse) {
-        Course course = instructorService.updateCourse(instructorId, courseId, updatedCourse);
+        Course course = instructorService.updateCourse(user.getId(), courseId, updatedCourse);
         if (course != null) {
             return ResponseEntity.ok(course);
         }
@@ -105,66 +107,66 @@ public class InstructorController {
     }
 
     // Tested final
-    @DeleteMapping("/{instructorId}/courses/{courseId}")
-    public ResponseEntity<Void> deleteCourse(@PathVariable Long instructorId,
+    @DeleteMapping("/courses/{courseId}")
+    public ResponseEntity<Void> deleteCourse(@AuthenticationPrincipal User user,
                                              @PathVariable Long courseId) {
-        instructorService.deleteCourse(instructorId, courseId);
+        instructorService.deleteCourse(user.getId(), courseId);
         return ResponseEntity.noContent().build();
     }
 
     // Tested final
-    @PostMapping("/{instructorId}/courses/{courseId}/lessons")
+    @PostMapping("/courses/{courseId}/lessons")
     public ResponseEntity<Course> addLessonToCourse(
-            @PathVariable Long instructorId,
+            @AuthenticationPrincipal User user,
             @PathVariable Long courseId,
             @RequestBody LessonDTO lesson) {
-        return ResponseEntity.ok(instructorService.addLessonToCourse(instructorId, courseId, lesson));
+        return ResponseEntity.ok(instructorService.addLessonToCourse(user.getId(), courseId, lesson));
     }
 
     // Tested final
-    @PostMapping("/{instructorId}/courses/{courseId}/questionBank")
+    @PostMapping("/courses/{courseId}/questionBank")
     public ResponseEntity<QuestionBank> addQuestionToBank(
-            @PathVariable Long instructorId,
+            @AuthenticationPrincipal User user,
             @PathVariable Long courseId,
             @Valid @RequestBody QuestionDTO questionDTO) {
-        return ResponseEntity.ok(instructorService.addQuestionToBank(instructorId, courseId, questionDTO));
+        return ResponseEntity.ok(instructorService.addQuestionToBank(user.getId(), courseId, questionDTO));
     }
 
 
     // Tested final
-    @PostMapping("/{instructorId}/courses/{courseId}/quiz")
+    @PostMapping("/courses/{courseId}/quiz")
     public ResponseEntity<Quiz> addQuizToCourse(
-            @PathVariable Long instructorId,
+            @AuthenticationPrincipal User user,
             @PathVariable Long courseId,
             @Valid @RequestBody QuizDTO quizDTO) {
-        return ResponseEntity.ok(instructorService.createQuiz(instructorId, courseId, quizDTO));
+        return ResponseEntity.ok(instructorService.createQuiz(user.getId(), courseId, quizDTO));
     }
 
     // Tested final
-    @DeleteMapping("/{instructorId}/courses/{courseId}/students/{studentId}")
-    public ResponseEntity<Void> removeStudentFromCourse(@PathVariable Long instructorId,
+    @DeleteMapping("/courses/{courseId}/students/{studentId}")
+    public ResponseEntity<Void> removeStudentFromCourse(@AuthenticationPrincipal User user,
                                                         @PathVariable Long courseId,
                                                         @PathVariable Long studentId){
-        instructorService.removeStudentFromCourse(instructorId, courseId, studentId);
+        instructorService.removeStudentFromCourse(user.getId(), courseId, studentId);
         return ResponseEntity.noContent().build();
     }
 
     // Tested final
-    @PutMapping("/{instructorId}/edit")
-    public ResponseEntity<Instructor> editInstructorProfile(@PathVariable Long instructorId, @RequestBody InstructorDTO instructorDTO) {
-        return ResponseEntity.ok(instructorService.updateInstructorProfile(instructorId, instructorDTO));
+    @PutMapping("/edit")
+    public ResponseEntity<Instructor> editInstructorProfile(@AuthenticationPrincipal User user, @RequestBody InstructorDTO instructorDTO) {
+        return ResponseEntity.ok(instructorService.updateInstructorProfile(user.getId(), instructorDTO));
     }
 
 
     // Tested final
-    @PostMapping("/{instructorId}/courses/{courseId}/media/upload")
+    @PostMapping("/courses/{courseId}/media/upload")
     public ResponseEntity<String> uploadMediaToCourse(
-            @PathVariable Long instructorId,
+            @AuthenticationPrincipal User user,
             @PathVariable Long courseId,
             @RequestParam("filePath") String filePath) {
 
         try {
-            instructorService.saveMediaFile(instructorId, courseId, filePath);
+            instructorService.saveMediaFile(user.getId(), courseId, filePath);
 
             return ResponseEntity.ok("File path saved successfully: " + filePath);
         }
@@ -179,18 +181,18 @@ public class InstructorController {
     }
 
     // Tested final
-    @PostMapping("/{instructorId}/courses/{courseId}/assignments")
-    public ResponseEntity<Course> addAssignmentToCourse(@PathVariable Long instructorId,
+    @PostMapping("/courses/{courseId}/assignments")
+    public ResponseEntity<Course> addAssignmentToCourse(@AuthenticationPrincipal User user,
                                                    @PathVariable Long courseId,
                                                    @Valid @RequestBody AssignmentDTO assignmentDTO) {
-        return ResponseEntity.ok(instructorService.addAssignmentToCourse(instructorId, courseId, assignmentDTO));
+        return ResponseEntity.ok(instructorService.addAssignmentToCourse(user.getId(), courseId, assignmentDTO));
     }
 
     // Tested final
-    @PostMapping("{instructorId}/grade/{assignmentId}/{studentId}")
-    public ResponseEntity<String> gradeAssignment(@PathVariable Long assignmentId,
+    @PostMapping("/grade/{assignmentId}/{studentId}")
+    public ResponseEntity<String> gradeAssignment(@AuthenticationPrincipal User user,
                                                   @PathVariable Long studentId,
                                                   @RequestParam int grade) {
-        return instructorService.gradeAssignment(assignmentId, studentId, grade);
+        return instructorService.gradeAssignment(user.getId(), studentId, grade);
     }
 }

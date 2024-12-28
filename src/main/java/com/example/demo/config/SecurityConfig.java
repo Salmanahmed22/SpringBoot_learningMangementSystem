@@ -27,28 +27,24 @@
         private JwtAuthenticationFilter jwtAuthenticationFilter;
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-            http.csrf(AbstractHttpConfigurer::disable);
-    //                .securityMatcher("/api/**")
-    //                .authorizeHttpRequests(authorize -> authorize
-    //                        .requestMatchers("/api/users/**").permitAll()
-    ////                        students and admin and instructor all are authorized to api/students
-    //                        .requestMatchers("/api/students/**").hasAnyRole(Role.STUDENT.name(), Role.ADMIN.name(),
-    //                                Role.INSTRUCTOR.name())
-    //                        //only Admin and instructor are authorized to api/instructors
-    ////                        .requestMatchers("/api/instructors/**").hasAnyRole(Role.INSTRUCTOR.name(), Role.ADMIN.name())
-    //                        //only admin
-    ////                        .requestMatchers("/api/admins/**").hasRole(Role.ADMIN.name())
-    //                        .requestMatchers("/api/admins/**").permitAll()
-    ////                        .anyRequest().authenticated()
-    //                ).sessionManagement((session) -> session
-    //                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-    //                )
-    //                .exceptionHandling(
-    //                        e -> e.authenticationEntryPoint(
-    //                                (request, response, authException) -> response.setStatus(HttpServletResponse.SC_UNAUTHORIZED)
-    //                        )
-    //                )
-    //                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            http.csrf(AbstractHttpConfigurer::disable)
+                    .securityMatcher("/api/**")
+                    .authorizeHttpRequests(authorize -> authorize
+                            .requestMatchers("/api/users/**").permitAll()
+                            .requestMatchers("/api/students/**").hasAnyRole(Role.STUDENT.name(), Role.ADMIN.name(),
+                                    Role.INSTRUCTOR.name())
+                            .requestMatchers("/api/instructors/**").hasAnyRole(Role.INSTRUCTOR.name(), Role.ADMIN.name())
+                            .requestMatchers("/api/admins/**").hasRole(Role.ADMIN.name())
+                            .anyRequest().authenticated()
+                    ).sessionManagement((session) -> session
+                            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    )
+                    .exceptionHandling(
+                            e -> e.authenticationEntryPoint(
+                                    (request, response, authException) -> response.setStatus(HttpServletResponse.SC_UNAUTHORIZED)
+                            )
+                    )
+                    .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
             return http.build();
         }
 

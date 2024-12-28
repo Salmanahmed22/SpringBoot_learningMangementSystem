@@ -3,16 +3,12 @@ package com.example.demo.controller;
 import com.example.demo.dtos.AssignmentSubmissionDTO;
 import com.example.demo.dtos.StudentDTO;
 import com.example.demo.dtos.SubmissionDTO;
-import com.example.demo.models.Course;
-import com.example.demo.models.Lesson;
-import com.example.demo.models.Quiz;
-import com.example.demo.models.Notification;
-import com.example.demo.models.Student;
-import com.example.demo.models.Assignment;
-import com.example.demo.models.Submission;
+import com.example.demo.models.*;
 import com.example.demo.service.StudentService;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +20,7 @@ public class  StudentController {
 
     @Autowired
     private StudentService studentService;
+
 
     @PostMapping
     public ResponseEntity<Student> createStudent(@RequestBody Student student) {
@@ -44,52 +41,52 @@ public class  StudentController {
 
     // tested final
     @PutMapping("/{studentId}/enroll/{courseId}")
-    public ResponseEntity<Student> enrollCourse(@PathVariable Long studentId, @PathVariable Long courseId) {
-        return ResponseEntity.ok(studentService.enrollCourse(studentId, courseId));
+    public ResponseEntity<Student> enrollCourse(@AuthenticationPrincipal User user, @PathVariable Long courseId) {
+        return ResponseEntity.ok(studentService.enrollCourse(user.getId(), courseId));
     }
 
     // tested
-    @GetMapping("/{studentId}/available-courses")
-    public List<Course> viewAvailableCourses(@PathVariable Long studentId) {
-        return studentService.getAvailableCourses(studentId);
+    @GetMapping("/available-courses")
+    public List<Course> viewAvailableCourses(@AuthenticationPrincipal User user) {
+        return studentService.getAvailableCourses(user.getId());
     }
 
     // tested
-    @GetMapping("/{studentId}/enrolled-courses")
-    public List<Course> viewEnrolledCourses(@PathVariable Long studentId) {
-        return studentService.getEnrolledCourses(studentId);
+    @GetMapping("/enrolled-courses")
+    public List<Course> viewEnrolledCourses(@AuthenticationPrincipal User user) {
+        return studentService.getEnrolledCourses(user.getId());
     }
 
     // tested
-    @GetMapping("/{studentId}/courses/{courseId}/lessons")
-    public ResponseEntity<List<Lesson>> viewCourseLessons(@PathVariable Long studentId, @PathVariable Long courseId) {
-        List<Lesson> lessons = studentService.getCourseLessons(studentId, courseId);
+    @GetMapping("/courses/{courseId}/lessons")
+    public ResponseEntity<List<Lesson>> viewCourseLessons(@AuthenticationPrincipal User user, @PathVariable Long courseId) {
+        List<Lesson> lessons = studentService.getCourseLessons(user.getId(), courseId);
         return ResponseEntity.ok(lessons);
     }
 
     // tested
-    @GetMapping("/{studentId}/courses/{courseId}/lessons/{lessonId}")
+    @GetMapping("/courses/{courseId}/lessons/{lessonId}")
     // pass the OTP ?XXXXXX (request param)
-    public ResponseEntity<String> viewLessonContent(@PathVariable Long studentId, @PathVariable Long courseId, @PathVariable Long lessonId ,@RequestParam String enterdOTP) {
-        String lessonContent = studentService.getLessonContent(studentId, courseId, lessonId , enterdOTP);
+    public ResponseEntity<String> viewLessonContent(@AuthenticationPrincipal User user, @PathVariable Long courseId, @PathVariable Long lessonId ,@RequestParam String enterdOTP) {
+        String lessonContent = studentService.getLessonContent(user.getId(), courseId, lessonId , enterdOTP);
         return ResponseEntity.ok(lessonContent);
     }
 
     // tested
-    @GetMapping("/{studentId}/courses/{courseId}/assignments")
+    @GetMapping("/courses/{courseId}/assignments")
     public ResponseEntity<List<Assignment>> viewAssignments(
-            @PathVariable Long studentId, @PathVariable Long courseId) {
-        List<Assignment> assignments = studentService.getAssignments(studentId, courseId);
+            @AuthenticationPrincipal User user, @PathVariable Long courseId) {
+        List<Assignment> assignments = studentService.getAssignments(user.getId(), courseId);
         return ResponseEntity.ok(assignments);
     }
 
     // Tested final
-    @PostMapping("/{studentId}/assignments/{assignmentId}/submit")
-    public ResponseEntity<String> submitAssignment(@PathVariable Long studentId,
+    @PostMapping("/assignments/{assignmentId}/submit")
+    public ResponseEntity<String> submitAssignment(@AuthenticationPrincipal User user,
                                                    @PathVariable Long assignmentId,
                                                    @RequestBody AssignmentSubmissionDTO assignmentSubmissionDTO) {
         try {
-            studentService.submitAssignment(studentId, assignmentId, assignmentSubmissionDTO.getSubmissionContent());
+            studentService.submitAssignment(user.getId(), assignmentId, assignmentSubmissionDTO.getSubmissionContent());
             return ResponseEntity.ok("Assignment submitted successfully");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -97,40 +94,40 @@ public class  StudentController {
     }
 
     // tested
-    @GetMapping("/{studentId}/courses/{courseId}/quizzes")
-    public ResponseEntity<List<Quiz>> viewQuizzes(@PathVariable Long studentId, @PathVariable Long courseId) {
-        List<Quiz> quizzes = studentService.getQuizzes(studentId, courseId);
+    @GetMapping("/courses/{courseId}/quizzes")
+    public ResponseEntity<List<Quiz>> viewQuizzes(@AuthenticationPrincipal User user, @PathVariable Long courseId) {
+        List<Quiz> quizzes = studentService.getQuizzes(user.getId(), courseId);
         return ResponseEntity.ok(quizzes);
     }
 
     //
-    @PostMapping("/{studentId}/quizzes/{quizId}/submit")
-        public ResponseEntity<String> submitQuiz(@PathVariable Long studentId,
+    @PostMapping("/quizzes/{quizId}/submit")
+        public ResponseEntity<String> submitQuiz(@AuthenticationPrincipal User user,
                                                  @PathVariable Long quizId,
                                                  @RequestBody SubmissionDTO submissionDTO) {
         try {
-            return ResponseEntity.ok("Grade " + studentService.takeQuiz(studentId, quizId, submissionDTO));
+            return ResponseEntity.ok("Grade " + studentService.takeQuiz(user.getId(), quizId, submissionDTO));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
 
-    @GetMapping("/{studentId}/notifications")
-    public ResponseEntity<List<Notification>> viewNotifications(@PathVariable Long studentId, @RequestParam(required = false) Boolean unread) {
-        return ResponseEntity.ok(studentService.getNotifications(studentId, unread));
+    @GetMapping("/notifications")
+    public ResponseEntity<List<Notification>> viewNotifications(@AuthenticationPrincipal User user, @RequestParam(required = false) Boolean unread) {
+        return ResponseEntity.ok(studentService.getNotifications(user.getId(), unread));
     }
 
     //done test
-    @PutMapping("{id}/editProfile")
-    public ResponseEntity<Student> editStudentProfile(@PathVariable Long id, @RequestBody StudentDTO studentDTO) {
-        return ResponseEntity.ok(studentService.updateStudentProfile(id, studentDTO));
+    @PutMapping("/editProfile")
+    public ResponseEntity<Student> editStudentProfile(@AuthenticationPrincipal User user, @RequestBody StudentDTO studentDTO) {
+        return ResponseEntity.ok(studentService.updateStudentProfile(user.getId(), studentDTO));
     }
 
     // Tested final
-    @PutMapping("/{studentId}/unroll/{courseId}")
-    public ResponseEntity<Student> unrollCourse(@PathVariable Long studentId, @PathVariable Long courseId) {
-        return ResponseEntity.ok(studentService.unrollCourse(studentId, courseId));
+    @PutMapping("/unroll/{courseId}")
+    public ResponseEntity<Student> unrollCourse(@AuthenticationPrincipal User user, @PathVariable Long courseId) {
+        return ResponseEntity.ok(studentService.unrollCourse(user.getId(), courseId));
     }
 
     //move it to admin as delete user
@@ -140,14 +137,14 @@ public class  StudentController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{studentId}/assignmentsGrades")
-    public ResponseEntity<Map<Long,String>> viewAssignmentsGrades(@PathVariable Long studentId) {
-        return ResponseEntity.ok(studentService.viewAssignmentsGrades(studentId));
+    @GetMapping("/assignmentsGrades")
+    public ResponseEntity<Map<Long,String>> viewAssignmentsGrades(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(studentService.viewAssignmentsGrades(user.getId()));
     }
 
-    @GetMapping("/{studentId}/quizzesGrades")
-    public ResponseEntity<Map<Long,String>> viewQuizzesGrades(@PathVariable Long studentId) {
-        return ResponseEntity.ok(studentService.viewQuizzesGrades(studentId));
+    @GetMapping("/quizzesGrades")
+    public ResponseEntity<Map<Long,String>> viewQuizzesGrades(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(studentService.viewQuizzesGrades(user.getId()));
     }
 
 

@@ -5,6 +5,7 @@ import com.example.demo.models.*;
 import com.example.demo.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,42 +49,42 @@ public class AdminController {
 
     // Delete User
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUser(@AuthenticationPrincipal User user,@PathVariable Long id) {
         adminService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 
     // Instructor Management
     @PostMapping("/instructors")
-    public ResponseEntity<Instructor> createInstructor(@RequestBody Instructor instructor) {
+    public ResponseEntity<Instructor> createInstructor(@AuthenticationPrincipal User user,@RequestBody Instructor instructor) {
         return ResponseEntity.ok(adminService.createInstructor(instructor));
     }
 
     @PutMapping("/instructors/{id}")
-    public ResponseEntity<Instructor> updateInstructor(@PathVariable Long id, @RequestBody Instructor updatedInstructor) {
+    public ResponseEntity<Instructor> updateInstructor(@AuthenticationPrincipal User user,@PathVariable Long id, @RequestBody Instructor updatedInstructor) {
         return ResponseEntity.ok(adminService.updateInstructor(id, updatedInstructor));
     }
 
     // Student Management
     @PostMapping("/students")
-    public ResponseEntity<Student> createStudent(@RequestBody Student student) {
+    public ResponseEntity<Student> createStudent(@AuthenticationPrincipal User user,@RequestBody Student student) {
         return ResponseEntity.ok(adminService.createStudent(student));
     }
 
     @PutMapping("/students/{id}")
-    public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody StudentDTO updatedStudentDTO) {
+    public ResponseEntity<Student> updateStudent(@AuthenticationPrincipal User user,@PathVariable Long id, @RequestBody StudentDTO updatedStudentDTO) {
         return ResponseEntity.ok(adminService.updateStudent(id, updatedStudentDTO));
     }
 
 
     // Course Management
     @PostMapping("/courses")
-    public ResponseEntity<Course> createCourse(@RequestBody CourseDTO courseDTO) {
+    public ResponseEntity<Course> createCourse(@AuthenticationPrincipal User user, @RequestBody CourseDTO courseDTO) {
         return ResponseEntity.ok(adminService.createCourse(courseDTO));
     }
 
     @PutMapping("/courses/{id}")
-    public ResponseEntity<Course> updateCourse(@PathVariable Long id, @RequestBody CourseDTO updatedCourseDTO) {
+    public ResponseEntity<Course> updateCourse(@AuthenticationPrincipal User user,@PathVariable Long id, @RequestBody CourseDTO updatedCourseDTO) {
         try {
             Course updatedCourse = adminService.updateCourse(id, updatedCourseDTO);
             return ResponseEntity.ok(updatedCourse);
@@ -93,41 +94,41 @@ public class AdminController {
     }
 
     @DeleteMapping("/courses/{id}")
-    public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCourse(@AuthenticationPrincipal User user,@PathVariable Long id) {
         adminService.deleteCourse(id);
         return ResponseEntity.noContent().build();
     }
 
     // Lesson Management
     @PostMapping("/lessons")
-    public ResponseEntity<Lesson> createLesson(@RequestBody LessonDTO lessonDTO) {
+    public ResponseEntity<Lesson> createLesson(@AuthenticationPrincipal User user,@RequestBody LessonDTO lessonDTO) {
         return ResponseEntity.ok(adminService.createLesson(lessonDTO));
     }
 
     @PutMapping("/lessons/{id}")
-    public ResponseEntity<Lesson> updateLesson(@PathVariable Long id, @RequestBody LessonDTO updatedLessonDTO) {
+    public ResponseEntity<Lesson> updateLesson(@AuthenticationPrincipal User user,@PathVariable Long id, @RequestBody LessonDTO updatedLessonDTO) {
         return ResponseEntity.ok(adminService.updateLesson(id, updatedLessonDTO));
     }
 
     @DeleteMapping("/lessons/{id}")
-    public ResponseEntity<Void> deleteLesson(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteLesson(@AuthenticationPrincipal User user,@PathVariable Long id) {
         adminService.deleteLesson(id);
         return ResponseEntity.noContent().build();
     }
 
     // Assignment Management
     @PostMapping("/assignments")
-    public ResponseEntity<Assignment> createAssignment(@RequestBody AssignmentDTO assignmentDTO) {
+    public ResponseEntity<Assignment> createAssignment(@AuthenticationPrincipal User user,@RequestBody AssignmentDTO assignmentDTO) {
         return ResponseEntity.ok(adminService.createAssignment(assignmentDTO));
     }
 
     @PutMapping("/assignments/{id}")
-    public ResponseEntity<Assignment> updateAssignment(@PathVariable Long id, @RequestBody AssignmentDTO updatedAssignmentDTO) {
+    public ResponseEntity<Assignment> updateAssignment(@AuthenticationPrincipal User user,@PathVariable Long id, @RequestBody AssignmentDTO updatedAssignmentDTO) {
         return ResponseEntity.ok(adminService.updateAssignment(id, updatedAssignmentDTO));
     }
 
     @DeleteMapping("/assignments/{id}")
-    public ResponseEntity<Void> deleteAssignment(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteAssignment(@AuthenticationPrincipal User user,@PathVariable Long id) {
         adminService.deleteAssignment(id);
         return ResponseEntity.noContent().build();
     }

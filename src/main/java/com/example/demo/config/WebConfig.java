@@ -21,7 +21,7 @@ public class WebConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> userRepository
-                .findByEmail(username)
+                .findById(Long.valueOf(username))
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
