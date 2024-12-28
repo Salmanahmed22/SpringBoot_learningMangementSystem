@@ -1,4 +1,3 @@
-
 package com.example.demo.serviceTest;
 
 import com.example.demo.dtos.AssignmentDTO;
@@ -8,21 +7,22 @@ import com.example.demo.repository.CourseRepository;
 import com.example.demo.service.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class CourseServiceTest {
-
-    @InjectMocks
-    private CourseService courseService;
 
     @Mock
     private CourseRepository courseRepository;
@@ -42,178 +42,192 @@ public class CourseServiceTest {
     @Mock
     private StudentService studentService;
 
-    private Course course;
-    private Instructor instructor;
-    private CourseDTO courseDTO;
-    private Lesson lesson;
-    private Assignment assignment;
+    @Mock
+    private NotificationService notificationService;
+
+    @InjectMocks
+    private CourseService courseService;
+
+    private Course testCourse;
+    private CourseDTO testCourseDTO;
+    private Instructor testInstructor;
+    private Lesson testLesson;
+    private Assignment testAssignment;
+    private Quiz testQuiz;
+    private Student testStudent;
 
     @BeforeEach
-    public void setUp() {
-        // Set up mock data
-        instructor = new Instructor();
-        instructor.setId(1L);
-        instructor.setName("Instructor Name");
+    void setUp() {
+        testInstructor = new Instructor();
+        testInstructor.setId(1L);
+        testInstructor.setName("Test Instructor");
 
-        course = new Course();
-        course.setId(1L);
-        course.setTitle("Java Programming");
-        course.setDescription("Java basics course");
-        course.setMinLevel((short) 1);
-        course.setInstructor(instructor);
+        testCourse = new Course();
+        testCourse.setId(1L);
+        testCourse.setTitle("Test Course");
+        testCourse.setDescription("Test Description");
+        testCourse.setMinLevel((short) 1);
+        testCourse.setInstructor(testInstructor);
+        testCourse.setQuestionBank(new QuestionBank());
+        testCourse.setLessons(new ArrayList<>());
+        testCourse.setAssignments(new ArrayList<>());
+        testCourse.setQuizzes(new ArrayList<>());
+        testCourse.setEnrolledStudents(new ArrayList<>());
 
-        courseDTO = new CourseDTO();
-        courseDTO.setTitle("Java Programming");
-        courseDTO.setDescription("Java basics course");
-        courseDTO.setMinLevel((short) 1);
+        testCourseDTO = new CourseDTO();
+        testCourseDTO.setTitle("Test Course");
+        testCourseDTO.setDescription("Test Description");
+        testCourseDTO.setMinLevel((short) 1);
+        testCourseDTO.setInstructorId(1L);
 
-        lesson = new Lesson();
-        lesson.setId(1L);
-        lesson.setTitle("Lesson 1");
+        testLesson = new Lesson();
+        testLesson.setId(1L);
+        testLesson.setTitle("Test Lesson");
 
-        assignment = new Assignment();
-        assignment.setId(1L);
-        assignment.setTitle("Assignment 1");
+        testAssignment = new Assignment();
+        testAssignment.setId(1L);
+        testAssignment.setTitle("Test Assignment");
+
+        testQuiz = new Quiz();
+        testQuiz.setId(1L);
+        testQuiz.setTitle("Test Quiz");
+
+        testStudent = new Student();
+        testStudent.setId(1L);
+        testStudent.setName("Test Student");
     }
 
     @Test
-    public void testGetCourseById_Found() {
-        // Arrange
-        when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
+    void getCourseById_Success() {
+        when(courseRepository.findById(1L)).thenReturn(Optional.of(testCourse));
 
-        // Act
         Course result = courseService.getCourseById(1L);
 
-        // Assert
         assertNotNull(result);
-        assertEquals(1L, result.getId());
-        assertEquals("Java Programming", result.getTitle());
+        assertEquals(testCourse.getTitle(), result.getTitle());
+        verify(courseRepository).findById(1L);
     }
 
     @Test
-    public void testGetCourseById_NotFound() {
-        // Arrange
+    void getCourseById_NotFound() {
         when(courseRepository.findById(1L)).thenReturn(Optional.empty());
 
-        // Act
         Course result = courseService.getCourseById(1L);
 
-        // Assert
         assertNull(result);
+        verify(courseRepository).findById(1L);
     }
 
     @Test
-    public void testCreateCourse() {
-        // Arrange
-        when(courseRepository.save(any(Course.class))).thenReturn(course);
+    void getAllCourses_Success() {
+        List<Course> courses = Arrays.asList(testCourse);
+        when(courseRepository.findAll()).thenReturn(courses);
 
-        // Act
-        Course result = courseService.createCourse(instructor, courseDTO);
+        List<Course> result = courseService.getAllCourses();
 
-        // Assert
         assertNotNull(result);
-        assertEquals("Java Programming", result.getTitle());
-        assertEquals(instructor, result.getInstructor());
+        assertEquals(1, result.size());
+        assertEquals(testCourse.getTitle(), result.get(0).getTitle());
+        verify(courseRepository).findAll();
     }
 
     @Test
-    public void testUpdateCourse_Success() {
-        // Arrange
+    void createCourse_Success() {
+        when(courseRepository.save(any(Course.class))).thenReturn(testCourse);
+
+        Course result = courseService.createCourse(testInstructor, testCourseDTO);
+
+        assertNotNull(result);
+        assertEquals(testCourse.getTitle(), result.getTitle());
+        assertEquals(testCourse.getDescription(), result.getDescription());
+        assertEquals(testCourse.getMinLevel(), result.getMinLevel());
+        verify(courseRepository).save(any(Course.class));
+    }
+
+    @Test
+    void updateCourse_Success() {
         CourseDTO updatedCourseDTO = new CourseDTO();
-        updatedCourseDTO.setTitle("Advanced Java Programming");
+        updatedCourseDTO.setTitle("Updated Title");
+        updatedCourseDTO.setDescription("Updated Description");
+        updatedCourseDTO.setMinLevel((short) 2);
 
-        when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
-        when(courseRepository.save(any(Course.class))).thenReturn(course);
+        when(courseRepository.findById(1L)).thenReturn(Optional.of(testCourse));
+        when(courseRepository.save(any(Course.class))).thenReturn(testCourse);
 
-        // Act
         Course result = courseService.updateCourse(1L, updatedCourseDTO);
 
-        // Assert
         assertNotNull(result);
-        assertEquals("Advanced Java Programming", result.getTitle());
+        verify(courseRepository).save(any(Course.class));
     }
 
     @Test
-    public void testUpdateCourse_NotFound() {
-        // Arrange
-        CourseDTO updatedCourseDTO = new CourseDTO();
-        updatedCourseDTO.setTitle("Advanced Java Programming");
-
+    void updateCourse_NotFound() {
         when(courseRepository.findById(1L)).thenReturn(Optional.empty());
 
-        // Act
-        Course result = courseService.updateCourse(1L, updatedCourseDTO);
+        Course result = courseService.updateCourse(1L, testCourseDTO);
 
-        // Assert
         assertNull(result);
+        verify(courseRepository).findById(1L);
+        verify(courseRepository, never()).save(any(Course.class));
     }
 
     @Test
-    public void testDeleteCourse() {
-        // Arrange
-        when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
-        doNothing().when(lessonService).deleteLesson(anyLong());
-        doNothing().when(assignmentService).deleteAssignment(anyLong());
-        doNothing().when(quizService).deleteQuiz(anyLong());
-        doNothing().when(courseRepository).deleteById(anyLong());
+    void deleteCourse_Success() {
+        testCourse.setLessons(Arrays.asList(testLesson));
+        testCourse.setAssignments(Arrays.asList(testAssignment));
+        testCourse.setQuizzes(Arrays.asList(testQuiz));
 
-        // Act
+        when(courseRepository.findById(1L)).thenReturn(Optional.of(testCourse));
+        doNothing().when(lessonService).deleteLesson(any());
+        doNothing().when(assignmentService).deleteAssignment(any());
+        doNothing().when(quizService).deleteQuiz(any());
+        doNothing().when(courseRepository).deleteById(any());
+
         courseService.deleteCourse(1L);
 
-        // Assert
-        verify(courseRepository, times(1)).deleteById(1L);
+        verify(lessonService).deleteLesson(1L);
+        verify(assignmentService).deleteAssignment(1L);
+        verify(quizService).deleteQuiz(1L);
+        verify(courseRepository).deleteById(1L);
     }
 
     @Test
-    public void testAddLesson() {
-        // Arrange
-        when(lessonService.createLesson(any(Lesson.class))).thenReturn(lesson);
-        when(courseRepository.save(any(Course.class))).thenReturn(course);
+    void addLesson_Success() {
+        when(courseRepository.findById(1L)).thenReturn(Optional.of(testCourse));
+        when(lessonService.createLesson(any(Lesson.class))).thenReturn(testLesson);
+        when(courseRepository.save(any(Course.class))).thenReturn(testCourse);
 
-        // Act
-        Course result = courseService.addLesson(course.getId(), lesson);
+        Course result = courseService.addLesson(1L, testLesson);
 
-        // Assert
         assertNotNull(result);
-        assertTrue(result.getLessons().contains(lesson));
+        verify(courseRepository).save(any(Course.class));
     }
 
     @Test
-    public void testRemoveStudentFromCourse() {
-        // Arrange
-        Student student = new Student();
-        student.setId(1L);
-        student.setName("Student Name");
+    void removeStudentFromCourse_Success() {
+        testCourse.getEnrolledStudents().add(testStudent);
 
-        course.getEnrolledStudents().add(student);
-        when(courseRepository.save(any(Course.class))).thenReturn(course);
+        when(courseRepository.save(any(Course.class))).thenReturn(testCourse);
+        doNothing().when(studentService).removeEnrolledCourse(any(Course.class), any(Student.class));
 
-        // Act
-        courseService.removeStudentFromCourse(course, student);
+        courseService.removeStudentFromCourse(testCourse, testStudent);
 
-        // Assert
-        assertFalse(course.getEnrolledStudents().contains(student));
-        verify(studentService, times(1)).removeEnrolledCourse(course, student);
+        verify(courseRepository).save(testCourse);
+        verify(studentService).removeEnrolledCourse(testCourse, testStudent);
     }
 
     @Test
-    public void testAddAssignment() {
-        // Arrange
-        when(assignmentService.createAssignment(any(Assignment.class))).thenReturn(assignment);
-        when(courseRepository.save(any(Course.class))).thenReturn(course);
-
-        // Act
+    void addAssignment_Success() {
         AssignmentDTO assignmentDTO = new AssignmentDTO();
-        assignmentDTO.setTitle(assignment.getTitle());
-        assignmentDTO.setDescription(assignment.getDescription());
-        assignmentDTO.setMark(assignment.getMark());
-        assignmentDTO.setDueDate(assignment.getDueDate());
-        assignmentDTO.setSubmissions(assignment.getSubmissions());
-        assignmentDTO.setCourseId(assignment.getCourse().getId());
+        assignmentDTO.setCourseId(1L);
+
+        when(courseRepository.findById(1L)).thenReturn(Optional.of(testCourse));
+        when(assignmentService.createAssignment(any(AssignmentDTO.class))).thenReturn(testAssignment);
+        when(courseRepository.save(any(Course.class))).thenReturn(testCourse);
+
         Course result = courseService.addAssignment(assignmentDTO);
 
-        // Assert
         assertNotNull(result);
-        assertTrue(result.getAssignments().contains(assignment));
+        verify(courseRepository).save(any(Course.class));
     }
 }

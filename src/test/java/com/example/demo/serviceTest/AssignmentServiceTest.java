@@ -1,192 +1,187 @@
-
 package com.example.demo.serviceTest;
 
-import com.example.demo.models.Assignment;
 import com.example.demo.dtos.AssignmentDTO;
+import com.example.demo.models.Assignment;
 import com.example.demo.models.Course;
 import com.example.demo.repository.AssignmentRepository;
-import com.example.demo.repository.StudentRepository;
 import com.example.demo.service.AssignmentService;
 import com.example.demo.service.CourseService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class AssignmentServiceTest {
-
-    @InjectMocks
-    private AssignmentService assignmentService;
 
     @Mock
     private AssignmentRepository assignmentRepository;
 
     @Mock
-    private StudentRepository studentRepository;
-
-    @Mock
     private CourseService courseService;
 
-    private Assignment assignment;
-    private Course course;
+    @InjectMocks
+    private AssignmentService assignmentService;
+
+    private Assignment testAssignment;
+    private AssignmentDTO testAssignmentDTO;
+    private Course testCourse;
 
     @BeforeEach
-    public void setUp() {
-        // Set up mock data
-        course = new Course();
-        course.setId(1L);
-        course.setTitle("Java Programming");
+    void setUp() {
+        testCourse = new Course();
+        testCourse.setId(1L);
+        testCourse.setTitle("Test Course");
 
-        assignment = new Assignment();
-        assignment.setId(1L);
-        assignment.setTitle("Assignment 1");
-        assignment.setDescription("Java Basics");
-        assignment.setCourse(course);
+        testAssignment = new Assignment();
+        testAssignment.setId(1L);
+        testAssignment.setTitle("Test Assignment");
+        testAssignment.setDescription("Test Description");
+        testAssignment.setMark(100);
+        testAssignment.setDueDate(LocalDateTime.now().plusDays(7));
+        testAssignment.setCourse(testCourse);
+        testAssignment.setSubmissions(new HashMap<>());
+
+        testAssignmentDTO = new AssignmentDTO();
+        testAssignmentDTO.setTitle("Test Assignment");
+        testAssignmentDTO.setDescription("Test Description");
+        testAssignmentDTO.setMark(100);
+        testAssignmentDTO.setDueDate(LocalDateTime.now().plusDays(7));
+        testAssignmentDTO.setCourseId(1L);
     }
 
     @Test
-    public void testGetAssignmentById_Found() {
-        // Arrange
-        when(assignmentRepository.findById(1L)).thenReturn(Optional.of(assignment));
+    void getAssignmentById_Success() {
+        when(assignmentRepository.findById(1L)).thenReturn(Optional.of(testAssignment));
 
-        // Act
         Assignment result = assignmentService.getAssignmentById(1L);
 
-        // Assert
         assertNotNull(result);
-        assertEquals(1L, result.getId());
-        assertEquals("Assignment 1", result.getTitle());
+        assertEquals(testAssignment.getTitle(), result.getTitle());
+        verify(assignmentRepository).findById(1L);
     }
 
     @Test
-    public void testGetAssignmentById_NotFound() {
-        // Arrange
+    void getAssignmentById_NotFound() {
         when(assignmentRepository.findById(1L)).thenReturn(Optional.empty());
 
-        // Act
         Assignment result = assignmentService.getAssignmentById(1L);
 
-        // Assert
         assertNull(result);
+        verify(assignmentRepository).findById(1L);
     }
 
     @Test
-    public void testGetAllAssignments() {
-        // Arrange
-        when(assignmentRepository.findAll()).thenReturn(Arrays.asList(assignment));
+    void getAllAssignments_Success() {
+        List<Assignment> assignments = Arrays.asList(testAssignment);
+        when(assignmentRepository.findAll()).thenReturn(assignments);
 
-        // Act
         List<Assignment> result = assignmentService.getAllAssignments();
 
-        // Assert
         assertNotNull(result);
-        assertFalse(result.isEmpty());
         assertEquals(1, result.size());
+        assertEquals(testAssignment.getTitle(), result.get(0).getTitle());
+        verify(assignmentRepository).findAll();
     }
 
     @Test
-    public void testCreateAssignment() {
-        // Arrange
-        when(assignmentRepository.save(assignment)).thenReturn(assignment);
+    void createAssignment_FromDTO_Success() {
+        when(courseService.getCourseById(1L)).thenReturn(testCourse);
+        when(assignmentRepository.save(any(Assignment.class))).thenReturn(testAssignment);
 
-        AssignmentDTO assignmentDTO = new AssignmentDTO();
-        assignmentDTO.setTitle(assignment.getTitle());
-        assignmentDTO.setDescription(assignment.getDescription());
-        assignmentDTO.setMark(assignment.getMark());
-        assignmentDTO.setDueDate(assignment.getDueDate());
-        assignmentDTO.setSubmissions(assignment.getSubmissions());
-        assignmentDTO.setCourseId(assignment.getCourse().getId());
-        // Act
-        Assignment result = assignmentService.createAssignment(assignmentDTO);
+        Assignment result = assignmentService.createAssignment(testAssignmentDTO);
 
-        // Assert
         assertNotNull(result);
-        assertEquals("Assignment 1", result.getTitle());
-        assertEquals(course, result.getCourse());
+        assertEquals(testAssignment.getTitle(), result.getTitle());
+        assertEquals(testAssignment.getDescription(), result.getDescription());
+        assertEquals(testAssignment.getMark(), result.getMark());
+        verify(assignmentRepository).save(any(Assignment.class));
+        verify(courseService).getCourseById(1L);
     }
 
     @Test
-    public void testUpdateAssignment_Success() {
-        // Arrange
+    void createAssignment_FromAssignment_Success() {
+        when(assignmentRepository.save(any(Assignment.class))).thenReturn(testAssignment);
+
+        Assignment result = assignmentService.createAssignment(testAssignment);
+
+        assertNotNull(result);
+        assertEquals(testAssignment.getTitle(), result.getTitle());
+        verify(assignmentRepository).save(testAssignment);
+    }
+
+    @Test
+    void updateAssignment_Success() {
         Assignment updatedAssignment = new Assignment();
         updatedAssignment.setTitle("Updated Title");
         updatedAssignment.setDescription("Updated Description");
+        updatedAssignment.setDueDate(LocalDateTime.now().plusDays(14));
+        updatedAssignment.setCourse(testCourse);
 
-        when(assignmentRepository.findById(1L)).thenReturn(Optional.of(assignment));
+        when(assignmentRepository.findById(1L)).thenReturn(Optional.of(testAssignment));
         when(assignmentRepository.save(any(Assignment.class))).thenReturn(updatedAssignment);
 
-        // Act
         Assignment result = assignmentService.updateAssignment(1L, updatedAssignment);
 
-        // Assert
         assertNotNull(result);
-        assertEquals("Updated Title", result.getTitle());
-        assertEquals("Updated Description", result.getDescription());
+        assertEquals(updatedAssignment.getTitle(), result.getTitle());
+        assertEquals(updatedAssignment.getDescription(), result.getDescription());
+        verify(assignmentRepository).save(any(Assignment.class));
     }
 
     @Test
-    public void testUpdateAssignment_NotFound() {
-        // Arrange
-        Assignment updatedAssignment = new Assignment();
-        updatedAssignment.setTitle("Updated Title");
-
+    void updateAssignment_NotFound() {
         when(assignmentRepository.findById(1L)).thenReturn(Optional.empty());
 
-        // Act
-        Assignment result = assignmentService.updateAssignment(1L, updatedAssignment);
+        Assignment result = assignmentService.updateAssignment(1L, testAssignment);
 
-        // Assert
         assertNull(result);
+        verify(assignmentRepository).findById(1L);
+        verify(assignmentRepository, never()).save(any(Assignment.class));
     }
 
     @Test
-    public void testSubmitAssignment_Success() {
-        // Arrange
-        Long studentId = 123L;
-        String submissionContent = "My submission content";
-        when(assignmentRepository.findById(1L)).thenReturn(Optional.of(assignment));
-        when(assignmentRepository.save(any(Assignment.class))).thenReturn(assignment);
+    void submitAssignment_Success() {
+        Long studentId = 1L;
+        String submissionContent = "Test Submission";
+        testAssignment.setSubmissions(new HashMap<>());
 
-        // Act
+        when(assignmentRepository.findById(1L)).thenReturn(Optional.of(testAssignment));
+        when(assignmentRepository.save(any(Assignment.class))).thenReturn(testAssignment);
+
         Assignment result = assignmentService.submitAssignment(1L, studentId, submissionContent);
 
-        // Assert
         assertNotNull(result);
-        assertTrue(result.getSubmissions().containsKey(studentId));
         assertEquals(submissionContent, result.getSubmissions().get(studentId));
+        verify(assignmentRepository).save(any(Assignment.class));
     }
 
     @Test
-    public void testSubmitAssignment_NotFound() {
-        // Arrange
-        Long studentId = 123L;
-        String submissionContent = "My submission content";
+    void submitAssignment_NotFound() {
         when(assignmentRepository.findById(1L)).thenReturn(Optional.empty());
 
-        // Act
-        Assignment result = assignmentService.submitAssignment(1L, studentId, submissionContent);
+        Assignment result = assignmentService.submitAssignment(1L, 1L, "Test Submission");
 
-        // Assert
         assertNull(result);
+        verify(assignmentRepository).findById(1L);
+        verify(assignmentRepository, never()).save(any(Assignment.class));
     }
 
     @Test
-    public void testDeleteAssignment() {
-        // Arrange
+    void deleteAssignment_Success() {
         doNothing().when(assignmentRepository).deleteById(1L);
 
-        // Act
         assignmentService.deleteAssignment(1L);
 
-        // Assert
-        verify(assignmentRepository, times(1)).deleteById(1L);
+        verify(assignmentRepository).deleteById(1L);
     }
 }

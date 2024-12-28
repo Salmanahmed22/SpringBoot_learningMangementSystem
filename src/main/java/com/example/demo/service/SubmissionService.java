@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dtos.SubmissionDTO;
 import com.example.demo.models.Submission;
 import com.example.demo.repository.SubmissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
